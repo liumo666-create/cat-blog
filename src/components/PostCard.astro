@@ -1,0 +1,29 @@
+---
+// PostCard.astro — Individual post card
+export interface Post {
+  id: number;
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+  tags: string[];
+  isNew: boolean;
+  pinned: boolean;
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+<div class="post-card">
+  <div class="post-date">{post.date}</div>
+  <div class="post-title">{post.title}</div>
+  <div class="post-excerpt">{post.excerpt}</div>
+  <div class="post-meta">
+    <span class="cat">{post.category}</span>
+    {post.tags.map((tag) => <span class="tag">{tag}</span>)}
+  </div>
+</div>

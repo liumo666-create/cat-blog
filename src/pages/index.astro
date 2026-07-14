@@ -1,0 +1,124 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+import HeroBanner from "@components/HeroBanner.astro";
+import PostCard from "@components/PostCard.astro";
+import Sidebar from "@components/Sidebar.astro";
+import type { Post } from "@components/PostCard.astro";
+import type { Category } from "@components/Sidebar.astro";
+
+const POSTS: Post[] = [
+  { id: 1, title: "Welcome to My Pixel Blog", excerpt: "FYH像素世界——用代码和像素艺术构建的个人空间。记录学习、分享创作、偶尔碎碎念。", date: "2024-06-15", category: "生活", tags: ["像素", "博客", "生活"], isNew: false, pinned: true },
+  { id: 2, title: "Canvas像素画编辑器的开发记录", excerpt: "从零构建浏览器端像素画编辑器，支持图层管理、自定义调色板、GIF导出。", date: "2024-06-10", category: "开发", tags: ["Canvas", "JavaScript", "Web", "像素画"], isNew: true, pinned: false },
+  { id: 3, title: "像素画入门完全指南", excerpt: "分享像素画学习之路——工具选择、基础技法、配色理论到练习方法。零基础也能开始像素创作。", date: "2024-05-20", category: "像素画", tags: ["像素画", "设计", "练习", "创作"], isNew: false, pinned: false },
+  { id: 4, title: "我的极简桌面布置分享", excerpt: "花了两个月重新设计桌面工作区——从显示器支架到键盘选择、理线到灯光，完整改造记录。", date: "2024-05-08", category: "生活", tags: ["桌面", "工具", "效率", "开发"], isNew: false, pinned: false },
+];
+
+interface Project { name: string; desc: string; tech: string[]; status: string; icon: string; }
+const PROJECTS_DATA: Project[] = [
+  { name: "Pixel Painter", desc: "基于Canvas的在线像素画编辑器，支持图层、调色板、GIF/PNG导出。", tech: ["Canvas API", "JavaScript", "Web Workers"], status: "开发中", icon: "PAINT" },
+  { name: "CatViewer", desc: "可爱的猫咪图片浏览器，支持懒加载。", tech: ["React", "TypeScript", "CSS Grid"], status: "已完成", icon: "CAT" },
+];
+
+const CATEGORIES: Category[] = [
+  { name: "设计", icon: "D", count: 1, slug: "design" },
+  { name: "开发", icon: "C", count: 2, slug: "dev" },
+  { name: "像素画", icon: "P", count: 1, slug: "pixel" },
+  { name: "生活", icon: "L", count: 2, slug: "life" },
+];
+
+const TAGS: string[] = ["像素", "博客", "生活", "Canvas", "JavaScript", "Web", "设计", "工具", "开发"];
+
+const HERO_PHRASES = ["CODE. DESIGN. LIFE.", "Keep it pixel.", "BITS AND BYTES", "HELLO, WORLD!", "> READY._", "Pixel is art."];
+---
+
+<Layout>
+  <div class="game-scene">
+    <div class="scroll-container" id="scrollContainer">
+      <div class="web-wrapper">
+        <NavBar />
+        <HeroBanner />
+
+        <div class="section-page active" id="page-home">
+          <div class="main-col">
+            <div class="section-title">LATEST POSTS</div>
+            <div class="post-list">
+              {POSTS.map((post) => <PostCard post={post} />)}
+            </div>
+          </div>
+          <div class="side-col">
+            <Sidebar postCount={POSTS.length} projectCount={PROJECTS_DATA.length} categories={CATEGORIES} tags={TAGS} />
+          </div>
+        </div>
+
+        <div class="section-page" id="page-projects">
+          <div class="main-col" style="width:100%">
+            <div class="section-title">PROJECTS</div>
+            <div class="projects-grid">
+              {PROJECTS_DATA.map((p) => (
+                <div class="project-card">
+                  <div class="proj-icon">{p.icon}</div>
+                  <div class="proj-name">{p.name}</div>
+                  <div class="proj-desc">{p.desc}</div>
+                  <div class="proj-status">STATUS: {p.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="site-footer">
+          &copy; {new Date().getFullYear()} FYH BLOG — Pixel Haven
+        </div>
+      </div>
+    </div>
+    <div class="foreground-layer"></div>
+  </div>
+</Layout>
+
+<script define:vars={{ phrases: HERO_PHRASES }}>
+  // Navigation switching
+  const mainNav = document.getElementById("mainNav");
+  if (mainNav) {
+    mainNav.addEventListener("click", (e: Event) => {
+      const target = e.target as HTMLElement;
+      const a = target.closest("a");
+      if (!a || !a.dataset.page) return;
+      e.preventDefault();
+      document.querySelectorAll(".section-page").forEach((s) => s.classList.remove("active"));
+      document.querySelectorAll("#mainNav a").forEach((l) => l.classList.remove("active"));
+      const pageEl = document.getElementById("page-" + a.dataset.page);
+      if (pageEl) pageEl.classList.add("active");
+      a.classList.add("active");
+    });
+  }
+
+  // Cat logo randomizer on click
+  const catWrap = document.getElementById("catWrap");
+  const catLogo = document.getElementById("catLogo") as HTMLImageElement;
+  if (catWrap && catLogo) {
+    catWrap.addEventListener("click", () => {
+      const n = Math.floor(Math.random() * 9) + 1;
+      catLogo.src = `/cat${n}.png`;
+    });
+  }
+
+  // Typewriter effect
+  function startTypewriter() {
+    const el = document.getElementById("heroSubtitle");
+    if (!el) return;
+    let idx = 0;
+    function cycle() {
+      el!.style.opacity = "0";
+      setTimeout(() => {
+        el!.textContent = phrases[idx];
+        el!.style.opacity = "1";
+        idx = (idx + 1) % phrases.length;
+      }, 300);
+      setTimeout(cycle, 3500);
+    }
+    el.textContent = phrases[0];
+    setTimeout(cycle, 3500);
+  }
+  document.addEventListener("DOMContentLoaded", startTypewriter);
+</script>

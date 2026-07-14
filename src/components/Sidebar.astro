@@ -1,0 +1,44 @@
+---
+// Sidebar.astro — Stats, categories, and tag cloud sidebar
+export interface Category {
+  name: string;
+  icon: string;
+  count: number;
+  slug: string;
+}
+
+interface Props {
+  postCount: number;
+  projectCount: number;
+  categories: Category[];
+  tags: string[];
+}
+
+const { postCount, projectCount, categories, tags } = Astro.props;
+---
+
+<div class="stats-grid">
+  <div class="stat-item">
+    <div class="stat-number">{postCount}</div>
+    <div class="stat-label">POSTS</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">{projectCount}</div>
+    <div class="stat-label">PROJECTS</div>
+  </div>
+</div>
+
+<div class="section-title">CATEGORIES</div>
+<div class="cat-list">
+  {categories.map((c) => (
+    <div class="cat-item">
+      <span>{c.icon} {c.name}</span>
+      <span class="count">{c.count}</span>
+    </div>
+  ))}
+</div>
+
+<div class="section-title">TAGS</div>
+<div class="tag-cloud">
+  {tags.map((t) => <span class="tag-chip">{t}</span>)}
+</div>

@@ -1,0 +1,140 @@
+---
+// SakuraEffect.astro — Sakura falling canvas + click burst effects + custom cursors
+---
+
+<!-- Sakura falling canvas -->
+<canvas id="canvas_sakura"></canvas>
+
+<!-- Custom cursor styles -->
+<style is:global>
+  body {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%23ff66cc' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='miter' d='M2 2 L9 17 L10 12 L16 18 L18 16 L12 10 L17 9 Z'/></svg>") 2 2, auto;
+  }
+  a, button, .cat-wrap, .post-card, .cat-item, .tag-chip, .project-card {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2366ffcc' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='miter' d='M2 2 L9 17 L10 12 L16 18 L18 16 L12 10 L17 9 Z'/></svg>") 2 2, pointer !important;
+  }
+  .click-sakura {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    width: 16px;
+    height: 16px;
+    background-image: url("/sakura.webp");
+    background-size: cover;
+    background-position: center;
+    transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+    opacity: 1;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-in;
+  }
+  #canvas_sakura {
+    position: fixed;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    z-index: 900;
+  }
+</style>
+
+<script>
+  // ===== Sakura Falling Effect =====
+  let sakuraParticles: Array<{
+    x: number; y: number; size: number;
+    vx: number; vy: number; opacity: number;
+    rot: number; rotSpeed: number;
+    swayAmp: number; swaySpeed: number; swayPhase: number;
+  }> = [];
+  let sakuraCtx: CanvasRenderingContext2D | null = null;
+  let sakuraCanvas: HTMLCanvasElement | null = null;
+  let sakuraRunning = false;
+  let sakuraImg: HTMLImageElement | null = null;
+
+  function initSakura() {
+    sakuraCanvas = document.getElementById("canvas_sakura") as HTMLCanvasElement;
+    if (!sakuraCanvas) return;
+    sakuraCanvas.width = window.innerWidth;
+    sakuraCanvas.height = window.innerHeight;
+    sakuraCtx = sakuraCanvas.getContext("2d");
+    sakuraImg = new Image();
+    sakuraImg.src = "/sakura.webp";
+    sakuraImg.onload = () => {
+      sakuraParticles = [];
+      for (let i = 0; i < 30; i++) {
+        sakuraParticles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          size: 8 + Math.random() * 14,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: 0.3 + Math.random() * 0.8,
+          opacity: 0.25 + Math.random() * 0.5,
+          rot: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.02,
+          swayAmp: 0.3 + Math.random() * 1.0,
+          swaySpeed: 0.003 + Math.random() * 0.006,
+          swayPhase: Math.random() * Math.PI * 2,
+        });
+      }
+      if (!sakuraRunning) {
+        sakuraRunning = true;
+        animateSakura();
+      }
+    };
+  }
+
+  function animateSakura() {
+    if (!sakuraRunning || !sakuraCtx || !sakuraCanvas) return;
+    sakuraCtx.clearRect(0, 0, sakuraCanvas.width, sakuraCanvas.height);
+    for (let i = 0; i < sakuraParticles.length; i++) {
+      const p = sakuraParticles[i];
+      p.swayPhase += p.swaySpeed;
+      p.x += p.vx + Math.sin(p.swayPhase) * p.swayAmp * 0.3;
+      p.y += p.vy;
+      p.rot += p.rotSpeed;
+      if (p.y > window.innerHeight + 40) {
+        p.y = -40;
+        p.x = Math.random() * window.innerWidth;
+      }
+      if (p.x < -40) p.x = window.innerWidth + 40;
+      if (p.x > window.innerWidth + 40) p.x = -40;
+      sakuraCtx.save();
+      sakuraCtx.translate(p.x, p.y);
+      sakuraCtx.rotate(p.rot);
+      sakuraCtx.globalAlpha = p.opacity;
+      if (sakuraImg && sakuraImg.complete) {
+        sakuraCtx.drawImage(sakuraImg, -p.size / 2, -p.size / 2, p.size, p.size);
+      }
+      sakuraCtx.restore();
+    }
+    requestAnimationFrame(animateSakura);
+  }
+
+  window.addEventListener("resize", () => {
+    if (sakuraCanvas) {
+      sakuraCanvas.width = window.innerWidth;
+      sakuraCanvas.height = window.innerHeight;
+    }
+  });
+
+  // ===== Click Sakura Burst Effect =====
+  document.addEventListener("click", (e: MouseEvent) => {
+    const particleCount = 5 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < particleCount; i++) {
+      const sakura = document.createElement("div");
+      sakura.className = "click-sakura";
+      sakura.style.left = e.clientX + "px";
+      sakura.style.top = e.clientY + "px";
+      document.body.appendChild(sakura);
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 40 + Math.random() * 60;
+      const rot = (Math.random() - 0.5) * 540 + "deg";
+      sakura.offsetWidth;
+      sakura.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(1.2) rotate(${rot})`;
+      sakura.style.opacity = "0";
+      setTimeout(() => {
+        sakura.remove();
+      }, 600);
+    }
+  });
+
+  // Start on DOM ready
+  document.addEventListener("DOMContentLoaded", initSakura);
+</script>
