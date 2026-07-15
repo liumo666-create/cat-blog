@@ -363,13 +363,45 @@
 
 <script>
   // @ts-nocheck
-  // Cat logo randomizer
+  // Cat logo randomizer + autoplay
   const catWrap = document.getElementById("catWrap");
   const catLogo = /** @type {HTMLImageElement} */ (/** @type {unknown} */ (document.getElementById("catLogo")));
   if (catWrap && catLogo) {
-    catWrap.addEventListener("click", () => {
-      const n = Math.floor(Math.random() * 9) + 1;
+    function showRandomCat() {
+      // choose a different random index from current to avoid immediate repeats
+      const m = (catLogo.src || '').match(/cat(\d+)\.png$/);
+      const currentIndex = m ? parseInt(m[1], 10) : -1;
+      let n;
+      do {
+        n = Math.floor(Math.random() * 9) + 1;
+      } while (n === currentIndex);
       catLogo.src = `/cat${n}.png`;
+    }
+
+    catWrap.addEventListener("click", showRandomCat);
+
+    // Autoplay: rotate every 0.5 seconds
+    const AUTOPLAY_MS = 500;
+
+    let autoplayTimer = setInterval(showRandomCat, AUTOPLAY_MS);
+
+    // Pause autoplay while hovering and resume after
+    catWrap.addEventListener('mouseenter', () => {
+      if (autoplayTimer) clearInterval(autoplayTimer);
+      autoplayTimer = null;
     });
-  }
+    catWrap.addEventListener('mouseleave', () => {
+      if (autoplayTimer) return;
+      autoplayTimer = setInterval(showRandomCat, AUTOPLAY_MS);
+    });
+
+    // Handle page visibility to avoid background timers
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (autoplayTimer) clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      } else {
+        if (!autoplayTimer) autoplayTimer = setInterval(showRandomCat, AUTOPLAY_MS);
+      }
+    });  }
 </script>
