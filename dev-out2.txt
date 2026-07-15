@@ -1,0 +1,15 @@
+[vite] connected.
+[2m05:25:00[22m [34m[types][39m Generated [2m1ms[22m
+[vite] connected.
+[2m05:25:00[22m [34m[content][39m Syncing content
+[2m05:25:00[22m [34m[content][39m Astro config changed
+[2m05:25:00[22m [34m[content][39m Clearing content store
+[2m05:25:00[22m [34m[content][39m Synced content
+[2m05:25:00[22m [34m[vite][39m Port 4322 is in use, trying another one...
+[42m[1m astro [22m[49m [32mv6.3.0[39m [2mready in[22m 4630 [2mms[22m
+[2m┃[22m Local    [36mhttp://localhost:4323/[39m
+[2m┃[22m Network  [36mhttp://192.168.56.1:4323/[39m
+           [36mhttp://192.168.5.174:4323/[39m
+           [36mhttp://192.168.46.1:4323/[39m
+           [36mhttp://192.168.118.1:4323/[39m
+[2m05:25:00[22m [32mwatching for file changes...[39m

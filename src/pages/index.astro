@@ -80,8 +80,8 @@ const HERO_PHRASES = ["CODE. DESIGN. LIFE.", "Keep it pixel.", "BITS AND BYTES",
   // Navigation switching
   const mainNav = document.getElementById("mainNav");
   if (mainNav) {
-    mainNav.addEventListener("click", (e: Event) => {
-      const target = e.target as HTMLElement;
+    mainNav.addEventListener("click", (e) => {
+      const target = e.target;
       const a = target.closest("a");
       if (!a || !a.dataset.page) return;
       e.preventDefault();
@@ -95,7 +95,7 @@ const HERO_PHRASES = ["CODE. DESIGN. LIFE.", "Keep it pixel.", "BITS AND BYTES",
 
   // Cat logo randomizer on click
   const catWrap = document.getElementById("catWrap");
-  const catLogo = document.getElementById("catLogo") as HTMLImageElement;
+  const catLogo = document.getElementById("catLogo");
   if (catWrap && catLogo) {
     catWrap.addEventListener("click", () => {
       const n = Math.floor(Math.random() * 9) + 1;
@@ -109,10 +109,10 @@ const HERO_PHRASES = ["CODE. DESIGN. LIFE.", "Keep it pixel.", "BITS AND BYTES",
     if (!el) return;
     let idx = 0;
     function cycle() {
-      el!.style.opacity = "0";
+      el.style.opacity = "0";
       setTimeout(() => {
-        el!.textContent = phrases[idx];
-        el!.style.opacity = "1";
+        el.textContent = phrases[idx];
+        el.style.opacity = "1";
         idx = (idx + 1) % phrases.length;
       }, 300);
       setTimeout(cycle, 3500);

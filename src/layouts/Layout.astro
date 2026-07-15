@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css'; // 路径根据你的实际情况调整
 import SakuraEffect from "@components/SakuraEffect.astro";
 
 interface Props {
@@ -99,6 +100,7 @@ const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码�
         min-height: 100vh;
         aspect-ratio: 1672 / 941;
         background: var(--deep);
+        overflow: hidden;
       }
       .foreground-layer {
         position: absolute;
@@ -106,11 +108,49 @@ const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码�
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: url("/ChatGPT Image 2026年6月4日 16_42_58.png");
+        background-image: url("/ChatGPT%20Image%202026%E5%B9%B46%E6%9C%884%E6%97%A5%2016_42_58.png");
         background-size: 100% 100%;
         background-repeat: no-repeat;
         z-index: 999;
         pointer-events: none;
+      }
+
+      /* Day background reveal - radial wipe from button */
+      .game-scene::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1000;
+        background-image: url("/day.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        clip-path: circle(0% at var(--ripple-x, 50%) var(--ripple-y, 50%));
+        transition: clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: clip-path;
+        pointer-events: none;
+      }
+      .game-scene.day-mode::after {
+        clip-path: circle(150% at var(--ripple-x, 50%) var(--ripple-y, 50%));
+      }
+      /* Day mode color overrides */
+      .game-scene.day-mode {
+        --pink: #e8786a;
+        --cyan: #5b9ecf;
+        --yellow: #d4a030;
+        --purple: #8b7aaf;
+        --orange: #e89450;
+        --text: #383040;
+        --muted: #685868;
+        --dim: #988898;
+        --deep: #f5efe4;
+        --web: rgba(255, 252, 247, 0.96);
+        --card: rgba(255, 250, 244, 0.92);
+        --hover: rgba(232, 215, 195, 0.7);
+        --glass: rgba(255, 250, 244, 0.82);
+        --b-sub: #dcd0c5;
+        --b-hi: #c8b8a8;
+        --b-ac: #a89588;
       }
       .scroll-container {
         position: absolute;
@@ -146,104 +186,73 @@ const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码�
         padding: 28px 32px;
         position: relative;
       }
-      /* Header & Nav */
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 16px;
-        margin-bottom: 18px;
-        border-bottom: 4px solid var(--pink);
-        flex-wrap: wrap;
-        gap: 14px;
-      }
-      .logo-area {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .cat-wrap {
-        width: 64px;
-        height: 64px;
-        flex-shrink: 0;
+        width: 60%;
+      /* Theme Toggle Button */
+      .theme-toggle-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid var(--b-hi);
+        background: var(--card);
+        color: var(--yellow);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
         position: relative;
+        overflow: hidden;
       }
-      .cat-wrap img {
-        width: 64px;
-        height: 64px;
-        object-fit: contain;
-        image-rendering: pixelated;
-        filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.9));
-        transition: transform 0.12s;
-      }
-      .cat-wrap:hover img {
+      .theme-toggle-btn:hover {
+        border-color: var(--yellow);
+        background: rgba(255, 221, 68, 0.1);
+        box-shadow: 0 0 18px rgba(255, 221, 68, 0.25);
         transform: scale(1.08);
       }
-      .logo-text h1 {
-        font-family: var(--fp);
-        font-size: 20px;
-        font-weight: 700;
-        color: #fff;
-        text-shadow: 3px 3px 0 #000;
-        margin-bottom: 4px;
-        letter-spacing: 1px;
-        line-height: 1.25;
+      .theme-toggle-btn:active {
+        transform: scale(0.94);
+        transition: transform 0.12s;
       }
-      .logo-text p {
-        font-family: var(--fm);
-        font-size: 11px;
-        color: var(--pink);
-        letter-spacing: 3px;
+      .theme-toggle-btn svg {
+        width: 18px;
+        height: 18px;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s;
+        pointer-events: none;
       }
-      .nav-links {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+      .theme-toggle-btn .icon-moon {
+        position: absolute;
       }
-      .nav-links a {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-family: var(--fm);
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text);
-        padding: 7px 12px;
-        border: 2px solid transparent;
-        transition: all 0.18s;
-        position: relative;
-        cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2366ffcc' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='miter' d='M2 2 L9 17 L10 12 L16 18 L18 16 L12 10 L17 9 Z'/></svg>") 2 2, pointer !important;
+      .theme-toggle-btn .icon-sun {
+        position: absolute;
+        opacity: 0;
+        transform: rotate(90deg) scale(0.5);
       }
-      .nav-links a::after {
+      .theme-toggle-btn.day .icon-moon {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0.5);
+      }
+      .theme-toggle-btn.day .icon-sun {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+      .theme-toggle-btn::before {
         content: "";
         position: absolute;
-        bottom: -2px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 2px;
-        background: var(--pink);
-        transition: width 0.25s ease;
+        inset: -2px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,221,68,0.3) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.35s;
       }
-      .nav-links a:hover,
-      .nav-links a.active {
-        color: var(--pink);
-        border-color: var(--pink);
-        background: rgba(255, 102, 204, 0.08);
-      }
-      .nav-links a:hover::after,
-      .nav-links a.active::after {
-        width: 60%;
+      .theme-toggle-btn:hover::before {
+        opacity: 1;
       }
       /* Hero Banner */
       .hero-banner {
         width: 100%;
         height: 180px;
-        background-image: url("/hero图.webp");
+        background-image: url("/hero-night.png");
         background-size: cover;
         background-position: center;
         border: 2px solid #000;
@@ -252,6 +261,10 @@ const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码�
         position: relative;
         overflow: hidden;
         border-radius: 16px;
+      }
+
+      .game-scene.day-mode .hero-banner {
+        background-image: url("/hero-day.png");
       }
       .hero-banner::before {
         content: "";
@@ -526,5 +539,77 @@ const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码�
   <body>
     <SakuraEffect />
     <slot />
+
+    <script>
+      // @ts-nocheck
+      (function() {
+        const SCENE_SEL = '.game-scene';
+        const BTN_SEL = '.theme-toggle-btn';
+        const STORAGE_KEY = 'fyh-theme';
+
+        function getScene() { var el = document.querySelector(SCENE_SEL); return /** @type {HTMLElement|null} */ (el); }
+        function getBtn() { var el = document.querySelector(BTN_SEL); return /** @type {HTMLElement|null} */ (el); }
+
+        function updateRippleOrigin() {
+          const btn = getBtn();
+          const /** @type {HTMLElement|null} */ scene = getScene();
+          if (!btn || !scene) return;
+          const br = btn.getBoundingClientRect();
+          const sr = scene.getBoundingClientRect();
+          const cx = ((br.left + br.width / 2) - sr.left) / sr.width * 100;
+          const cy = ((br.top + br.height / 2) - sr.top) / sr.height * 100;
+          scene.style.setProperty('--ripple-x', cx + '%');
+          scene.style.setProperty('--ripple-y', cy + '%');
+        }
+
+        /** @param {"day"|"night"} theme */
+        function setTheme(theme) {
+          const scene = getScene();
+          const btn = getBtn();
+          if (!scene || !btn) return;
+          updateRippleOrigin();
+          if (theme === 'day') {
+            scene.classList.add('day-mode');
+            btn.classList.add('day');
+          } else {
+            scene.classList.remove('day-mode');
+            btn.classList.remove('day');
+          }
+          try { localStorage.setItem(STORAGE_KEY, theme); } catch(e) {}
+        }
+
+        function toggleTheme() {
+          const scene = getScene();
+          if (!scene) return;
+          const isDay = scene.classList.contains('day-mode');
+          setTheme(isDay ? 'night' : 'day');
+        }
+
+        function initTheme() {
+          let theme = 'night';
+          try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved === 'day' || saved === 'night') theme = saved;
+          } catch(e) {}
+          setTheme(theme);
+        }
+
+        document.addEventListener('click', function(e) {
+          const target = /** @type {HTMLElement} */ (/** @type {unknown} */ (e.target));
+          const btn = target.closest(BTN_SEL);
+          if (btn) toggleTheme();
+        });
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initTheme);
+        } else {
+          initTheme();
+        }
+
+        window.addEventListener('resize', function() {
+          updateRippleOrigin();
+        });
+      })();
+    </script>
   </body>
 </html>
