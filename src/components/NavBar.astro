@@ -1,5 +1,4 @@
----
-// NavBar.astro ? Premium pixel nav with dropdowns and theme toggle
+﻿---
 ---
 
 <header>
@@ -9,399 +8,310 @@
     </div>
     <div class="logo-text">
       <h1>FYH BLOG</h1>
-      <p>== PIXEL HAVEN ==</p>
+      <p>像素天堂</p>
     </div>
   </div>
 
   <nav class="nav-links" id="mainNav">
-    <!-- 1. Home -->
     <a data-page="home" class="nav-item active">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-      <span>HOME</span>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>首页</span>
     </a>
-
-    <!-- 2. Links (dropdown) -->
-    <div class="nav-dropdown">
-      <button class="nav-item nav-dropdown-trigger" data-page="links">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-        <span>LINKS</span>
+    <div class="nav-dropdown" data-dropdown="links">
+      <button class="nav-item nav-dropdown-trigger">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <span>链接</span>
         <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div class="dropdown-menu">
-        <a href="https://www.douyin.com/user/your-id" target="_blank" class="dropdown-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-          <span>??</span>
+        <a href="https://www.douyin.com/user/MS4wLjABAAAAKD7gXoehr1Yq_yVSHfiRBmtKUISmPRnlXwGkDqRYWhM?from_tab_name=main" target="_blank" rel="noopener" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+          <span>抖音</span>
         </a>
-        <a href="https://space.bilibili.com/your-id" target="_blank" class="dropdown-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="2"/><line x1="8" x2="10" y1="4" y2="6"/><line x1="16" x2="14" y1="4" y2="6"/><line x1="9" x2="9.01" y1="13" y2="13"/><line x1="15" x2="15.01" y1="13" y2="13"/></svg>
-          <span>????</span>
+        <a href="https://space.bilibili.com/54055135?spm_id_from=333.1007.0.0" target="_blank" rel="noopener" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="2"/><line x1="8" x2="10" y1="4" y2="6"/><line x1="16" x2="14" y1="4" y2="6"/><line x1="9" x2="9.01" y1="13" y2="13"/><line x1="15" x2="15.01" y1="13" y2="13"/></svg>
+          <span>哔哩哔哩</span>
         </a>
-        <a href="https://github.com/fyh" target="_blank" class="dropdown-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        <a href="https://github.com/liumo666-create?tab=repositories" target="_blank" rel="noopener" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
           <span>GitHub</span>
         </a>
       </div>
     </div>
-
-    <!-- 3. My (dropdown) -->
-    <div class="nav-dropdown">
-      <button class="nav-item nav-dropdown-trigger" data-page="my">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-        <span>MY</span>
+    <div class="nav-dropdown" data-dropdown="space">
+      <button class="nav-item nav-dropdown-trigger">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>空间</span>
         <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div class="dropdown-menu">
-        <a href="/diary" class="dropdown-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          <span>??</span>
+        <a data-page="album" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          <span>相册</span>
         </a>
-        <a href="/album" class="dropdown-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          <span>??</span>
-        </a>
-        <a href="/devices" class="dropdown-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
-          <span>????</span>
+        <a data-page="editor" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>写文章</span>
         </a>
       </div>
     </div>
-
-    <!-- 4. About -->
-    <a href="/about" class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 16v-4"/>
-        <path d="M12 8h.01"/>
-      </svg>
-      <span>ABOUT</span>
-    </a>
-
-    <!-- 5. Projects -->
     <a data-page="projects" class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
-      </svg>
-      <span>PROJECTS</span>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+      <span>项目</span>
+    </a>
+    <a data-page="about" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <span>关于</span>
     </a>
   </nav>
-
-  <button class="theme-toggle-btn" aria-label="Toggle day/night mode" title="Switch theme">
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1" x2="12" y2="3"/>
-      <line x1="12" y1="21" x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1" y1="12" x2="3" y2="12"/>
-      <line x1="21" y1="12" x2="23" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    </svg>
+  <button class="theme-toggle-btn" aria-label="切换日间/夜间模式" title="切换主题">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
   </button>
 </header>
-
 <style>
   header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 16px;
-    margin-bottom: 18px;
-    border-bottom: 4px solid var(--pink);
-    flex-wrap: wrap;
-    gap: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 16px; margin-bottom: 18px;
+    border-bottom: 1px solid var(--border-hi);
+    flex-wrap: wrap; gap: 12px;
   }
-
-  /* ===== Logo ===== */
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
   .cat-wrap {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
+    width: 58px; height: 58px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; position: relative;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .cat-wrap:hover {
+    transform: scale(1.06);
   }
   .cat-wrap img {
-    width: 64px;
-    height: 64px;
+    width: 100%; height: 100%;
     object-fit: contain;
     image-rendering: pixelated;
-    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.9));
-    transition: transform 0.12s;
+    transition: transform 0.15s;
   }
-  .cat-wrap:hover img {
-    transform: scale(1.08);
-  }
+  .cat-wrap:hover img { transform: scale(1.12); }
   .logo-text h1 {
-    font-family: var(--fp);
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 3px 3px 0 #000;
-    margin-bottom: 4px;
-    letter-spacing: 1px;
-    line-height: 1.25;
+    font-family: var(--font-pixel); font-size: 20px; font-weight: 700;
+    color: #fff; margin-bottom: 2px; letter-spacing: 1px; line-height: 1.2;
   }
+  .game-scene.day-mode .logo-text h1 { color: #1a1030; }
   .logo-text p {
-    font-family: var(--fm);
-    font-size: 11px;
-    color: var(--pink);
-    letter-spacing: 3px;
+    font-family: var(--font-body); font-size: 12px;
+    color: var(--pink); letter-spacing: 2px;
   }
-
-  /* ===== Nav Links ===== */
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-wrap: wrap;
-  }
-
-  /* ===== Nav Item ===== */
+  .nav-links { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--fm);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    color: var(--text-secondary);
     padding: 8px 14px;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     border-radius: 12px;
     background: transparent;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    text-decoration: none;
-    white-space: nowrap;
+    transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+    position: relative; text-decoration: none; white-space: nowrap;
+    user-select: none;
   }
   .nav-item:hover {
     color: var(--pink);
-    border-color: var(--b-hi);
+    border-color: var(--border-hi);
     background: var(--hover);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transform: translateY(-1px);
   }
   .nav-item.active {
     color: var(--pink);
     border-color: var(--pink);
-    background: rgba(255, 102, 204, 0.1);
-    box-shadow: 0 0 16px rgba(255, 102, 204, 0.15);
+    background: rgba(255,107,157,0.08);
+    box-shadow: 0 0 16px var(--glow-pink);
   }
-  .nav-icon {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .nav-item:hover .nav-icon {
-    transform: scale(1.15);
-  }
-  .nav-chevron {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-    opacity: 0.5;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* ===== Dropdown ===== */
-  .nav-dropdown {
-    position: relative;
+  .game-scene.day-mode .nav-item { color: #4a3d58; }
+  .game-scene.day-mode .nav-item:hover { color: #d9466f; }
+  .game-scene.day-mode .nav-item.active { color: #d9466f; }
+  .nav-icon { width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .nav-item:hover .nav-icon { transform: scale(1.15); }
+  .nav-chevron { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.5; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .nav-dropdown { position: relative; }
+  .nav-dropdown::after {
+    content: ""; position: absolute; top: 100%; left: 0; right: 0; height: 10px;
+    z-index: 99;
   }
   .dropdown-menu {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%) translateY(6px);
-    min-width: 160px;
-    padding: 6px;
-    background: var(--glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 2px solid var(--b-hi);
+    position: absolute; top: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    min-width: 155px; padding: 6px;
+    background: var(--glass-strong);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-hi);
     border-radius: 14px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 102, 204, 0.1);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 100;
-    pointer-events: none;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,107,157,0.06);
+    opacity: 0; visibility: hidden;
+    transition: all 0.28s cubic-bezier(0.4,0,0.2,1);
+    z-index: 100; pointer-events: none;
   }
-  .nav-dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
+  .nav-dropdown.open .dropdown-menu {
+    opacity: 1; visibility: visible;
     transform: translateX(-50%) translateY(0);
     pointer-events: auto;
   }
-  .nav-dropdown:hover .nav-chevron {
-    transform: rotate(180deg);
-    opacity: 1;
+  .nav-dropdown.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
+  .nav-dropdown.open .nav-dropdown-trigger {
+    color: var(--pink); border-color: var(--border-hi); background: var(--hover);
   }
-  .nav-dropdown:hover .nav-dropdown-trigger {
-    color: var(--pink);
-    border-color: var(--b-hi);
-    background: var(--hover);
-  }
-
   .dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-family: var(--fb);
-    font-size: 13px;
-    color: var(--text);
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    font-family: var(--font-body); font-size: 14px;
+    color: var(--text-secondary); text-decoration: none;
+    transition: all 0.22s ease; cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
   }
-  .dropdown-item svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    opacity: 0.7;
-  }
-  .dropdown-item:hover {
-    background: var(--hover);
-    color: var(--cyan);
-  }
-  .dropdown-item:hover svg {
-    opacity: 1;
-    color: var(--cyan);
-  }
-  .dropdown-item:first-child:hover {
-    color: var(--pink);
-  }
-  .dropdown-item:first-child:hover svg {
-    color: var(--pink);
-  }
-
-  /* ===== Theme Toggle ===== */
-  .theme-toggle-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--b-hi);
-    background: var(--card);
-    color: var(--yellow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
-    margin-left: 8px;
-  }
-  .theme-toggle-btn:hover {
-    border-color: var(--yellow);
-    background: rgba(255, 221, 68, 0.1);
-    box-shadow: 0 0 20px rgba(255, 221, 68, 0.3);
-    transform: scale(1.1);
-  }
-  .theme-toggle-btn:active {
-    transform: scale(0.92);
-    transition: transform 0.1s;
-  }
-  .theme-toggle-btn svg {
-    width: 19px;
-    height: 19px;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s;
-    pointer-events: none;
-  }
-  .theme-toggle-btn .icon-moon {
-    position: absolute;
-  }
-  .theme-toggle-btn .icon-sun {
-    position: absolute;
-    opacity: 0;
-    transform: rotate(90deg) scale(0.5);
-  }
-  .theme-toggle-btn.day .icon-moon {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0.5);
-  }
-  .theme-toggle-btn.day .icon-sun {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-  }
-  .theme-toggle-btn::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 221, 68, 0.3) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.35s;
-  }
-  .theme-toggle-btn:hover::before {
-    opacity: 1;
-  }
+  .dropdown-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+  .dropdown-item:hover { background: var(--hover); color: var(--pink); }
+  .dropdown-item:hover svg { opacity: 1; color: var(--pink); }
 </style>
-
 <script>
-  // @ts-nocheck
-  // Cat logo randomizer + autoplay
-  const catWrap = document.getElementById("catWrap");
-  const catLogo = /** @type {HTMLImageElement} */ (/** @type {unknown} */ (document.getElementById("catLogo")));
+// @ts-nocheck
+  var catWrap = document.getElementById('catWrap');
+  var catLogo = document.getElementById('catLogo');
   if (catWrap && catLogo) {
-    function showRandomCat() {
-      // choose a different random index from current to avoid immediate repeats
-      const m = (catLogo.src || '').match(/cat(\d+)\.png$/);
-      const currentIndex = m ? parseInt(m[1], 10) : -1;
-      let n;
-      do {
-        n = Math.floor(Math.random() * 9) + 1;
-      } while (n === currentIndex);
-      catLogo.src = `/cat${n}.png`;
+    var catAutoTimer = null;
+    function randomCat() {
+      var m = (catLogo.src || '').match(/cat(\d+)\.png$/);
+      var cur = m ? parseInt(m[1], 10) : -1;
+      var n;
+      do { n = Math.floor(Math.random() * 9) + 1; } while (n === cur && 9 > 1);
+      catLogo.src = '/cat' + n + '.png';
     }
-
-    catWrap.addEventListener("click", showRandomCat);
-
-    // Autoplay: rotate every 0.5 seconds
-    const AUTOPLAY_MS = 500;
-
-    let autoplayTimer = setInterval(showRandomCat, AUTOPLAY_MS);
-
-    // Pause autoplay while hovering and resume after
-    catWrap.addEventListener('mouseenter', () => {
-      if (autoplayTimer) clearInterval(autoplayTimer);
-      autoplayTimer = null;
+    catWrap.addEventListener('click', function() {
+      randomCat();
+      if (catAutoTimer) clearInterval(catAutoTimer);
+      catAutoTimer = setInterval(randomCat, 500);
     });
-    catWrap.addEventListener('mouseleave', () => {
-      if (autoplayTimer) return;
-      autoplayTimer = setInterval(showRandomCat, AUTOPLAY_MS);
-    });
+    catAutoTimer = setInterval(randomCat, 500);
+  }
 
-    // Handle page visibility to avoid background timers
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        if (autoplayTimer) clearInterval(autoplayTimer);
-        autoplayTimer = null;
+  /* Dropdown toggle via JS for reliable mouse interaction */
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  var activeDropdown = null;
+  var closeTimer = null;
+
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu = dd.querySelector('.dropdown-menu');
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (dd.classList.contains('open')) {
+        closeDropdown(dd);
       } else {
-        if (!autoplayTimer) autoplayTimer = setInterval(showRandomCat, AUTOPLAY_MS);
+        if (activeDropdown && activeDropdown !== dd) closeDropdown(activeDropdown);
+        openDropdown(dd);
       }
-    });  }
+    });
+
+    trigger.addEventListener('mouseenter', function() {
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+      if (activeDropdown && activeDropdown !== dd) closeDropdown(activeDropdown);
+      openDropdown(dd);
+    });
+
+    dd.addEventListener('mouseenter', function() {
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+      if (activeDropdown && activeDropdown !== dd) closeDropdown(activeDropdown);
+      openDropdown(dd);
+    });
+
+    dd.addEventListener('mouseleave', function() {
+      closeTimer = setTimeout(function() { closeDropdown(dd); }, 200);
+    });
+
+    menu.addEventListener('click', function(e) {
+      var item = e.target.closest('.dropdown-item');
+      if (item) {
+        closeTimer = setTimeout(function() { closeDropdown(dd); }, 150);
+      }
+    });
+  });
+
+  function openDropdown(dd) {
+    if (!dd) return;
+    dd.classList.add('open');
+    activeDropdown = dd;
+  }
+
+  function closeDropdown(dd) {
+    if (!dd) return;
+    dd.classList.remove('open');
+    if (activeDropdown === dd) activeDropdown = null;
+  }
+
+  /* Close dropdowns when clicking outside */
+  document.addEventListener('click', function(e) {
+    if (!e.target || !e.target.closest('.nav-dropdown')) {
+      dropdowns.forEach(function(dd) { closeDropdown(dd); });
+    }
+  });
+
+  /* Navigation: section-page switching */
+  var mainNav = document.getElementById('mainNav');
+  if (mainNav) {
+    mainNav.addEventListener('click', function(e) {
+      var a = e.target && e.target.closest('[data-page]');
+      if (!a || !a.dataset.page) return;
+      e.preventDefault();
+      e.stopPropagation();
+      navigateTo(a.dataset.page);
+    });
+  }
+
+  function navigateTo(pageName) {
+    /* Deactivate all sections */
+    document.querySelectorAll('.section-page').forEach(function(s) { s.classList.remove('active'); });
+    /* Deactivate all nav items */
+    document.querySelectorAll('#mainNav .nav-item').forEach(function(l) { l.classList.remove('active'); });
+    /* Deactivate dropdown triggers */
+    document.querySelectorAll('.nav-dropdown-trigger').forEach(function(t) { t.classList.remove('active'); });
+    /* Activate target section */
+    var pageEl = document.getElementById('page-' + pageName);
+    if (pageEl) {
+      pageEl.classList.add('active');
+      /* Trigger entrance animation */
+      pageEl.querySelectorAll('.animate-in').forEach(function(el) {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+      });
+    }
+    /* Activate matching nav item(s) */
+    document.querySelectorAll('[data-page="' + pageName + '"]').forEach(function(link) {
+      link.classList.add('active');
+      var dd = link.closest('.nav-dropdown');
+      if (dd) {
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.classList.add('active');
+      }
+    });
+    /* Scroll to top */
+    var sc = document.getElementById('scrollContainer');
+    if (sc) sc.scrollTop = 0;
+    /* Lazy-init features when their page becomes visible */
+    if (pageName === 'project-detail-1') setTimeout(function(){ if (typeof initPixelPainter === 'function') initPixelPainter(); }, 100);
+    if (pageName === 'project-detail-3') setTimeout(function(){ if (typeof initSakuraPetals === 'function') initSakuraPetals(); }, 100);
+    if (pageName === 'project-detail-2') setTimeout(function(){ if (typeof initCatShowcase === 'function') initCatShowcase(); }, 100);
+  }
+
+  /* Expose navigateTo globally for other scripts */
+  // @ts-ignore
+  window.navigateTo = navigateTo;
 </script>

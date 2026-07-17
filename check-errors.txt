@@ -1,0 +1,932 @@
+﻿node.exe : npm warn Unknown project config "minimum-release-age". This will stop working in the next major version of n
+pm.
+At line:1 char:1
++ & "D:\node.js/node.exe" "D:\node.js/node_modules/npm/bin/npx-cli.js"  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn Unknown project config "verify-deps-before-run". This will stop working in the next major version of npm.
+[2m01:14:33[22m [34m[content][39m Syncing content
+[2m01:14:33[22m [34m[content][39m Synced content
+[2m01:14:33[22m [34m[types][39m Generated [2m702ms[22m
+[2m01:14:33[22m [34m[check][39m Getting diagnostics for Astro files in D:\fyh blog page\cat-blog...
+[96msrc/content.config.ts[0m:[93m1[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'defineCollection' is declared but its value is never read.
+
+[7m1[0m import { defineCollection } from "astro:content";
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/HeroBanner.astro[0m:[93m29[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'el' is possibly 'null'.
+
+[7m29[0m         el.style.opacity = "1";
+[7m  [0m [91m        ~~[0m
+[96msrc/components/HeroBanner.astro[0m:[93m28[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'el' is possibly 'null'.
+
+[7m28[0m         el.textContent = phrases[idx];
+[7m  [0m [91m        ~~[0m
+[96msrc/components/HeroBanner.astro[0m:[93m26[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'el' is possibly 'null'.
+
+[7m26[0m       el.style.opacity = "0";
+[7m  [0m [91m      ~~[0m
+
+[96msrc/components/NavBar.astro[0m:[93m284[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m284[0m         el.style.animation = '';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m283[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'offsetHeight' does not exist on type 'Element'.
+
+[7m283[0m         el.offsetHeight;
+[7m   [0m [91m           ~~~~~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m282[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m282[0m         el.style.animation = 'none';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m261[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m261[0m       var a = e.target && e.target.closest('[data-page]');
+[7m   [0m [91m                                   ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m252[0m:[93m32[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m252[0m     if (!e.target || !e.target.closest('.nav-dropdown')) {
+[7m   [0m [91m                               ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m233[0m:[93m9[0m - [91merror[0m[90m ts(2322): [0mType 'number' is not assignable to type 'null'.
+
+[7m233[0m         closeTimer = setTimeout(function() { closeDropdown(dd); }, 150);
+[7m   [0m [91m        ~~~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m231[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m231[0m       var item = e.target.closest('.dropdown-item');
+[7m   [0m [91m                          ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m231[0m:[93m18[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m231[0m       var item = e.target.closest('.dropdown-item');
+[7m   [0m [91m                 ~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m230[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'menu' is possibly 'null'.
+
+[7m230[0m     menu.addEventListener('click', function(e) {
+[7m   [0m [91m    ~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m227[0m:[93m7[0m - [91merror[0m[90m ts(2322): [0mType 'number' is not assignable to type 'null'.
+
+[7m227[0m       closeTimer = setTimeout(function() { closeDropdown(dd); }, 200);
+[7m   [0m [91m      ~~~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m214[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'trigger' is possibly 'null'.
+
+[7m214[0m     trigger.addEventListener('mouseenter', function() {
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m204[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'trigger' is possibly 'null'.
+
+[7m204[0m     trigger.addEventListener('click', function(e) {
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m191[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'src' does not exist on type 'HTMLElement'.
+
+[7m191[0m       catLogo.src = '/cat' + n + '.png';
+[7m   [0m [91m              ~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m191[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'catLogo' is possibly 'null'.
+
+[7m191[0m       catLogo.src = '/cat' + n + '.png';
+[7m   [0m [91m      ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m187[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'src' does not exist on type 'HTMLElement'.
+
+[7m187[0m       var m = (catLogo.src || '').match(/cat(\d+)\.png$/);
+[7m   [0m [91m                       ~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m187[0m:[93m16[0m - [91merror[0m[90m ts(18047): [0m'catLogo' is possibly 'null'.
+
+[7m187[0m       var m = (catLogo.src || '').match(/cat(\d+)\.png$/);
+[7m   [0m [91m               ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m269[0m:[93m23[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'pageName' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m269[0m   function navigateTo(pageName) {
+[7m   [0m [93m                      ~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m244[0m:[93m26[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'dd' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m244[0m   function closeDropdown(dd) {
+[7m   [0m [93m                         ~~[0m
+[96msrc/components/NavBar.astro[0m:[93m238[0m:[93m25[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'dd' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m238[0m   function openDropdown(dd) {
+[7m   [0m [93m                        ~~[0m
+[96msrc/components/NavBar.astro[0m:[93m189[0m:[93m11[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'n' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m189[0m       var n;
+[7m   [0m [93m          ~[0m
+
+[96msrc/components/SakuraEffect.astro[0m:[93m104[0m:[93m20[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m104[0m       sakuraCanvas.height = window.innerHeight;
+[7m   [0m [91m                   ~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m104[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'sakuraCanvas' is possibly 'null'.
+
+[7m104[0m       sakuraCanvas.height = window.innerHeight;
+[7m   [0m [91m      ~~~~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m103[0m:[93m20[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m103[0m       sakuraCanvas.width = window.innerWidth;
+[7m   [0m [91m                   ~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m103[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'sakuraCanvas' is possibly 'null'.
+
+[7m103[0m       sakuraCanvas.width = window.innerWidth;
+[7m   [0m [91m      ~~~~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m95[0m:[93m78[0m - [91merror[0m[90m ts(2339): [0mProperty 'size' does not exist on type 'never'.
+
+[7m95[0m           sakuraCtx.drawImage(sakuraImg, -p.size / 2, -p.size / 2, p.size, p.size);
+[7m  [0m [91m                                                                             ~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m95[0m:[93m70[0m - [91merror[0m[90m ts(2339): [0mProperty 'size' does not exist on type 'never'.
+
+[7m95[0m           sakuraCtx.drawImage(sakuraImg, -p.size / 2, -p.size / 2, p.size, p.size);
+[7m  [0m [91m                                                                     ~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m95[0m:[93m58[0m - [91merror[0m[90m ts(2339): [0mProperty 'size' does not exist on type 'never'.
+
+[7m95[0m           sakuraCtx.drawImage(sakuraImg, -p.size / 2, -p.size / 2, p.size, p.size);
+[7m  [0m [91m                                                         ~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m95[0m:[93m45[0m - [91merror[0m[90m ts(2339): [0mProperty 'size' does not exist on type 'never'.
+
+[7m95[0m           sakuraCtx.drawImage(sakuraImg, -p.size / 2, -p.size / 2, p.size, p.size);
+[7m  [0m [91m                                            ~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m93[0m:[93m35[0m - [91merror[0m[90m ts(2339): [0mProperty 'opacity' does not exist on type 'never'.
+
+[7m93[0m         sakuraCtx.globalAlpha = p.opacity;
+[7m  [0m [91m                                  ~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m92[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'rot' does not exist on type 'never'.
+
+[7m92[0m         sakuraCtx.rotate(p.rot);
+[7m  [0m [91m                           ~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m91[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'y' does not exist on type 'never'.
+
+[7m91[0m         sakuraCtx.translate(p.x, p.y);
+[7m  [0m [91m                                   ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m91[0m:[93m31[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m91[0m         sakuraCtx.translate(p.x, p.y);
+[7m  [0m [91m                              ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m89[0m:[93m45[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m89[0m         if (p.x > window.innerWidth + 40) p.x = -40;
+[7m  [0m [91m                                            ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m89[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m89[0m         if (p.x > window.innerWidth + 40) p.x = -40;
+[7m  [0m [91m              ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m88[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m88[0m         if (p.x < -40) p.x = window.innerWidth + 40;
+[7m  [0m [91m                         ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m88[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m88[0m         if (p.x < -40) p.x = window.innerWidth + 40;
+[7m  [0m [91m              ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m86[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m86[0m           p.x = Math.random() * window.innerWidth;
+[7m  [0m [91m            ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m85[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'y' does not exist on type 'never'.
+
+[7m85[0m           p.y = -40;
+[7m  [0m [91m            ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m84[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'y' does not exist on type 'never'.
+
+[7m84[0m         if (p.y > window.innerHeight + 40) {
+[7m  [0m [91m              ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m83[0m:[93m20[0m - [91merror[0m[90m ts(2339): [0mProperty 'rotSpeed' does not exist on type 'never'.
+
+[7m83[0m         p.rot += p.rotSpeed;
+[7m  [0m [91m                   ~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m83[0m:[93m11[0m - [91merror[0m[90m ts(2339): [0mProperty 'rot' does not exist on type 'never'.
+
+[7m83[0m         p.rot += p.rotSpeed;
+[7m  [0m [91m          ~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m82[0m:[93m18[0m - [91merror[0m[90m ts(2339): [0mProperty 'vy' does not exist on type 'never'.
+
+[7m82[0m         p.y += p.vy;
+[7m  [0m [91m                 ~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m82[0m:[93m11[0m - [91merror[0m[90m ts(2339): [0mProperty 'y' does not exist on type 'never'.
+
+[7m82[0m         p.y += p.vy;
+[7m  [0m [91m          ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m81[0m:[93m49[0m - [91merror[0m[90m ts(2339): [0mProperty 'swayAmp' does not exist on type 'never'.
+
+[7m81[0m         p.x += p.vx + Math.sin(p.swayPhase) * p.swayAmp * 0.3;
+[7m  [0m [91m                                                ~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m81[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'swayPhase' does not exist on type 'never'.
+
+[7m81[0m         p.x += p.vx + Math.sin(p.swayPhase) * p.swayAmp * 0.3;
+[7m  [0m [91m                                 ~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m81[0m:[93m18[0m - [91merror[0m[90m ts(2339): [0mProperty 'vx' does not exist on type 'never'.
+
+[7m81[0m         p.x += p.vx + Math.sin(p.swayPhase) * p.swayAmp * 0.3;
+[7m  [0m [91m                 ~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m81[0m:[93m11[0m - [91merror[0m[90m ts(2339): [0mProperty 'x' does not exist on type 'never'.
+
+[7m81[0m         p.x += p.vx + Math.sin(p.swayPhase) * p.swayAmp * 0.3;
+[7m  [0m [91m          ~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m80[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'swaySpeed' does not exist on type 'never'.
+
+[7m80[0m         p.swayPhase += p.swaySpeed;
+[7m  [0m [91m                         ~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m80[0m:[93m11[0m - [91merror[0m[90m ts(2339): [0mProperty 'swayPhase' does not exist on type 'never'.
+
+[7m80[0m         p.swayPhase += p.swaySpeed;
+[7m  [0m [91m          ~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m77[0m:[93m66[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m77[0m       sakuraCtx.clearRect(0, 0, sakuraCanvas.width, sakuraCanvas.height);
+[7m  [0m [91m                                                                 ~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m77[0m:[93m53[0m - [91merror[0m[90m ts(18047): [0m'sakuraCanvas' is possibly 'null'.
+
+[7m77[0m       sakuraCtx.clearRect(0, 0, sakuraCanvas.width, sakuraCanvas.height);
+[7m  [0m [91m                                                    ~~~~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m77[0m:[93m46[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m77[0m       sakuraCtx.clearRect(0, 0, sakuraCanvas.width, sakuraCanvas.height);
+[7m  [0m [91m                                             ~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m77[0m:[93m33[0m - [91merror[0m[90m ts(18047): [0m'sakuraCanvas' is possibly 'null'.
+
+[7m77[0m       sakuraCtx.clearRect(0, 0, sakuraCanvas.width, sakuraCanvas.height);
+[7m  [0m [91m                                ~~~~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m55[0m:[93m30[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ x: number; y: number; size: number; vx: number; vy: number; opacity: number; rot: number; rotSpeed: number; swayAmp: number; swaySpeed: number; swayPhase: number; }' is not assignable to parameter of type 'never'.
+
+[7m 55[0m         sakuraParticles.push({
+[7m   [0m [91m                             ~[0m
+[7m 56[0m           x: Math.random() * window.innerWidth,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m 66[0m           swayPhase: Math.random() * Math.PI * 2,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m 67[0m         });
+[7m   [0m [91m~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m43[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'getContext' does not exist on type 'HTMLElement'.
+
+[7m43[0m     var sakuraCtx = sakuraCanvas.getContext("2d");
+[7m  [0m [91m                                 ~~~~~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m41[0m:[93m18[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m41[0m     sakuraCanvas.height = window.innerHeight;
+[7m  [0m [91m                 ~~~~~~[0m
+[96msrc/components/SakuraEffect.astro[0m:[93m40[0m:[93m18[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m40[0m     sakuraCanvas.width = window.innerWidth;
+[7m  [0m [91m                 ~~~~~[0m
+
+[96msrc/layouts/Layout.astro[0m:[93m78[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m78[0m             c.style.setProperty('--mc-y', ((e.clientY - r.top) / r.height) * 100 + '%');
+[7m  [0m [91m              ~~~~~[0m
+[96msrc/layouts/Layout.astro[0m:[93m77[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m77[0m             c.style.setProperty('--mc-x', ((e.clientX - r.left) / r.width) * 100 + '%');
+[7m  [0m [91m              ~~~~~[0m
+[96msrc/layouts/Layout.astro[0m:[93m70[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m70[0m             c.style.setProperty('--mouse-y', ((e.clientY - r.top) / r.height) * 100 + '%');
+[7m  [0m [91m              ~~~~~[0m
+[96msrc/layouts/Layout.astro[0m:[93m69[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m69[0m             c.style.setProperty('--mouse-x', ((e.clientX - r.left) / r.width) * 100 + '%');
+[7m  [0m [91m              ~~~~~[0m
+[96msrc/layouts/Layout.astro[0m:[93m60[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m60[0m           var b = e.target.closest(BTN); if (b) toggle();
+[7m  [0m [91m                           ~~~~~~~[0m
+[96msrc/layouts/Layout.astro[0m:[93m60[0m:[93m19[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m60[0m           var b = e.target.closest(BTN); if (b) toggle();
+[7m  [0m [91m                  ~~~~~~~~[0m
+[96msrc/layouts/Layout.astro[0m:[93m42[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 't' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m42[0m         function setTheme(t) {
+[7m  [0m [93m                          ~[0m
+[96msrc/layouts/Layout.astro[0m:[93m32[0m:[93m21[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'sel' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m32[0m         function gs(sel) { return document.querySelector(sel); }
+[7m  [0m [93m                    ~~~[0m
+
+[96msrc/pages/index.astro[0m:[93m1037[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m1037[0m         if (icon) { icon.style.transform = ''; }
+[7m    [0m [91m                         ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m1032[0m:[93m16[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m1032[0m           icon.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+[7m    [0m [91m               ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m1031[0m:[93m16[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m1031[0m           icon.style.transform = 'scale(1.3) rotate(' + (idx % 2 === 0 ? '15deg' : '-15deg') + ')';
+[7m    [0m [91m               ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m995[0m:[93m102[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m995[0m         if (tool === 'fill') { ctx.fillStyle = painterColor; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+[7m   [0m [91m                                                                                                     ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m995[0m:[93m95[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m995[0m         if (tool === 'fill') { ctx.fillStyle = painterColor; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+[7m   [0m [91m                                                                                              ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m995[0m:[93m88[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m995[0m         if (tool === 'fill') { ctx.fillStyle = painterColor; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+[7m   [0m [91m                                                                                       ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m995[0m:[93m81[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m995[0m         if (tool === 'fill') { ctx.fillStyle = painterColor; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+[7m   [0m [91m                                                                                ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m994[0m:[93m74[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m994[0m         if (tool === 'clear') { ctx.clearRect(0, 0, canvas.width, canvas.height); drawGrid(); }
+[7m   [0m [91m                                                                         ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m994[0m:[93m67[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m994[0m         if (tool === 'clear') { ctx.clearRect(0, 0, canvas.width, canvas.height); drawGrid(); }
+[7m   [0m [91m                                                                  ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m994[0m:[93m60[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m994[0m         if (tool === 'clear') { ctx.clearRect(0, 0, canvas.width, canvas.height); drawGrid(); }
+[7m   [0m [91m                                                           ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m994[0m:[93m53[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m994[0m         if (tool === 'clear') { ctx.clearRect(0, 0, canvas.width, canvas.height); drawGrid(); }
+[7m   [0m [91m                                                    ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m992[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'toolbar' is possibly 'null'.
+
+[7m992[0m         toolbar.querySelectorAll('.painter-tool-btn').forEach(function(b){ b.classList.remove('active'); });
+[7m   [0m [91m        ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m989[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m989[0m         var btn = e.target.closest('.painter-tool-btn');
+[7m   [0m [91m                           ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m989[0m:[93m19[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m989[0m         var btn = e.target.closest('.painter-tool-btn');
+[7m   [0m [91m                  ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m981[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'palette' is possibly 'null'.
+
+[7m981[0m         palette.querySelectorAll('.painter-swatch').forEach(function(s){ s.classList.remove('active'); });
+[7m   [0m [91m        ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m978[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m978[0m         var sw = e.target.closest('.painter-swatch');
+[7m   [0m [91m                          ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m978[0m:[93m18[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m978[0m         var sw = e.target.closest('.painter-swatch');
+[7m   [0m [91m                 ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m961[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m961[0m       var scaleY = canvas.height / rect.height;
+[7m   [0m [91m                          ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m961[0m:[93m20[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m961[0m       var scaleY = canvas.height / rect.height;
+[7m   [0m [91m                   ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m960[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m960[0m       var scaleX = canvas.width / rect.width;
+[7m   [0m [91m                          ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m960[0m:[93m20[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m960[0m       var scaleX = canvas.width / rect.width;
+[7m   [0m [91m                   ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m959[0m:[93m18[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m959[0m       var rect = canvas.getBoundingClientRect();
+[7m   [0m [91m                 ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m954[0m:[93m52[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m954[0m       ctx.fillText('在此涂鸦!', canvas.width/2, canvas.height/2);
+[7m   [0m [91m                                                   ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m954[0m:[93m45[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m954[0m       ctx.fillText('在此涂鸦!', canvas.width/2, canvas.height/2);
+[7m   [0m [91m                                            ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m954[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m954[0m       ctx.fillText('在此涂鸦!', canvas.width/2, canvas.height/2);
+[7m   [0m [91m                                   ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m954[0m:[93m29[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m954[0m       ctx.fillText('在此涂鸦!', canvas.width/2, canvas.height/2);
+[7m   [0m [91m                            ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m946[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m946[0m         for (var y = 0; y < canvas.height; y += pixelSize) {
+[7m   [0m [91m                                   ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m946[0m:[93m29[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m946[0m         for (var y = 0; y < canvas.height; y += pixelSize) {
+[7m   [0m [91m                            ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m945[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m945[0m       for (var x = 0; x < canvas.width; x += pixelSize) {
+[7m   [0m [91m                                 ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m945[0m:[93m27[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m945[0m       for (var x = 0; x < canvas.width; x += pixelSize) {
+[7m   [0m [91m                          ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m944[0m:[93m48[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m944[0m       ctx.clearRect(0, 0, canvas.width, canvas.height);
+[7m   [0m [91m                                               ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m944[0m:[93m41[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m944[0m       ctx.clearRect(0, 0, canvas.width, canvas.height);
+[7m   [0m [91m                                        ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m944[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m944[0m       ctx.clearRect(0, 0, canvas.width, canvas.height);
+[7m   [0m [91m                                 ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m944[0m:[93m27[0m - [91merror[0m[90m ts(18047): [0m'canvas' is possibly 'null'.
+
+[7m944[0m       ctx.clearRect(0, 0, canvas.width, canvas.height);
+[7m   [0m [91m                          ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m938[0m:[93m22[0m - [91merror[0m[90m ts(2339): [0mProperty 'getContext' does not exist on type 'HTMLElement'.
+
+[7m938[0m     var ctx = canvas.getContext('2d');
+[7m   [0m [91m                     ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m937[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'height' does not exist on type 'HTMLElement'.
+
+[7m937[0m     canvas.height = container.clientHeight || 200;
+[7m   [0m [91m           ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m936[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'width' does not exist on type 'HTMLElement'.
+
+[7m936[0m     canvas.width = container.clientWidth || 600;
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m927[0m:[93m25[0m - [91merror[0m[90m ts(2552): [0mCannot find name 'navigateTo'. Did you mean 'navigator'?
+
+[7m927[0m     if (activeDetail) { navigateTo('projects'); return; }
+[7m   [0m [91m                        ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m913[0m:[93m9[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m913[0m       c.style.setProperty("--mc-y", ((e.clientY - r.top) / r.height) * 100 + "%");
+[7m   [0m [91m        ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m912[0m:[93m9[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m912[0m       c.style.setProperty("--mc-x", ((e.clientX - r.left) / r.width) * 100 + "%");
+[7m   [0m [91m        ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m894[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'twEl' is possibly 'null'.
+
+[7m894[0m         twEl.style.transition = "opacity 0.3s ease";
+[7m   [0m [91m        ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m893[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'twEl' is possibly 'null'.
+
+[7m893[0m         twEl.style.opacity = "1";
+[7m   [0m [91m        ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m892[0m:[93m9[0m - [91merror[0m[90m ts(18047): [0m'twEl' is possibly 'null'.
+
+[7m892[0m         twEl.textContent = phrases[twIdx];
+[7m   [0m [91m        ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m890[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'twEl' is possibly 'null'.
+
+[7m890[0m       twEl.style.opacity = "0";
+[7m   [0m [91m      ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m857[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m857[0m   document.getElementById('albumViewer').addEventListener('click', function(e){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m854[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m854[0m   document.getElementById('entryModal').addEventListener('click', function(e){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m850[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'EventTarget'.
+
+[7m850[0m     e.target.value = '';
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m850[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m850[0m     e.target.value = '';
+[7m   [0m [91m    ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m838[0m:[93m32[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'string | ArrayBuffer | null' is not assignable to parameter of type 'never'.
+  Type 'null' is not assignable to type 'never'.
+
+[7m838[0m           newAlbum.photos.push(ev.target.result);
+[7m   [0m [91m                               ~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m838[0m:[93m32[0m - [91merror[0m[90m ts(18047): [0m'ev.target' is possibly 'null'.
+
+[7m838[0m           newAlbum.photos.push(ev.target.result);
+[7m   [0m [91m                               ~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m830[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'EventTarget'.
+
+[7m830[0m     if (!name) { e.target.value = ''; return; }
+[7m   [0m [91m                          ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m830[0m:[93m18[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m830[0m     if (!name) { e.target.value = ''; return; }
+[7m   [0m [91m                 ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m827[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'files' does not exist on type 'EventTarget'.
+
+[7m827[0m     var files = e.target.files;
+[7m   [0m [91m                         ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m827[0m:[93m17[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m827[0m     var files = e.target.files;
+[7m   [0m [91m                ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m826[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m826[0m   document.getElementById('albumFileInput').addEventListener('change', function(e){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m819[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'remove' does not exist on type 'never'.
+
+[7m819[0m     if (lightboxEl) { lightboxEl.remove(); lightboxEl = null; }
+[7m   [0m [91m                                 ~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m815[0m:[93m31[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'null' is not assignable to parameter of type 'Node'.
+
+[7m815[0m     document.body.appendChild(lightboxEl);
+[7m   [0m [91m                              ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m810[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'lightboxEl' is possibly 'null'.
+
+[7m810[0m     lightboxEl.addEventListener('click', function(e) {
+[7m   [0m [91m    ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m809[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'lightboxEl' is possibly 'null'.
+
+[7m809[0m     lightboxEl.innerHTML = '<span class="lightbox-close">×</span>' + navPrev + navNext + '<img src="'+albums[albumIdx].photos[photoIdx]+'" />';
+[7m   [0m [91m    ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m806[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'lightboxEl' is possibly 'null'.
+
+[7m806[0m     lightboxEl.className = 'lightbox-overlay';
+[7m   [0m [91m    ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m805[0m:[93m5[0m - [91merror[0m[90m ts(2322): [0mType 'HTMLDivElement' is not assignable to type 'null'.
+
+[7m805[0m     lightboxEl = document.createElement('div');
+[7m   [0m [91m    ~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m795[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m795[0m     if (!photo || e.target.closest('.photo-del')) return;
+[7m   [0m [91m                           ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m795[0m:[93m19[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m795[0m     if (!photo || e.target.closest('.photo-del')) return;
+[7m   [0m [91m                  ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m794[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m794[0m     var photo = e.target.closest('.album-viewer-photo');
+[7m   [0m [91m                         ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m794[0m:[93m17[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m794[0m     var photo = e.target.closest('.album-viewer-photo');
+[7m   [0m [91m                ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m782[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m782[0m     var del = e.target.closest('[data-del]'); if (!del) return;
+[7m   [0m [91m                       ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m782[0m:[93m15[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m782[0m     var del = e.target.closest('[data-del]'); if (!del) return;
+[7m   [0m [91m              ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m764[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'EventTarget'.
+
+[7m764[0m     e.target.value = '';
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m764[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m764[0m     e.target.value = '';
+[7m   [0m [91m    ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m753[0m:[93m29[0m - [91merror[0m[90m ts(18047): [0m'ev.target' is possibly 'null'.
+
+[7m753[0m           album.photos.push(ev.target.result);
+[7m   [0m [91m                            ~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m743[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'files' does not exist on type 'EventTarget'.
+
+[7m743[0m     var files = e.target.files;
+[7m   [0m [91m                         ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m743[0m:[93m17[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m743[0m     var files = e.target.files;
+[7m   [0m [91m                ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m704[0m:[93m38[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m704[0m         openAlbumViewer(parseInt(set.dataset.album));
+[7m   [0m [91m                                     ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m703[0m:[93m22[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m703[0m         if (e.target.closest('.album-upload-card')) return;
+[7m   [0m [91m                     ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m703[0m:[93m13[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m703[0m         if (e.target.closest('.album-upload-card')) return;
+[7m   [0m [91m            ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m697[0m:[93m71[0m - [91merror[0m[90m ts(18047): [0m'fi' is possibly 'null'.
+
+[7m697[0m       uz.addEventListener('click', function(e) { e.stopPropagation(); fi.click(); });
+[7m   [0m [91m                                                                      ~~[0m
+[96msrc/pages/index.astro[0m:[93m690[0m:[93m13[0m - [91merror[0m[90m ts(2322): [0mType 'number' is not assignable to type 'string'.
+
+[7m690[0m     if (pc) pc.textContent = totalPhotos;
+[7m   [0m [91m            ~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m658[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m658[0m     document.getElementById('page-home').classList.add('active');
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m655[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'mdPreview' is possibly 'null'.
+
+[7m655[0m     mdPreview.innerHTML = '';
+[7m   [0m [91m    ~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m654[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m654[0m     mdEditor.value = '';
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m654[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'mdEditor' is possibly 'null'.
+
+[7m654[0m     mdEditor.value = '';
+[7m   [0m [91m    ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m653[0m:[93m45[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m653[0m     document.getElementById('articleTitle').value = '';
+[7m   [0m [91m                                            ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m653[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m653[0m     document.getElementById('articleTitle').value = '';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m640[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m640[0m     var content = mdEditor.value.trim();
+[7m   [0m [91m                           ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m640[0m:[93m19[0m - [91merror[0m[90m ts(18047): [0m'mdEditor' is possibly 'null'.
+
+[7m640[0m     var content = mdEditor.value.trim();
+[7m   [0m [91m                  ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m639[0m:[93m57[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m639[0m     var title = document.getElementById('articleTitle').value.trim();
+[7m   [0m [91m                                                        ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m639[0m:[93m17[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m639[0m     var title = document.getElementById('articleTitle').value.trim();
+[7m   [0m [91m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m638[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m638[0m   document.getElementById('btnPublish').addEventListener('click', function(){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m636[0m:[93m98[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m636[0m     mdEditor.addEventListener('input', function(){ mdPreview.innerHTML = simpleMarkdown(mdEditor.value); });
+[7m   [0m [91m                                                                                                 ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m636[0m:[93m89[0m - [91merror[0m[90m ts(18047): [0m'mdEditor' is possibly 'null'.
+
+[7m636[0m     mdEditor.addEventListener('input', function(){ mdPreview.innerHTML = simpleMarkdown(mdEditor.value); });
+[7m   [0m [91m                                                                                        ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m636[0m:[93m52[0m - [91merror[0m[90m ts(18047): [0m'mdPreview' is possibly 'null'.
+
+[7m636[0m     mdEditor.addEventListener('input', function(){ mdPreview.innerHTML = simpleMarkdown(mdEditor.value); });
+[7m   [0m [91m                                                   ~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m610[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m610[0m     document.getElementById('entryModal').style.display = 'none';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m609[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m609[0m   document.getElementById('btnEntryCancel').addEventListener('click', function(){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m605[0m:[93m45[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m605[0m     document.getElementById('entryContent').value = '';
+[7m   [0m [91m                                            ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m605[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m605[0m     document.getElementById('entryContent').value = '';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m604[0m:[93m43[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m604[0m     document.getElementById('entryTitle').value = '';
+[7m   [0m [91m                                          ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m604[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m604[0m     document.getElementById('entryTitle').value = '';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m599[0m:[93m56[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m599[0m       content: document.getElementById('entryContent').value.trim(),
+[7m   [0m [91m                                                       ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m599[0m:[93m16[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m599[0m       content: document.getElementById('entryContent').value.trim(),
+[7m   [0m [91m               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m597[0m:[93m18[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m597[0m     calendarData[calSelectedDate].push({
+[7m   [0m [91m                 ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m596[0m:[93m54[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m596[0m     if (!calendarData[calSelectedDate]) calendarData[calSelectedDate] = [];
+[7m   [0m [91m                                                     ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m596[0m:[93m23[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m596[0m     if (!calendarData[calSelectedDate]) calendarData[calSelectedDate] = [];
+[7m   [0m [91m                      ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m594[0m:[93m55[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m594[0m     var title = document.getElementById('entryTitle').value.trim();
+[7m   [0m [91m                                                      ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m594[0m:[93m17[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m594[0m     var title = document.getElementById('entryTitle').value.trim();
+[7m   [0m [91m                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m593[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m593[0m   document.getElementById('btnEntrySave').addEventListener('click', function(){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m590[0m:[93m23[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m590[0m       entryType = btn.dataset.type;
+[7m   [0m [91m                      ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m581[0m:[93m73[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m581[0m     if (calendarData[calSelectedDate].length === 0) delete calendarData[calSelectedDate];
+[7m   [0m [91m                                                                        ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m581[0m:[93m22[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m581[0m     if (calendarData[calSelectedDate].length === 0) delete calendarData[calSelectedDate];
+[7m   [0m [91m                     ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m580[0m:[93m18[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m580[0m     calendarData[calSelectedDate].splice(idx, 1);
+[7m   [0m [91m                 ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m579[0m:[93m23[0m - [91merror[0m[90m ts(2538): [0mType 'null' cannot be used as an index type.
+
+[7m579[0m     if (!calendarData[calSelectedDate]) return;
+[7m   [0m [91m                      ~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m577[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m577[0m     var del = e.target.closest('.del-btn'); if (!del) return;
+[7m   [0m [91m                       ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m577[0m:[93m15[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m577[0m     var del = e.target.closest('.del-btn'); if (!del) return;
+[7m   [0m [91m              ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m576[0m:[93m3[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m576[0m   document.getElementById('entryList').addEventListener('click', function(e){
+[7m   [0m [91m  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m566[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m566[0m     document.getElementById('entryModal').style.display = 'flex';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m564[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m564[0m     document.querySelector('.entry-type-btn[data-type="note"]').classList.add('active');
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m561[0m:[93m45[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m561[0m     document.getElementById('entryContent').value = '';
+[7m   [0m [91m                                            ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m561[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m561[0m     document.getElementById('entryContent').value = '';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m560[0m:[93m43[0m - [91merror[0m[90m ts(2339): [0mProperty 'value' does not exist on type 'HTMLElement'.
+
+[7m560[0m     document.getElementById('entryTitle').value = '';
+[7m   [0m [91m                                          ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m560[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m560[0m     document.getElementById('entryTitle').value = '';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m559[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m559[0m     document.getElementById('entryModalTitle').textContent = dateStr + ' 的记录';
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m552[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m552[0m       var cell = e.target.closest('.day-cell');
+[7m   [0m [91m                          ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m552[0m:[93m18[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m552[0m       var cell = e.target.closest('.day-cell');
+[7m   [0m [91m                 ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m551[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m551[0m     document.getElementById('calGrid').addEventListener('click', function(e){
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m550[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m550[0m     document.getElementById('calNext').addEventListener('click', function(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m549[0m:[93m5[0m - [91merror[0m[90m ts(2531): [0mObject is possibly 'null'.
+
+[7m549[0m     document.getElementById('calPrev').addEventListener('click', function(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
+[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m498[0m:[93m33[0m - [91merror[0m[90m ts(2554): [0mExpected 2 arguments, but got 3.
+
+[7m498[0m         showWeather(temp, desc, code);
+[7m   [0m [91m                                ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m478[0m:[93m102[0m - [91merror[0m[90m ts(2339): [0mProperty 'code' does not exist on type 'never'.
+
+[7m478[0m     if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
+[7m   [0m [91m                                                                                                     ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m478[0m:[93m95[0m - [91merror[0m[90m ts(2554): [0mExpected 2 arguments, but got 3.
+
+[7m478[0m     if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
+[7m   [0m [91m                                                                                              ~~~~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m478[0m:[93m89[0m - [91merror[0m[90m ts(2339): [0mProperty 'desc' does not exist on type 'never'.
+
+[7m478[0m     if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
+[7m   [0m [91m                                                                                        ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m478[0m:[93m76[0m - [91merror[0m[90m ts(2339): [0mProperty 'temp' does not exist on type 'never'.
+
+[7m478[0m     if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
+[7m   [0m [91m                                                                           ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m478[0m:[93m39[0m - [91merror[0m[90m ts(2339): [0mProperty 'time' does not exist on type 'never'.
+
+[7m478[0m     if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
+[7m   [0m [91m                                      ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m958[0m:[93m24[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m958[0m     function drawPixel(e) {
+[7m   [0m [93m                       ~[0m
+[96msrc/pages/index.astro[0m:[93m822[0m:[93m31[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m822[0m   function lightboxKeyHandler(e) {
+[7m   [0m [93m                              ~[0m
+[96msrc/pages/index.astro[0m:[93m810[0m:[93m51[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m810[0m     lightboxEl.addEventListener('click', function(e) {
+[7m   [0m [93m                                                  ~[0m
+[96msrc/pages/index.astro[0m:[93m801[0m:[93m35[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'photoIdx' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m801[0m   function showLightbox(albumIdx, photoIdx) {
+[7m   [0m [93m                                  ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m801[0m:[93m25[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'albumIdx' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m801[0m   function showLightbox(albumIdx, photoIdx) {
+[7m   [0m [93m                        ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m718[0m:[93m61[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'pi' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m718[0m       imgs.innerHTML = (album.photos || []).map(function(p, pi) {
+[7m   [0m [93m                                                            ~~[0m
+[96msrc/pages/index.astro[0m:[93m718[0m:[93m58[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'p' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m718[0m       imgs.innerHTML = (album.photos || []).map(function(p, pi) {
+[7m   [0m [93m                                                         ~[0m
+[96msrc/pages/index.astro[0m:[93m710[0m:[93m28[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'idx' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m710[0m   function openAlbumViewer(idx) {
+[7m   [0m [93m                           ~~~[0m
+[96msrc/pages/index.astro[0m:[93m670[0m:[93m36[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'ai' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m670[0m     albums.forEach(function(album, ai) {
+[7m   [0m [93m                                   ~~[0m
+[96msrc/pages/index.astro[0m:[93m670[0m:[93m29[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'album' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m670[0m     albums.forEach(function(album, ai) {
+[7m   [0m [93m                            ~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m626[0m:[93m45[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'm' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m626[0m       .replace(/(<li>.*<\/li>)/gs, function(m){ return '<ul>'+m+'</ul>'; })
+[7m   [0m [93m                                            ~[0m
+[96msrc/pages/index.astro[0m:[93m614[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'text' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m614[0m   function simpleMarkdown(text) {
+[7m   [0m [93m                          ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m571[0m:[93m46[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'i' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m571[0m     list.innerHTML = entries.map(function(e, i){
+[7m   [0m [93m                                             ~[0m
+[96msrc/pages/index.astro[0m:[93m571[0m:[93m43[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'e' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m571[0m     list.innerHTML = entries.map(function(e, i){
+[7m   [0m [93m                                          ~[0m
+[96msrc/pages/index.astro[0m:[93m568[0m:[93m28[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'dateStr' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m568[0m   function renderEntryList(dateStr) {
+[7m   [0m [93m                           ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m558[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'dateStr' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m558[0m   function openEntryModal(dateStr) {
+[7m   [0m [93m                          ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m510[0m:[93m16[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'calMonth' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m510[0m   var calYear, calMonth, calendarData = getCalendar(), calSelectedDate = null, entryType = 'note';
+[7m   [0m [93m               ~~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m510[0m:[93m7[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'calYear' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m510[0m   var calYear, calMonth, calendarData = getCalendar(), calSelectedDate = null, entryType = 'note';
+[7m   [0m [93m      ~~~~~~~[0m
+[96msrc/pages/index.astro[0m:[93m502[0m:[93m30[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'desc' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m502[0m   function showWeather(temp, desc) {
+[7m   [0m [93m                             ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m502[0m:[93m24[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'temp' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m502[0m   function showWeather(temp, desc) {
+[7m   [0m [93m                       ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m459[0m:[93m271[0m - [93mwarning[0m[90m ts(7044): [0mParameter 't' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m459[0m       return '<div class="post-card"><div class="post-date">' + p.date + '</div><div class="post-title">' + p.title + '</div><div class="post-excerpt">' + p.excerpt + '</div><div class="post-meta"><span class="cat">' + p.category + '</span>' + (p.tags||[]).map(function(t){return '<span class="tag">'+t+'</span>';}).join('') + '</div></div>';
+[7m   [0m [93m                                                                                                                                                                                                                                                                              ~[0m
+[96msrc/pages/index.astro[0m:[93m458[0m:[93m44[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'p' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m458[0m     list.innerHTML = articles.map(function(p) {
+[7m   [0m [93m                                           ~[0m
+[96msrc/pages/index.astro[0m:[93m452[0m:[93m23[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'a' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m452[0m   function saveAlbums(a) { try { localStorage.setItem(KEYS.albums, JSON.stringify(a)); } catch(e) {} }
+[7m   [0m [93m                      ~[0m
+[96msrc/pages/index.astro[0m:[93m450[0m:[93m25[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'o' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m450[0m   function saveCalendar(o) { try { localStorage.setItem(KEYS.calendar, JSON.stringify(o)); } catch(e) {} }
+[7m   [0m [93m                        ~[0m
+[96msrc/pages/index.astro[0m:[93m448[0m:[93m25[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'a' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m448[0m   function saveArticles(a) { try { localStorage.setItem(KEYS.articles, JSON.stringify(a)); } catch(e) {} }
+[7m   [0m [93m                        ~[0m
+
+Result (9 files): 
+- 193 errors
+- 0 warnings
+- 32 hints
+

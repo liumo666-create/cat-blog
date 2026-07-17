@@ -1,0 +1,104 @@
+﻿node.exe : npm warn Unknown project config "minimum-release-age". This will stop working in the next major version of n
+pm.
+At line:1 char:1
++ & "D:\node.js/node.exe" "D:\node.js/node_modules/npm/bin/npx-cli.js"  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn Unknown project config "verify-deps-before-run". This will stop working in the next major version of npm.
+[2m01:15:45[22m [34m[content][39m Syncing content
+[2m01:15:45[22m [34m[content][39m Synced content
+[2m01:15:45[22m [34m[types][39m Generated [2m968ms[22m
+[2m01:15:45[22m [34m[check][39m Getting diagnostics for Astro files in D:\fyh blog page\cat-blog...
+[96msrc/content.config.ts[0m:[93m1[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'defineCollection' is declared but its value is never read.
+
+[7m1[0m import { defineCollection } from "astro:content";
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/NavBar.astro[0m:[93m284[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m284[0m         el.style.animation = '';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m283[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'offsetHeight' does not exist on type 'Element'.
+
+[7m283[0m         el.offsetHeight;
+[7m   [0m [91m           ~~~~~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m282[0m:[93m12[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m282[0m         el.style.animation = 'none';
+[7m   [0m [91m           ~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m261[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m261[0m       var a = e.target && e.target.closest('[data-page]');
+[7m   [0m [91m                                   ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m252[0m:[93m32[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m252[0m     if (!e.target || !e.target.closest('.nav-dropdown')) {
+[7m   [0m [91m                               ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m233[0m:[93m9[0m - [91merror[0m[90m ts(2322): [0mType 'number' is not assignable to type 'null'.
+
+[7m233[0m         closeTimer = setTimeout(function() { closeDropdown(dd); }, 150);
+[7m   [0m [91m        ~~~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m231[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'closest' does not exist on type 'EventTarget'.
+
+[7m231[0m       var item = e.target.closest('.dropdown-item');
+[7m   [0m [91m                          ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m231[0m:[93m18[0m - [91merror[0m[90m ts(18047): [0m'e.target' is possibly 'null'.
+
+[7m231[0m       var item = e.target.closest('.dropdown-item');
+[7m   [0m [91m                 ~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m230[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'menu' is possibly 'null'.
+
+[7m230[0m     menu.addEventListener('click', function(e) {
+[7m   [0m [91m    ~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m227[0m:[93m7[0m - [91merror[0m[90m ts(2322): [0mType 'number' is not assignable to type 'null'.
+
+[7m227[0m       closeTimer = setTimeout(function() { closeDropdown(dd); }, 200);
+[7m   [0m [91m      ~~~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m214[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'trigger' is possibly 'null'.
+
+[7m214[0m     trigger.addEventListener('mouseenter', function() {
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m204[0m:[93m5[0m - [91merror[0m[90m ts(18047): [0m'trigger' is possibly 'null'.
+
+[7m204[0m     trigger.addEventListener('click', function(e) {
+[7m   [0m [91m    ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m191[0m:[93m15[0m - [91merror[0m[90m ts(2339): [0mProperty 'src' does not exist on type 'HTMLElement'.
+
+[7m191[0m       catLogo.src = '/cat' + n + '.png';
+[7m   [0m [91m              ~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m191[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'catLogo' is possibly 'null'.
+
+[7m191[0m       catLogo.src = '/cat' + n + '.png';
+[7m   [0m [91m      ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m187[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'src' does not exist on type 'HTMLElement'.
+
+[7m187[0m       var m = (catLogo.src || '').match(/cat(\d+)\.png$/);
+[7m   [0m [91m                       ~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m187[0m:[93m16[0m - [91merror[0m[90m ts(18047): [0m'catLogo' is possibly 'null'.
+
+[7m187[0m       var m = (catLogo.src || '').match(/cat(\d+)\.png$/);
+[7m   [0m [91m               ~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m269[0m:[93m23[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'pageName' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m269[0m   function navigateTo(pageName) {
+[7m   [0m [93m                      ~~~~~~~~[0m
+[96msrc/components/NavBar.astro[0m:[93m244[0m:[93m26[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'dd' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m244[0m   function closeDropdown(dd) {
+[7m   [0m [93m                         ~~[0m
+[96msrc/components/NavBar.astro[0m:[93m238[0m:[93m25[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'dd' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m238[0m   function openDropdown(dd) {
+[7m   [0m [93m                        ~~[0m
+[96msrc/components/NavBar.astro[0m:[93m189[0m:[93m11[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'n' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m189[0m       var n;
+[7m   [0m [93m          ~[0m
+
+Result (9 files): 
+- 16 errors
+- 0 warnings
+- 5 hints
+

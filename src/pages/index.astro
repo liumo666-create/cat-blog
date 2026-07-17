@@ -1,35 +1,7 @@
----
+﻿---
 import Layout from "@layouts/Layout.astro";
 import NavBar from "@components/NavBar.astro";
 import HeroBanner from "@components/HeroBanner.astro";
-import PostCard from "@components/PostCard.astro";
-import Sidebar from "@components/Sidebar.astro";
-import type { Post } from "@components/PostCard.astro";
-import type { Category } from "@components/Sidebar.astro";
-
-const POSTS: Post[] = [
-  { id: 1, title: "Welcome to My Pixel Blog", excerpt: "FYH像素世界——用代码和像素艺术构建的个人空间。记录学习、分享创作、偶尔碎碎念。", date: "2024-06-15", category: "生活", tags: ["像素", "博客", "生活"], isNew: false, pinned: true },
-  { id: 2, title: "Canvas像素画编辑器的开发记录", excerpt: "从零构建浏览器端像素画编辑器，支持图层管理、自定义调色板、GIF导出。", date: "2024-06-10", category: "开发", tags: ["Canvas", "JavaScript", "Web", "像素画"], isNew: true, pinned: false },
-  { id: 3, title: "像素画入门完全指南", excerpt: "分享像素画学习之路——工具选择、基础技法、配色理论到练习方法。零基础也能开始像素创作。", date: "2024-05-20", category: "像素画", tags: ["像素画", "设计", "练习", "创作"], isNew: false, pinned: false },
-  { id: 4, title: "我的极简桌面布置分享", excerpt: "花了两个月重新设计桌面工作区——从显示器支架到键盘选择、理线到灯光，完整改造记录。", date: "2024-05-08", category: "生活", tags: ["桌面", "工具", "效率", "开发"], isNew: false, pinned: false },
-];
-
-interface Project { name: string; desc: string; tech: string[]; status: string; icon: string; }
-const PROJECTS_DATA: Project[] = [
-  { name: "Pixel Painter", desc: "基于Canvas的在线像素画编辑器，支持图层、调色板、GIF/PNG导出。", tech: ["Canvas API", "JavaScript", "Web Workers"], status: "开发中", icon: "PAINT" },
-  { name: "CatViewer", desc: "可爱的猫咪图片浏览器，支持懒加载。", tech: ["React", "TypeScript", "CSS Grid"], status: "已完成", icon: "CAT" },
-];
-
-const CATEGORIES: Category[] = [
-  { name: "设计", icon: "D", count: 1, slug: "design" },
-  { name: "开发", icon: "C", count: 2, slug: "dev" },
-  { name: "像素画", icon: "P", count: 1, slug: "pixel" },
-  { name: "生活", icon: "L", count: 2, slug: "life" },
-];
-
-const TAGS: string[] = ["像素", "博客", "生活", "Canvas", "JavaScript", "Web", "设计", "工具", "开发"];
-
-const HERO_PHRASES = ["CODE. DESIGN. LIFE.", "Keep it pixel.", "BITS AND BYTES", "HELLO, WORLD!", "> READY._", "Pixel is art."];
 ---
 
 <Layout>
@@ -39,86 +11,1046 @@ const HERO_PHRASES = ["CODE. DESIGN. LIFE.", "Keep it pixel.", "BITS AND BYTES",
         <NavBar />
         <HeroBanner />
 
+        <!-- ===== HOME PAGE ===== -->
         <div class="section-page active" id="page-home">
           <div class="main-col">
-            <div class="section-title">LATEST POSTS</div>
-            <div class="post-list">
-              {POSTS.map((post) => <PostCard post={post} />)}
-            </div>
+            <div class="section-title">最新文章</div>
+            <div class="post-list" id="postList"></div>
           </div>
           <div class="side-col">
-            <Sidebar postCount={POSTS.length} projectCount={PROJECTS_DATA.length} categories={CATEGORIES} tags={TAGS} />
-          </div>
-        </div>
-
-        <div class="section-page" id="page-projects">
-          <div class="main-col" style="width:100%">
-            <div class="section-title">PROJECTS</div>
-            <div class="projects-grid">
-              {PROJECTS_DATA.map((p) => (
-                <div class="project-card">
-                  <div class="proj-icon">{p.icon}</div>
-                  <div class="proj-name">{p.name}</div>
-                  <div class="proj-desc">{p.desc}</div>
-                  <div class="proj-status">STATUS: {p.status}</div>
-                </div>
-              ))}
+            <div class="glass-card" style="margin-bottom:12px;">
+              <div class="widget-date" id="widgetDate"></div>
+              <div class="widget-clock" id="widgetClock"></div>
+              <div class="widget-weather" id="widgetWeather">
+                <span class="temp" id="weatherTemp">--°</span>
+                <span id="weatherDesc">加载中...</span>
+              </div>
+            </div>
+            <div class="glass-card calendar-widget" style="margin-bottom:12px;">
+              <div class="calendar-header">
+                <button class="calendar-btn" id="calPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="m15 18-6-6 6-6"/></svg></button>
+                <span class="month-label" id="calMonthLabel"></span>
+                <button class="calendar-btn" id="calNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="m9 18 6-6-6-6"/></svg></button>
+              </div>
+              <div class="calendar-grid" id="calGrid"></div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-item"><div class="stat-number" id="statPosts">0</div><div class="stat-label">文章</div></div>
+              <div class="stat-item"><div class="stat-number" id="statPhotos">0</div><div class="stat-label">相册</div></div>
+            </div>
+            <div class="announce-box">
+              <div class="ann-text">欢迎来到我的像素世界！这里记录了我的代码、设计与生活点滴。</div>
+            </div>
+            <div class="section-title" style="margin-top:16px;">分类</div>
+            <div class="cat-list">
+              <div class="cat-item"><span>设计</span><span class="count">3</span></div>
+              <div class="cat-item"><span>开发</span><span class="count">5</span></div>
+              <div class="cat-item"><span>像素画</span><span class="count">2</span></div>
+              <div class="cat-item"><span>生活</span><span class="count">4</span></div>
+            </div>
+            <div class="section-title" style="margin-top:12px;">标签</div>
+            <div class="tag-cloud">
+              <span class="tag-chip">像素</span>
+              <span class="tag-chip">博客</span>
+              <span class="tag-chip">Canvas</span>
+              <span class="tag-chip">JavaScript</span>
+              <span class="tag-chip">设计</span>
+              <span class="tag-chip">CSS</span>
+              <span class="tag-chip">动画</span>
             </div>
           </div>
         </div>
 
-        <div class="site-footer">
-          &copy; {new Date().getFullYear()} FYH BLOG — Pixel Haven
+        
+
+        <!-- ===== ABOUT PAGE ===== -->
+        <div class="section-page" id="page-about">
+          <div class="about-layout">
+            <div class="about-avatar-card animate-in">
+              <div class="about-avatar-ring">
+                <div class="about-avatar-inner">猫</div>
+              </div>
+              <div class="about-name">FYH</div>
+              <div class="about-role">DESIGNER & DEVELOPER</div>
+              <div class="about-divider"></div>
+              <div class="about-contact">
+                <a href="https://github.com/liumo666-create" target="_blank" rel="noopener" title="GitHub">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                </a>
+                <a href="https://space.bilibili.com/54055135" target="_blank" rel="noopener" title="Bilibili">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="2"/><line x1="8" x2="10" y1="4" y2="6"/><line x1="16" x2="14" y1="4" y2="6"/><line x1="9" x2="9.01" y1="13" y2="13"/><line x1="15" x2="15.01" y1="13" y2="13"/></svg>
+                </a>
+                <a href="https://www.douyin.com/user/MS4wLjABAAAAKD7gXoehr1Yq_yVSHfiRBmtKUISmPRnlXwGkDqRYWhM" target="_blank" rel="noopener" title="Douyin">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="about-main">
+              <div class="about-bio-card animate-in">
+                <div class="about-bio-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  关于我
+                </div>
+                <div class="about-bio-text">
+                  你好，我是 FYH，一个热爱像素艺术与代码创作的设计师兼开发者。<br/>
+                  我相信每一行代码都可以是有温度的，每一个像素都能讲述故事。<br/>
+                  这个空间是我记录学习、分享创作、偶尔碎碎念的地方。<br/>
+                  欢迎你来到这里 <span class="about-typewriter" id="aboutTypewriter"></span>
+                </div>
+              </div>
+              <div class="about-bio-card animate-in">
+                <div class="about-bio-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+                  技能
+                </div>
+                <div class="about-skills-grid">
+                  <div class="about-skill"><div class="about-skill-icon">△</div><div class="about-skill-name">JavaScript</div><div class="about-skill-level">熟练</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">◇</div><div class="about-skill-name">TypeScript</div><div class="about-skill-level">熟练</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">□</div><div class="about-skill-name">React/Vue</div><div class="about-skill-level">掌握</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">☆</div><div class="about-skill-name">Astro/Svelte</div><div class="about-skill-level">掌握</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">◎</div><div class="about-skill-name">Canvas</div><div class="about-skill-level">热爱</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">⬡</div><div class="about-skill-name">CSS/动画</div><div class="about-skill-level">热爱</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">▽</div><div class="about-skill-name">像素画</div><div class="about-skill-level">热爱</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">◆</div><div class="about-skill-name">Python</div><div class="about-skill-level">熟悉</div></div>
+                </div>
+              </div>
+              <div class="about-now-card animate-in">
+                <div class="about-now-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  此刻正在...
+                </div>
+                <div class="about-now-items">
+                  <div class="about-now-item"><span class="about-now-dot pink"></span> 构建这个像素博客</div>
+                  <div class="about-now-item"><span class="about-now-dot cyan"></span> 学习 Canvas 动画技术</div>
+                  <div class="about-now-item"><span class="about-now-dot purple"></span> 喝一杯热咖啡</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+<!-- ===== PROJECTS PAGE (redesigned) ===== -->
+        <div class="section-page" id="page-projects">
+          <div class="main-col" style="width:100%">
+            <div class="proj-page-layout">
+              <div class="proj-featured animate-in" onclick="navigateTo(&#39;project-detail-0&#39;)" style="cursor:pointer;">
+                <div class="proj-feat-content">
+                  <div class="proj-feat-badge">★ Featured</div>
+                  <div class="proj-feat-name">FYH Blog</div>
+                  <div class="proj-feat-desc">你正在浏览的这个网站——像素风格个人空间。支持 Markdown 写作、相册管理、日历记事，以及昼夜主题切换。使用 Astro + Svelte 构建。</div>
+                  <div class="proj-feat-tags">
+                    <span class="proj-feat-tag">Astro</span>
+                    <span class="proj-feat-tag">Svelte</span>
+                    <span class="proj-feat-tag">CSS</span>
+                    <span class="proj-feat-tag">Canvas</span>
+                  </div>
+                </div>
+                <div class="proj-feat-visual">
+                  <div class="proj-feat-icon">猫</div>
+                </div>
+              </div>
+              <div class="proj-grid" id="projGrid"></div>
+            </div>
+          </div>
+        </div>
+        <!-- ===== PROJECT DETAIL: FYH Blog ===== -->
+        <div class="section-page" id="page-project-detail-0">
+          <div class="main-col" style="width:100%">
+            <button class="proj-detail-back" onclick="navigateTo('projects')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </button>
+            <div class="proj-detail-page active proj-detail-blog">
+              <div class="blog-hero animate-in">
+                <div class="blog-hero-content">
+                  <div class="blog-hero-badge">&#x2605; Featured Project</div>
+                  <div class="blog-hero-title">FYH Blog</div>
+                  <div class="blog-hero-desc">你正在浏览的这个网站——像素风格个人空间。支持 Markdown 写作、相册管理、日历记事，以及昼夜主题切换。使用 Astro + Svelte 构建，CSS 变量驱动的主题系统。</div>
+                </div>
+                <div class="blog-hero-visual">
+                  <div class="blog-cat-icon">&#x1F431;</div>
+                </div>
+              </div>
+              <div class="blog-stats-row animate-in">
+                <div class="blog-stat-card"><div class="stat-val">5</div><div class="stat-lbl">子页面</div></div>
+                <div class="blog-stat-card"><div class="stat-val">3</div><div class="stat-lbl">功能模块</div></div>
+                <div class="blog-stat-card"><div class="stat-val">CSS</div><div class="stat-lbl">动画变量</div></div>
+                <div class="blog-stat-card"><div class="stat-val">100+</div><div class="stat-lbl">样式规则</div></div>
+              </div>
+              <div class="blog-tech-grid animate-in">
+                <div class="blog-tech-card"><span class="tech-icon">&#x25C6;</span><div class="tech-name">Astro</div><div class="tech-ver">v5.x</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25B3;</span><div class="tech-name">Svelte</div><div class="tech-ver">v5.x</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25A0;</span><div class="tech-name">TypeScript</div><div class="tech-ver">latest</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x2606;</span><div class="tech-name">CSS Custom</div><div class="tech-ver">Properties</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25CB;</span><div class="tech-name">Canvas API</div><div class="tech-ver">2D</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25C7;</span><div class="tech-name">localStorage</div><div class="tech-ver">Persist</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PROJECT DETAIL: Pixel Painter ===== -->
+        <div class="section-page" id="page-project-detail-1">
+          <div class="main-col" style="width:100%">
+            <button class="proj-detail-back" onclick="navigateTo('projects')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </button>
+            <div class="proj-detail-page active proj-detail-painter">
+              <div class="painter-hero animate-in">
+                <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--cyan);margin-bottom:6px;">Pixel Painter</h3>
+                <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">基于 Canvas 的在线像素画编辑器，支持多图层、自定义调色板、GIF/PNG 导出、历史撤销。</p>
+                <div class="painter-canvas-demo" id="painterDemo">
+                  <canvas id="painterCanvas"></canvas>
+                </div>
+                <div class="painter-palette" id="painterPalette"></div>
+                <div class="painter-toolbar-row">
+                  <button class="painter-tool-btn active" data-tool="pen" title="画笔">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  </button>
+                  <button class="painter-tool-btn" data-tool="eraser" title="橡皮">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16c-.8-.8-.8-2 0-2.8L14.6 1.6c.8-.8 2-.8 2.8 0L20 4.2"/><path d="m17 17 3.3 3.3"/></svg>
+                  </button>
+                  <button class="painter-tool-btn" data-tool="fill" title="填充">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z"/></svg>
+                  </button>
+                  <button class="painter-tool-btn" data-tool="clear" title="清空">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                  </button>
+                </div>
+                <div class="painter-features-grid">
+                  <div class="painter-feature-card"><h4>多图层支持</h4><p>无限图层叠加，独立控制透明度、混合模式，自由排序。</p></div>
+                  <div class="painter-feature-card"><h4>自定义调色板</h4><p>16 色经典像素调色板，支持自定义颜色和保存配色方案。</p></div>
+                  <div class="painter-feature-card"><h4>GIF/PNG 导出</h4><p>支持静态 PNG 和动画 GIF 导出，可设帧率和循环次数。</p></div>
+                  <div class="painter-feature-card"><h4>历史撤销</h4><p>无限步撤销/重做，完整操作历史记录。</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PROJECT DETAIL: CatViewer ===== -->
+        <div class="section-page" id="page-project-detail-2">
+          <div class="main-col" style="width:100%">
+            <button class="proj-detail-back" onclick="navigateTo('projects')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </button>
+            <div class="proj-detail-page active proj-detail-cat">
+              <div class="cat-hero animate-in">
+                <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--purple);margin-bottom:6px;">&#x1F431; CatViewer</h3>
+                <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">可爱的猫咪图片浏览器，支持懒加载和无限滚动，集成 Cat API 获取随机猫咪照片。点击猫咪卡片来发现更多毛茸茸的朋友！</p>
+                <div class="cat-showcase" id="catShowcase">
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(255,107,157,0.1));"><span class="cat-card-icon">&#x1F408;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(255,107,157,0.2),rgba(251,146,60,0.1));"><span class="cat-card-icon">&#x1F63A;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(94,234,212,0.2),rgba(167,139,250,0.1));"><span class="cat-card-icon">&#x1F63B;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(255,107,157,0.1));"><span class="cat-card-icon">&#x1F638;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(251,146,60,0.2),rgba(94,234,212,0.1));"><span class="cat-card-icon">&#x1F63C;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(251,191,36,0.1));"><span class="cat-card-icon">&#x1F640;</span></div>
+                </div>
+                <div class="cat-facts-grid">
+                  <div class="cat-fact-card"><h4>懒加载</h4><p>Intersection Observer 实现，图片进入视口才开始加载，节省带宽。</p></div>
+                  <div class="cat-fact-card"><h4>无限滚动</h4><p>滚动到底自动加载更多，永无止境的猫咪瀑布流。</p></div>
+                  <div class="cat-fact-card"><h4>Cat API</h4><p>集成 The Cat API，海量猫咪图片随心浏览。</p></div>
+                  <div class="cat-fact-card"><h4>响应式设计</h4><p>自适应所有屏幕尺寸，手机和平板上同样可爱。</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PROJECT DETAIL: Sakura CSS ===== -->
+        <div class="section-page" id="page-project-detail-3">
+          <div class="main-col" style="width:100%">
+            <button class="proj-detail-back" onclick="navigateTo('projects')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </button>
+            <div class="proj-detail-page active proj-detail-sakura">
+              <div class="sakura-hero animate-in">
+                <div class="sakura-petals" id="sakuraPetals"></div>
+                <div class="sakura-content">
+                  <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--orange);margin-bottom:6px;">&#x1F338; Sakura CSS</h3>
+                  <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">纯 CSS 实现的樱花飘落效果库，零依赖、轻量级，支持自定义花瓣数量、速度和颜色。为你的网页添加一抹浪漫的春日气息。</p>
+                  <div class="sakura-feature-row">
+                    <div class="sakura-feature-item">
+                      <span class="sakura-feat-icon">&#x2B22;</span>
+                      <h4>零依赖</h4>
+                      <p>纯 CSS animation</p>
+                    </div>
+                    <div class="sakura-feature-item">
+                      <span class="sakura-feat-icon">&#x2699;</span>
+                      <h4>高度可定制</h4>
+                      <p>花瓣数/速度/颜色</p>
+                    </div>
+                    <div class="sakura-feature-item">
+                      <span class="sakura-feat-icon">&#x26A1;</span>
+                      <h4>轻量级</h4>
+                      <p>压缩后 &lt; 2KB</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PROJECT DETAIL: Pixel Weather ===== -->
+        <div class="section-page" id="page-project-detail-4">
+          <div class="main-col" style="width:100%">
+            <button class="proj-detail-back" onclick="navigateTo('projects')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </button>
+            <div class="proj-detail-page active proj-detail-weather">
+              <div class="weather-hero animate-in">
+                <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--yellow);margin-bottom:6px;">&#x26C5; Pixel Weather</h3>
+                <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">像素风天气卡片组件，集成 Open-Meteo API，支持实时天气和七日预报展示。让天气数据也变得可爱！</p>
+                <div class="weather-forecast-row" id="weatherForecast">
+                  <div class="weather-day-card"><span class="day-icon">&#x2600;</span><span class="day-name">今天</span><span class="day-temp">28&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x26C5;</span><span class="day-name">明天</span><span class="day-temp">26&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x2614;</span><span class="day-name">后天</span><span class="day-temp">22&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x2601;</span><span class="day-name">周四</span><span class="day-temp">24&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x2600;</span><span class="day-name">周五</span><span class="day-temp">29&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x26C5;</span><span class="day-name">周六</span><span class="day-temp">27&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x1F32C;</span><span class="day-name">周日</span><span class="day-temp">30&deg;</span></div>
+                </div>
+                <div class="weather-features-grid">
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F310;</span><div><h4>Open-Meteo API</h4><p>免费开源天气 API，无需 API Key，全球覆盖。</p></div></div>
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F4C5;</span><div><h4>七日预报</h4><p>未来一周天气一目了然，支持温度/湿度/风速展示。</p></div></div>
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F3A8;</span><div><h4>像素风格</h4><p>像素风图标和排版，复古游戏般的天气体验。</p></div></div>
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F3E0;</span><div><h4>组件化</h4><p>React 组件，开箱即用，支持完整的 TypeScript 类型。</p></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== ALBUM PAGE (enhanced) ===== -->
+        <div class="section-page" id="page-album">
+          <div class="main-col" style="width:100%">
+            <div class="album-page-hero">
+              <div class="album-page-hero-icon">&#x1F4F7;</div>
+              <div class="album-page-hero-info">
+                <h3>相册集</h3>
+                <p>每一张照片都是一段像素记忆。拖拽或点击上传，创建你的相片集。</p>
+              </div>
+              <div class="album-page-hero-stats">
+                <div class="album-page-hero-stat"><span class="num" id="albumHeroCount">0</span><span class="lbl">相册</span></div>
+                <div class="album-page-hero-stat"><span class="num" id="albumHeroPhotos">0</span><span class="lbl">照片</span></div>
+              </div>
+            </div>
+            <div class="album-section-divider">&#x25C6; 所有相册 &#x25C6;</div>
+            <div class="album-masonry-enhanced" id="albumGrid">
+              <div class="album-upload-card-enhanced" id="albumUpload">
+                <div class="upload-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                <div class="upload-hint">新建相册集<br/><span style="font-size:11px;opacity:0.6;">拖拽或点击上传</span></div>
+              </div>
+            </div>
+            <input type="file" id="albumFileInput" accept="image/*" multiple style="display:none" />
+          </div>
+        </div>
+<!-- ===== EDITOR PAGE ===== -->
+        <div class="section-page" id="page-editor">
+          <div class="main-col" style="width:100%">
+            <div class="section-title">写文章</div>
+            <div class="editor-toolbar" style="margin-bottom:12px;">
+              <input type="text" id="articleTitle" placeholder="文章标题..." />
+              <button class="glass-btn" id="btnPublish">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                发布
+              </button>
+              <button class="glass-btn" id="btnDraft" style="color:var(--muted);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                存草稿
+              </button>
+            </div>
+            <div class="editor-layout">
+              <div class="editor-pane">
+                <label>Markdown 编辑</label>
+                <textarea id="mdEditor" placeholder="# 开始写作...
+
+支持 Markdown 语法
+输入你的想法吧"></textarea>
+              </div>
+              <div class="editor-pane">
+                <label>预览</label>
+                <div class="editor-preview" id="mdPreview"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-footer">© 2026 FYH BLOG · 像素天堂</div>
       </div>
     </div>
     <div class="foreground-layer"></div>
   </div>
 </Layout>
 
-<script define:vars={{ phrases: HERO_PHRASES }}>
-  // Navigation switching
-  const mainNav = document.getElementById("mainNav");
-  if (mainNav) {
-    mainNav.addEventListener("click", (e) => {
-      const target = e.target;
-      const a = target.closest("a");
-      if (!a || !a.dataset.page) return;
-      e.preventDefault();
-      document.querySelectorAll(".section-page").forEach((s) => s.classList.remove("active"));
-      document.querySelectorAll("#mainNav a").forEach((l) => l.classList.remove("active"));
-      const pageEl = document.getElementById("page-" + a.dataset.page);
-      if (pageEl) pageEl.classList.add("active");
-      a.classList.add("active");
-    });
+<!-- ===== CALENDAR ENTRY MODAL ===== -->
+<div id="entryModal" class="entry-modal-overlay" style="display:none;">
+  <div class="entry-modal">
+    <h3 id="entryModalTitle">记录</h3>
+    <label>标题</label>
+    <input type="text" id="entryTitle" placeholder="今天做了什么..." />
+    <label>内容</label>
+    <textarea id="entryContent" rows="3" placeholder="写点东西吧..."></textarea>
+    <label>类型</label>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="glass-btn entry-type-btn active" data-type="note" style="font-size:12px;">笔记</button>
+      <button class="glass-btn entry-type-btn" data-type="article" style="font-size:12px;">文章</button>
+      <button class="glass-btn entry-type-btn" data-type="photo" style="font-size:12px;">照片</button>
+    </div>
+    <div id="entryList"></div>
+    <div class="btn-row">
+      <button class="glass-btn" id="btnEntryCancel" style="color:var(--muted);">取消</button>
+      <button class="glass-btn" id="btnEntrySave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ALBUM VIEWER MODAL ===== -->
+<div id="albumViewer" class="entry-modal-overlay" style="display:none;">
+  <div class="entry-modal" style="width:640px;max-width:94vw;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 id="albumViewerTitle">相册</h3>
+      <button class="glass-btn" id="btnAlbumClose" style="color:var(--muted);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        关闭
+      </button>
+    </div>
+    <div class="album-viewer-grid" id="albumViewerImages"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button class="glass-btn" id="btnAddToAlbum">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        添加照片
+      </button>
+      <button class="glass-btn" id="btnDeleteAlbum" style="color:#f87171;border-color:rgba(248,113,113,0.3);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        删除相册
+      </button>
+      <input type="file" id="albumAddFileInput" accept="image/*" multiple style="display:none" />
+    </div>
+  </div>
+</div>
+
+<script>
+// @ts-nocheck
+  var KEYS = { articles: 'fyh_articles', calendar: 'fyh_calendar', albums: 'fyh_albums', weatherCache: 'fyh_weather' };
+
+  var DEFAULT_ARTICLES = [
+    { id: 1, title: '欢迎来到我的像素博客', excerpt: 'FYH像素世界——用代码和像素艺术构建的个人空间。记录学习、分享创作、偶尔碎碎念。', date: '2024-06-15', category: '生活', tags: ['像素', '博客', '生活'] },
+    { id: 2, title: 'Canvas像素画编辑器的开发记录', excerpt: '从零构建浏览器端像素画编辑器，支持图层管理、自定义调色板、GIF导出。', date: '2024-06-10', category: '开发', tags: ['Canvas', 'JavaScript', '像素画'] },
+    { id: 3, title: '像素画入门完全指南', excerpt: '分享像素画学习之路——工具选择、基础技法、配色理论到练习方法。零基础也能开始像素创作。', date: '2024-05-20', category: '像素画', tags: ['像素画', '设计', '创作'] },
+    { id: 4, title: '我的极简桌面布置分享', excerpt: '花了两个月重新设计桌面工作区——从显示器支架到键盘选择、理线到灯光，完整改造记录。', date: '2024-05-08', category: '生活', tags: ['桌面', '工具', '效率'] }
+  ];
+
+  function getArticles() { try { return JSON.parse(localStorage.getItem(KEYS.articles) || 'null') || DEFAULT_ARTICLES.slice(); } catch(e) { return DEFAULT_ARTICLES.slice(); } }
+  function saveArticles(a) { try { localStorage.setItem(KEYS.articles, JSON.stringify(a)); } catch(e) {} }
+  function getCalendar() { try { return JSON.parse(localStorage.getItem(KEYS.calendar) || '{}'); } catch(e) { return {}; } }
+  function saveCalendar(o) { try { localStorage.setItem(KEYS.calendar, JSON.stringify(o)); } catch(e) {} }
+  function getAlbums() { try { return JSON.parse(localStorage.getItem(KEYS.albums) || '[]'); } catch(e) { return []; } }
+  function saveAlbums(a) { try { localStorage.setItem(KEYS.albums, JSON.stringify(a)); } catch(e) {} }
+
+  /* ===== Render Posts ===== */
+  function renderPosts() {
+    var list = document.getElementById('postList'); if (!list) return;
+    var articles = getArticles();
+    list.innerHTML = articles.map(function(p) {
+      return '<div class="post-card"><div class="post-date">' + p.date + '</div><div class="post-title">' + p.title + '</div><div class="post-excerpt">' + p.excerpt + '</div><div class="post-meta"><span class="cat">' + p.category + '</span>' + (p.tags||[]).map(function(t){return '<span class="tag">'+t+'</span>';}).join('') + '</div></div>';
+    }).join('');
+    var s = document.getElementById('statPosts'); if (s) s.textContent = articles.length;
   }
 
-  // Cat logo randomizer on click
-  const catWrap = document.getElementById("catWrap");
-  const catLogo = document.getElementById("catLogo");
-  if (catWrap && catLogo) {
-    catWrap.addEventListener("click", () => {
-      const n = Math.floor(Math.random() * 9) + 1;
-      catLogo.src = `/cat${n}.png`;
-    });
+  /* ===== Clock ===== */
+  function updateClock() {
+    var now = new Date();
+    var clk = document.getElementById('widgetClock');
+    var dat = document.getElementById('widgetDate');
+    if (clk) clk.textContent = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    if (dat) dat.textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
   }
+  setInterval(updateClock, 1000); updateClock();
 
-  // Typewriter effect
-  function startTypewriter() {
-    const el = document.getElementById("heroSubtitle");
-    if (!el) return;
-    let idx = 0;
-    function cycle() {
-      el.style.opacity = "0";
-      setTimeout(() => {
-        el.textContent = phrases[idx];
-        el.style.opacity = "1";
-        idx = (idx + 1) % phrases.length;
-      }, 300);
-      setTimeout(cycle, 3500);
+  /* ===== Weather ===== */
+  function fetchWeather() {
+    var cached = null;
+    try { cached = JSON.parse(localStorage.getItem(KEYS.weatherCache) || 'null'); } catch(e) {}
+    if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=31.23&longitude=121.47&current_weather=true')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var temp = data.current_weather.temperature;
+        var code = data.current_weather.weathercode;
+        var descs = {};
+        for (var i = 0; i <= 3; i++) descs[i] = '晴朗';
+        for (var i = 45; i <= 48; i++) descs[i] = '雾';
+        for (var i = 51; i <= 55; i++) descs[i] = '毛毛雨';
+        for (var i = 56; i <= 57; i++) descs[i] = '冻雨';
+        for (var i = 61; i <= 65; i++) descs[i] = '雨';
+        for (var i = 66; i <= 67; i++) descs[i] = '冻雨';
+        for (var i = 71; i <= 75; i++) descs[i] = '雪';
+        for (var i = 77; i <= 77; i++) descs[i] = '雪粒';
+        for (var i = 80; i <= 82; i++) descs[i] = '阵雨';
+        for (var i = 85; i <= 86; i++) descs[i] = '阵雪';
+        for (var i = 95; i <= 95; i++) descs[i] = '雷暴';
+        for (var i = 96; i <= 99; i++) descs[i] = '雷暴伴冰雹';
+        var desc = descs[code] || '未知';
+        showWeather(temp, desc, code);
+        try { localStorage.setItem(KEYS.weatherCache, JSON.stringify({ temp: temp, desc: desc, code: code, time: Date.now() })); } catch(e) {}
+      }).catch(function() { showWeather('--', '无法获取天气'); });
+  }
+  function showWeather(temp, desc) {
+    var t = document.getElementById('weatherTemp'), d = document.getElementById('weatherDesc');
+    if (t) t.textContent = temp + '°';
+    if (d) d.textContent = desc;
+  }
+  fetchWeather();
+
+  /* ===== Calendar ===== */
+  var calYear, calMonth, calendarData = getCalendar(), calSelectedDate = null, entryType = 'note';
+  function renderCalendar() {
+    var now = new Date();
+    if (!calYear) { calYear = now.getFullYear(); calMonth = now.getMonth(); }
+    var label = document.getElementById('calMonthLabel');
+    if (label) label.textContent = calYear + '年 ' + (calMonth + 1) + '月';
+    var grid = document.getElementById('calGrid'); if (!grid) return;
+    var headers = ['日','一','二','三','四','五','六'];
+    var html = headers.map(function(h){return '<div class="day-header">'+h+'</div>';}).join('');
+    var firstDay = new Date(calYear, calMonth, 1).getDay();
+    var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    var prevDays = new Date(calYear, calMonth, 0).getDate();
+    var todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    for (var i = firstDay - 1; i >= 0; i--) {
+      var d = prevDays - i;
+      var m = calMonth === 0 ? 12 : calMonth;
+      var y = calMonth === 0 ? calYear - 1 : calYear;
+      var ds = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      html += '<div class="day-cell other-month" data-date="'+ds+'">'+d+'</div>';
     }
-    el.textContent = phrases[0];
-    setTimeout(cycle, 3500);
+    for (var d = 1; d <= daysInMonth; d++) {
+      var ds = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      var classes = ['day-cell'];
+      if (ds === todayStr) classes.push('today');
+      if (calendarData[ds] && calendarData[ds].length > 0) classes.push('has-entry');
+      html += '<div class="'+classes.join(' ')+'" data-date="'+ds+'">'+d+'</div>';
+    }
+    var remaining = 42 - (firstDay + daysInMonth);
+    for (var d = 1; d <= remaining; d++) {
+      var m = calMonth === 11 ? 1 : calMonth + 2;
+      var y = calMonth === 11 ? calYear + 1 : calYear;
+      var ds = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      html += '<div class="day-cell other-month" data-date="'+ds+'">'+d+'</div>';
+    }
+    grid.innerHTML = html;
   }
-  document.addEventListener("DOMContentLoaded", startTypewriter);
+
+  /* Calendar nav */
+  (function(){
+    document.getElementById('calPrev').addEventListener('click', function(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
+    document.getElementById('calNext').addEventListener('click', function(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
+    document.getElementById('calGrid').addEventListener('click', function(e){
+      var cell = e.target.closest('.day-cell');
+      if (cell && cell.dataset.date) { calSelectedDate = cell.dataset.date; openEntryModal(calSelectedDate); }
+    });
+  })();
+
+  /* ===== Entry Modal ===== */
+  function openEntryModal(dateStr) {
+    document.getElementById('entryModalTitle').textContent = dateStr + ' 的记录';
+    document.getElementById('entryTitle').value = '';
+    document.getElementById('entryContent').value = '';
+    entryType = 'note';
+    document.querySelectorAll('.entry-type-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelector('.entry-type-btn[data-type="note"]').classList.add('active');
+    renderEntryList(dateStr);
+    document.getElementById('entryModal').style.display = 'flex';
+  }
+  function renderEntryList(dateStr) {
+    var list = document.getElementById('entryList'); if (!list) return;
+    var entries = calendarData[dateStr] || [];
+    list.innerHTML = entries.map(function(e, i){
+      var tl = e.type==='article'?'[文章]':e.type==='photo'?'[照片]':'[笔记]';
+      return '<div class="entry-entry"><span>'+tl+' '+e.title+'</span><span class="del-btn" data-idx="'+i+'">×</span></div>';
+    }).join('');
+  }
+  document.getElementById('entryList').addEventListener('click', function(e){
+    var del = e.target.closest('.del-btn'); if (!del) return;
+    var idx = parseInt(del.dataset.idx);
+    if (!calendarData[calSelectedDate]) return;
+    calendarData[calSelectedDate].splice(idx, 1);
+    if (calendarData[calSelectedDate].length === 0) delete calendarData[calSelectedDate];
+    saveCalendar(calendarData);
+    renderEntryList(calSelectedDate);
+    renderCalendar();
+  });
+  document.querySelectorAll('.entry-type-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.entry-type-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      entryType = btn.dataset.type;
+    });
+  });
+  document.getElementById('btnEntrySave').addEventListener('click', function(){
+    var title = document.getElementById('entryTitle').value.trim();
+    if (!title) { alert('请输入标题'); return; }
+    if (!calendarData[calSelectedDate]) calendarData[calSelectedDate] = [];
+    calendarData[calSelectedDate].push({
+      title: title,
+      content: document.getElementById('entryContent').value.trim(),
+      type: entryType,
+      time: new Date().toISOString()
+    });
+    saveCalendar(calendarData);
+    document.getElementById('entryTitle').value = '';
+    document.getElementById('entryContent').value = '';
+    renderEntryList(calSelectedDate);
+    renderCalendar();
+  });
+  document.getElementById('btnEntryCancel').addEventListener('click', function(){
+    document.getElementById('entryModal').style.display = 'none';
+  });
+
+  /* ===== Markdown Renderer ===== */
+  function simpleMarkdown(text) {
+    var html = text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;" />')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/gs, function(m){ return '<ul>'+m+'</ul>'; })
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br />');
+    return '<p>'+html+'</p>';
+  }
+
+  /* ===== Editor ===== */
+  var mdEditor = document.getElementById('mdEditor');
+  var mdPreview = document.getElementById('mdPreview');
+  if (mdEditor && mdPreview) {
+    mdEditor.addEventListener('input', function(){ mdPreview.innerHTML = simpleMarkdown(mdEditor.value); });
+  }
+  document.getElementById('btnPublish').addEventListener('click', function(){
+    var title = document.getElementById('articleTitle').value.trim();
+    var content = mdEditor.value.trim();
+    if (!title || !content) { alert('请输入标题和内容'); return; }
+    var articles = getArticles();
+    articles.unshift({
+      id: Date.now(),
+      title: title,
+      excerpt: content.replace(/[#*`\[\]!()]/g, '').substring(0, 120) + '...',
+      date: new Date().toISOString().split('T')[0],
+      category: '文章',
+      tags: ['原创']
+    });
+    saveArticles(articles);
+    renderPosts();
+    document.getElementById('articleTitle').value = '';
+    mdEditor.value = '';
+    mdPreview.innerHTML = '';
+    /* Navigate to home */
+    document.querySelectorAll('.section-page').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById('page-home').classList.add('active');
+    document.querySelectorAll('#mainNav .nav-item').forEach(function(l){ l.classList.remove('active'); });
+    var hn = document.querySelector('[data-page="home"]');
+    if (hn) hn.classList.add('active');
+  });
+
+  /* ===== Albums ===== */
+  function renderAlbums() {
+    var grid = document.getElementById('albumGrid'); if (!grid) return;
+    var albums = getAlbums();
+    var totalPhotos = 0;
+    var html = '';
+    albums.forEach(function(album, ai) {
+      totalPhotos += (album.photos || []).length;
+      var cover = album.photos && album.photos.length > 0 ? album.photos[0] : '';
+      var scatter = '';
+      var scatterPhotos = (album.photos || []).slice(0, 4);
+      for (var i = 0; i < Math.min(4, scatterPhotos.length); i++) {
+        scatter += '<img class="scatter-photo" src="'+scatterPhotos[i]+'" loading="lazy" />';
+      }
+      html += '<div class="album-set" data-album="'+ai+'">' +
+        (cover ? '<img class="cover-img" src="'+cover+'" loading="lazy" />' : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--dim);font-size:14px;">空相册</div>') +
+        (scatterPhotos.length > 0 ? '<div class="scatter-layer">'+scatter+'</div>' : '') +
+        '<div class="album-set-overlay">'+album.name+'<span class="album-set-count">'+(album.photos||[]).length+' 张</span></div>' +
+        '</div>';
+    });
+    html += '<div class="album-upload-card" id="albumUpload"><div class="album-upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><span class="album-upload-text">新建相册集</span></div>';
+    grid.innerHTML = html;
+
+    /* Update stats */
+    var ac = document.getElementById('albumCount'), pc = document.getElementById('photoCount');
+    if (ac) ac.textContent = albums.length;
+    if (pc) pc.textContent = totalPhotos;
+    var sp = document.getElementById('statPhotos'); if (sp) sp.textContent = albums.length;
+
+    /* Upload trigger */
+    var uz = document.getElementById('albumUpload');
+    var fi = document.getElementById('albumFileInput');
+    if (uz && fi) {
+      uz.addEventListener('click', function(e) { e.stopPropagation(); fi.click(); });
+    }
+
+    /* Album click > viewer */
+    grid.querySelectorAll('.album-set').forEach(function(set){
+      set.addEventListener('click', function(e) {
+        if (e.target.closest('.album-upload-card')) return;
+        openAlbumViewer(parseInt(set.dataset.album));
+      });
+    });
+  }
+
+  var currentViewingAlbum = -1;
+  function openAlbumViewer(idx) {
+    currentViewingAlbum = idx;
+    var albums = getAlbums(), album = albums[idx];
+    if (!album) return;
+    var titleEl = document.getElementById('albumViewerTitle');
+    if (titleEl) titleEl.textContent = album.name;
+    var imgs = document.getElementById('albumViewerImages');
+    if (imgs) {
+      imgs.innerHTML = (album.photos || []).map(function(p, pi) {
+        return '<div class="album-viewer-photo" data-photo-idx="'+pi+'"><img src="'+p+'" loading="lazy" /><span class="photo-del" data-del="'+pi+'">×</span></div>';
+      }).join('');
+      if ((album.photos || []).length === 0) {
+        imgs.innerHTML = '<div style="color:var(--dim);font-size:14px;text-align:center;padding:40px;">暂无照片<br/>点击下方按钮添加</div>';
+      }
+    }
+    var viewer = document.getElementById('albumViewer');
+    if (viewer) viewer.style.display = 'flex';
+  }
+
+  /* Album viewer controls */
+  var btnAlbumClose = document.getElementById('btnAlbumClose');
+  if (btnAlbumClose) btnAlbumClose.addEventListener('click', function(){
+    var viewer = document.getElementById('albumViewer');
+    if (viewer) viewer.style.display = 'none';
+    renderAlbums();
+  });
+  var btnAddToAlbum = document.getElementById('btnAddToAlbum');
+  if (btnAddToAlbum) btnAddToAlbum.addEventListener('click', function(){
+    var fi = document.getElementById('albumAddFileInput');
+    if (fi) fi.click();
+  });
+  var albumAddFileInput = document.getElementById('albumAddFileInput');
+  if (albumAddFileInput) albumAddFileInput.addEventListener('change', function(e){
+    var files = e.target.files;
+    if (!files.length || currentViewingAlbum < 0) return;
+    var albums = getAlbums(), album = albums[currentViewingAlbum];
+    if (!album) return;
+    if (!album.photos) album.photos = [];
+    var loaded = 0;
+    for (var i = 0; i < files.length; i++) {
+      (function(file){
+        var r = new FileReader();
+        r.onload = function(ev) {
+          album.photos.push(ev.target.result);
+          loaded++;
+          if (loaded === files.length) {
+            saveAlbums(albums);
+            openAlbumViewer(currentViewingAlbum);
+            renderAlbums();
+          }
+        };
+        r.readAsDataURL(file);
+      })(files[i]);
+    }
+    e.target.value = '';
+  });
+  /* Delete album */
+  var btnDeleteAlbum = document.getElementById('btnDeleteAlbum');
+  if (btnDeleteAlbum) btnDeleteAlbum.addEventListener('click', function(){
+    if (currentViewingAlbum < 0) return;
+    if (!confirm('确定要删除这个相册吗？此操作不可撤销。')) return;
+    var albums = getAlbums();
+    albums.splice(currentViewingAlbum, 1);
+    saveAlbums(albums);
+    var viewer = document.getElementById('albumViewer');
+    if (viewer) viewer.style.display = 'none';
+    currentViewingAlbum = -1;
+    renderAlbums();
+  });
+  /* Delete photo from viewer */
+  var albumViewerImages = document.getElementById('albumViewerImages');
+  if (albumViewerImages) albumViewerImages.addEventListener('click', function(e){
+    var del = e.target.closest('[data-del]'); if (!del) return;
+    e.stopPropagation();
+    var pi = parseInt(del.dataset.del), albums = getAlbums();
+    if (currentViewingAlbum >= 0 && albums[currentViewingAlbum]) {
+      albums[currentViewingAlbum].photos.splice(pi, 1);
+      saveAlbums(albums);
+      openAlbumViewer(currentViewingAlbum);
+      renderAlbums();
+    }
+  });
+  /* Lightbox on photo click */
+  if (albumViewerImages) albumViewerImages.addEventListener('click', function(e){
+    var photo = e.target.closest('.album-viewer-photo');
+    if (!photo || e.target.closest('.photo-del')) return;
+    var pi = parseInt(photo.dataset.photoIdx);
+    showLightbox(currentViewingAlbum, pi);
+  });
+  /* Lightbox */
+  var lightboxEl = null;
+  function showLightbox(albumIdx, photoIdx) {
+    var albums = getAlbums();
+    if (albumIdx < 0 || !albums[albumIdx] || !albums[albumIdx].photos[photoIdx]) return;
+    closeLightbox();
+    lightboxEl = document.createElement('div');
+    lightboxEl.className = 'lightbox-overlay';
+    var navPrev = photoIdx > 0 ? '<span class="lightbox-nav prev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="m15 18-6-6 6-6"/></svg></span>' : '';
+    var navNext = photoIdx < albums[albumIdx].photos.length - 1 ? '<span class="lightbox-nav next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="m9 18 6-6-6-6"/></svg></span>' : '';
+    lightboxEl.innerHTML = '<span class="lightbox-close">×</span>' + navPrev + navNext + '<img src="'+albums[albumIdx].photos[photoIdx]+'" />';
+    lightboxEl.addEventListener('click', function(e) {
+      if (e.target.classList.contains('lightbox-close') || e.target === lightboxEl) { closeLightbox(); return; }
+      if (e.target.closest('.lightbox-nav.prev') && photoIdx > 0) { showLightbox(albumIdx, photoIdx - 1); }
+      if (e.target.closest('.lightbox-nav.next') && photoIdx < albums[albumIdx].photos.length - 1) { showLightbox(albumIdx, photoIdx + 1); }
+    });
+    document.body.appendChild(lightboxEl);
+    document.addEventListener('keydown', lightboxKeyHandler);
+  }
+  function closeLightbox() {
+    if (lightboxEl) { lightboxEl.remove(); lightboxEl = null; }
+    document.removeEventListener('keydown', lightboxKeyHandler);
+  }
+  function lightboxKeyHandler(e) {
+    if (e.key === 'Escape') closeLightbox();
+  }
+  /* File input for new album */
+  document.getElementById('albumFileInput').addEventListener('change', function(e){
+    var files = e.target.files;
+    if (!files.length) return;
+    var name = prompt('请输入相册集名称：', '新相册 ' + new Date().toLocaleDateString('zh-CN'));
+    if (!name) { e.target.value = ''; return; }
+    var albums = getAlbums();
+    var newAlbum = { name: name, photos: [], created: new Date().toISOString() };
+    var loaded = 0;
+    for (var i = 0; i < files.length; i++) {
+      (function(file){
+        var r = new FileReader();
+        r.onload = function(ev) {
+          newAlbum.photos.push(ev.target.result);
+          loaded++;
+          if (loaded === files.length) {
+            albums.push(newAlbum);
+            saveAlbums(albums);
+            renderAlbums();
+          }
+        };
+        r.readAsDataURL(file);
+      })(files[i]);
+    }
+    if (files.length === 0) { albums.push(newAlbum); saveAlbums(albums); renderAlbums(); }
+    e.target.value = '';
+  });
+
+  /* ===== Modal backdrop click to close ===== */
+  document.getElementById('entryModal').addEventListener('click', function(e){
+    if (e.target === this) this.style.display = 'none';
+  });
+  document.getElementById('albumViewer').addEventListener('click', function(e){
+    if (e.target === this) { this.style.display = 'none'; renderAlbums(); }
+  });
+
+  /* ===== Render Projects ===== */
+  var PROJECTS = [
+    { id: 0, name: "FYH Blog", desc: "像素风格个人博客，Astro + Svelte 构建，支持 Markdown 写作、相册管理、日历记事、日夜主题切换。", icon: "猫", status: "活跃开发中", accent: "var(--pink)", iconBg: "rgba(255,107,157,0.1)", statusBg: "rgba(255,107,157,0.1)", tags: ["Astro","Svelte","CSS"] },
+    { id: 1, name: "Pixel Painter", desc: "基于 Canvas 的在线像素画编辑器，支持多图层、自定义调色板、GIF/PNG 导出、历史撤销。", icon: "画", status: "开发中", accent: "var(--cyan)", iconBg: "rgba(94,234,212,0.1)", statusBg: "rgba(94,234,212,0.1)", tags: ["Canvas","JS","像素"] },
+    { id: 2, name: "CatViewer", desc: "可爱的猫咪图片浏览器，支持懒加载和无限滚动，集成 Cat API 获取随机猫咪照片。", icon: "喵", status: "已完成", accent: "var(--purple)", iconBg: "rgba(167,139,250,0.1)", statusBg: "rgba(167,139,250,0.1)", tags: ["API","CSS","动画"] },
+    { id: 3, name: "Sakura CSS", desc: "纯 CSS 实现的樱花飘落效果库，零依赖、轻量级，支持自定义花瓣数量、速度和颜色。", icon: "樱", status: "已完成", accent: "var(--orange)", iconBg: "rgba(251,146,60,0.1)", statusBg: "rgba(251,146,60,0.1)", tags: ["CSS","动画"] },
+    { id: 4, name: "Pixel Weather", desc: "像素风天气卡片组件，集成 Open-Meteo API，支持实时天气和七日预报展示。", icon: "云", status: "计划中", accent: "var(--yellow)", iconBg: "rgba(251,191,36,0.1)", statusBg: "rgba(251,191,36,0.1)", tags: ["API","React"] }
+  ];
+
+  function renderProjects() {
+    var grid = document.getElementById("projGrid"); if (!grid) return;
+    grid.innerHTML = PROJECTS.map(function(p) {
+      return "<div class=\"proj-card\" style=\"--proj-accent:" + p.accent + ";--proj-glow:rgba(255,107,157,0.12);--proj-icon-bg:" + p.iconBg + ";--proj-status-bg:" + p.statusBg + ";\">" +
+        "<div class=\"proj-card-icon\">" + p.icon + "</div>" +
+        "<div class=\"proj-card-name\">" + p.name + "</div>" +
+        "<div class=\"proj-card-desc\">" + p.desc + "</div>" +
+        "<div class=\"proj-card-footer\">" +
+          "<span class=\"proj-card-status\">" + p.status + "</span>" +
+          "<div class=\"proj-card-tags\">" + p.tags.map(function(t){return "<span class=\"proj-card-tag\">"+t+"</span>";}).join("") + "</div>" +
+        "</div></div>";
+    }).join("");
+  }
+
+  /* ===== Typewriter Effect for About Page ===== */
+  var twEl = document.getElementById("aboutTypewriter");
+  if (twEl) {
+    var phrases = ["🎨", "✨", "🐱", "💻", "🌸", "🎮"];
+    var twIdx = 0;
+    function typeNext() {
+      twEl.style.opacity = "0";
+      setTimeout(function() {
+        twEl.textContent = phrases[twIdx];
+        twEl.style.opacity = "1";
+        twEl.style.transition = "opacity 0.3s ease";
+        twIdx = (twIdx + 1) % phrases.length;
+      }, 400);
+    }
+    setInterval(typeNext, 2500);
+    typeNext();
+  }
+
+  /* ===== Init ===== */
+  renderPosts();
+  renderCalendar();
+  renderAlbums();
+  renderProjects();
+
+  /* Mouse tracking for proj-card and about-bio-card */
+  document.addEventListener("mousemove", function(e) {
+    document.querySelectorAll(".proj-card, .about-bio-card").forEach(function(c) {
+      var r = c.getBoundingClientRect();
+      c.style.setProperty("--mc-x", ((e.clientX - r.left) / r.width) * 100 + "%");
+      c.style.setProperty("--mc-y", ((e.clientY - r.top) / r.height) * 100 + "%");
+    });
+  });
+
+  /* Global Escape key handler — closes modals, lightbox, returns from project details */
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (typeof lightboxEl !== 'undefined' && lightboxEl) { closeLightbox(); return; }
+    var viewer = document.getElementById('albumViewer');
+    if (viewer && viewer.style.display === 'flex') { viewer.style.display = 'none'; renderAlbums(); return; }
+    var modal = document.getElementById('entryModal');
+    if (modal && modal.style.display === 'flex') { modal.style.display = 'none'; return; }
+    /* If on a project detail page, go back to projects */
+    var activeDetail = document.querySelector('.section-page.active[id^="page-project-detail-"]');
+    if (activeDetail) { navigateTo('projects'); return; }
+  });
+
+  /* ===== Pixel Painter Canvas Demo ===== */
+  var painterInited = false;
+  function initPixelPainter() {
+    if (painterInited) return;
+    var canvas = document.getElementById('painterCanvas');
+    if (!canvas) return;
+    var container = document.getElementById('painterDemo');
+    if (!container) return;
+    painterInited = true;
+    canvas.width = container.clientWidth || 600;
+    canvas.height = container.clientHeight || 200;
+    var ctx = canvas.getContext('2d');
+    var pixelSize = 12;
+    var painterColor = '#ff6b9d';
+    var painterDrawing = false;
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var x = 0; x < canvas.width; x += pixelSize) {
+        for (var y = 0; y < canvas.height; y += pixelSize) {
+          ctx.fillStyle = (Math.floor(x/pixelSize) + Math.floor(y/pixelSize)) % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.04)';
+          ctx.fillRect(x, y, pixelSize, pixelSize);
+        }
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.font = '14px "Pixelify Sans"';
+      ctx.textAlign = 'center';
+      ctx.fillText('在此涂鸦!', canvas.width/2, canvas.height/2);
+    }
+    drawGrid();
+
+    function drawPixel(e) {
+      var rect = canvas.getBoundingClientRect();
+      var scaleX = canvas.width / rect.width;
+      var scaleY = canvas.height / rect.height;
+      var x = Math.floor((e.clientX - rect.left) * scaleX / pixelSize);
+      var y = Math.floor((e.clientY - rect.top) * scaleY / pixelSize);
+      ctx.fillStyle = painterColor;
+      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+    }
+
+    canvas.addEventListener('mousedown', function(e) { painterDrawing = true; drawPixel(e); });
+    canvas.addEventListener('mousemove', function(e) { if (painterDrawing) drawPixel(e); });
+    canvas.addEventListener('mouseup', function() { painterDrawing = false; });
+    canvas.addEventListener('mouseleave', function() { painterDrawing = false; });
+
+    var palette = document.getElementById('painterPalette');
+    if (palette && !palette.hasChildNodes()) {
+      var colors = ['#ff6b9d','#5eead4','#fbbf24','#a78bfa','#fb923c','#fff','#94a3b8','#1e293b','#ef4444','#22c55e','#3b82f6','#f97316'];
+      palette.innerHTML = colors.map(function(c) { return '<div class="painter-swatch'+(c===painterColor?' active':'')+'" style="background:'+c+'" data-color="'+c+'"></div>'; }).join('');
+      palette.addEventListener('click', function(e) {
+        var sw = e.target.closest('.painter-swatch');
+        if (!sw) return;
+        painterColor = sw.dataset.color;
+        palette.querySelectorAll('.painter-swatch').forEach(function(s){ s.classList.remove('active'); });
+        sw.classList.add('active');
+      });
+    }
+
+    var toolbar = document.querySelector('.painter-toolbar-row');
+    if (toolbar) {
+      toolbar.addEventListener('click', function(e) {
+        var btn = e.target.closest('.painter-tool-btn');
+        if (!btn) return;
+        var tool = btn.dataset.tool;
+        toolbar.querySelectorAll('.painter-tool-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (tool === 'clear') { ctx.clearRect(0, 0, canvas.width, canvas.height); drawGrid(); }
+        if (tool === 'fill') { ctx.fillStyle = painterColor; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+        if (tool === 'eraser') painterColor = '#080414';
+      });
+    }
+  }
+
+  /* ===== Sakura Petals Animation ===== */
+  var sakuraInited = false;
+  function initSakuraPetals() {
+    if (sakuraInited) return;
+    var container = document.getElementById('sakuraPetals');
+    if (!container) return;
+    sakuraInited = true;
+    for (var i = 0; i < 20; i++) {
+      var petal = document.createElement('div');
+      petal.className = 'sakura-petal';
+      petal.style.left = Math.random() * 100 + '%';
+      petal.style.setProperty('--sx', (Math.random() - 0.5) * 120 + 'px');
+      petal.style.setProperty('--sr', Math.random() * 720 + 'deg');
+      petal.style.animationDuration = (6 + Math.random() * 10) + 's';
+      petal.style.animationDelay = Math.random() * 8 + 's';
+      petal.style.width = (10 + Math.random() * 12) + 'px';
+      petal.style.height = (10 + Math.random() * 12) + 'px';
+      container.appendChild(petal);
+    }
+  }
+
+  /* ===== Cat Showcase Animation ===== */
+  var catInited = false;
+  function initCatShowcase() {
+    if (catInited) return;
+    var showcase = document.getElementById('catShowcase');
+    if (!showcase) return;
+    catInited = true;
+    showcase.querySelectorAll('.cat-card').forEach(function(card, idx) {
+      card.addEventListener('mouseenter', function() {
+        var icon = card.querySelector('.cat-card-icon');
+        if (icon) {
+          icon.style.transform = 'scale(1.3) rotate(' + (idx % 2 === 0 ? '15deg' : '-15deg') + ')';
+          icon.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        }
+      });
+      card.addEventListener('mouseleave', function() {
+        var icon = card.querySelector('.cat-card-icon');
+        if (icon) { icon.style.transform = ''; }
+      });
+    });
+  }
+
+  /* ===== Editor textarea auto-resize ===== */
+  var ta = document.getElementById('mdEditor');
+  if (ta) {
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.max(this.scrollHeight, 250) + 'px';
+    });
+  }
 </script>

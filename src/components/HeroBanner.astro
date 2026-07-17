@@ -1,10 +1,38 @@
----
-// HeroBanner.astro — Hero banner with typewriter subtitle
+﻿---
 ---
 
 <div class="hero-banner">
   <div class="hero-overlay">
     <h2>CODE. DESIGN. LIFE.</h2>
-    <p id="heroSubtitle">PIXEL ART AND CODE</p>
+    <p id="heroSubtitle">像素艺术与代码的个人空间</p>
   </div>
 </div>
+
+<script>
+  var phrases = [
+    "CODE. DESIGN. LIFE.",
+    "像素即是艺术",
+    "BITS AND BYTES",
+    "HELLO, WORLD!",
+    "> READY._",
+    "PIXEL IS ART.",
+    "猫咖的小天地"
+  ];
+  function startTypewriter() {
+    var el = document.getElementById("heroSubtitle");
+    if (!el) return;
+    var idx = 0;
+    function cycle() {
+      if (!el) return; el.style.opacity = "0";
+      setTimeout(function() {
+        if (!el) return; el.textContent = phrases[idx];
+        if (!el) return; el.style.opacity = "1";
+        idx = (idx + 1) % phrases.length;
+      }, 300);
+      setTimeout(cycle, 3500);
+    }
+    el.textContent = phrases[0];
+    setTimeout(cycle, 3500);
+  }
+  document.addEventListener("DOMContentLoaded", startTypewriter);
+</script>

@@ -1,17 +1,12 @@
----
-import '../styles/global.css'; // 路径根据你的实际情况调整
+﻿---
+import '../styles/global.css';
 import SakuraEffect from "@components/SakuraEffect.astro";
 
-interface Props {
-  title?: string;
-  description?: string;
-}
+interface Props { title?: string; description?: string; }
 
 const { title, description } = Astro.props;
-const pageTitle = title
-  ? `${title} - FYH BLOG`
-  : "FYH BLOG - Pixel Haven";
-const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码的个人空间";
+const pageTitle = title ? `${title} - FYH BLOG` : "FYH BLOG - ????";
+const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u827a\u672f\u4e0e\u4ee3\u7801\u7684\u4e2a\u4eba\u7a7a\u95f4";
 ---
 
 <!doctype html>
@@ -21,593 +16,68 @@ const pageDesc = description || "CODE. DESIGN. LIFE. — 像素艺术与代码�
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDesc} />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>"
-    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>\u732b</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <style is:global>
-      :root {
-        --pink: #ff66cc;
-        --cyan: #66ffcc;
-        --yellow: #ffdd44;
-        --purple: #aa77ff;
-        --orange: #ff9966;
-        --text: #e8ddf5;
-        --muted: #a088c0;
-        --dim: #6a5885;
-        --deep: #0c0518;
-        --web: rgba(18, 10, 32, 0.96);
-        --card: rgba(22, 12, 48, 0.92);
-        --hover: rgba(40, 20, 75, 0.7);
-        --glass: rgba(22, 12, 48, 0.82);
-        --b-sub: #332255;
-        --b-hi: #452b75;
-        --b-ac: #6644aa;
-        --fp: "Pixelify Sans", "Courier New", monospace;
-        --fb: "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
-          "Hiragino Sans GB", sans-serif;
-        --fm: "JetBrains Mono", "Courier New", monospace;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        font-size: 15px;
-        -webkit-text-size-adjust: 100%;
-      }
-      body {
-        background: var(--deep);
-        margin: 0;
-        overflow: hidden;
-        color: var(--text);
-        font-family: var(--fb);
-        line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      a {
-        color: var(--cyan);
-        text-decoration: none;
-        transition: color 0.18s;
-        cursor: pointer;
-      }
-      a:hover {
-        color: var(--pink);
-      }
-      ul {
-        list-style: none;
-      }
-      img {
-        max-width: 100%;
-        display: block;
-      }
-      .game-scene {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        min-width: 100vw;
-        min-height: 100vh;
-        aspect-ratio: 1672 / 941;
-        background: var(--deep);
-        overflow: hidden;
-      }
-      .foreground-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url("/ChatGPT%20Image%202026%E5%B9%B46%E6%9C%884%E6%97%A5%2016_42_58.png");
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        z-index: 999;
-        pointer-events: none;
-      }
-
-      /* Day background reveal - radial wipe from button */
-      .game-scene::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 1000;
-        background-image: url("/day.png");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        clip-path: circle(0% at var(--ripple-x, 50%) var(--ripple-y, 50%));
-        transition: clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: clip-path;
-        pointer-events: none;
-      }
-      .game-scene.day-mode::after {
-        clip-path: circle(150% at var(--ripple-x, 50%) var(--ripple-y, 50%));
-      }
-      /* Day mode color overrides */
-      .game-scene.day-mode {
-        --pink: #e8786a;
-        --cyan: #5b9ecf;
-        --yellow: #d4a030;
-        --purple: #8b7aaf;
-        --orange: #e89450;
-        --text: #383040;
-        --muted: #685868;
-        --dim: #988898;
-        --deep: #f5efe4;
-        --web: rgba(255, 252, 247, 0.96);
-        --card: rgba(255, 250, 244, 0.92);
-        --hover: rgba(232, 215, 195, 0.7);
-        --glass: rgba(255, 250, 244, 0.82);
-        --b-sub: #dcd0c5;
-        --b-hi: #c8b8a8;
-        --b-ac: #a89588;
-      }
-      .scroll-container {
-        position: absolute;
-        width: 74.52%;
-        height: 82.57%;
-        top: 48.5%;
-        left: 48%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scroll-behavior: smooth;
-      }
-      .scroll-container::-webkit-scrollbar {
-        width: 7px;
-      }
-      .scroll-container::-webkit-scrollbar-track {
-        background: rgba(12, 5, 24, 0.4);
-      }
-      .scroll-container::-webkit-scrollbar-thumb {
-        background: var(--pink);
-        border: 1px solid #000;
-      }
-      .scroll-container::-webkit-scrollbar-thumb:hover {
-        background: #ff88dd;
-      }
-      .web-wrapper {
-        width: 100%;
-        min-height: 100%;
-        background: var(--web);
-        border: 2px solid #000;
-        box-shadow: inset 0 0 0 2px var(--b-hi);
-        padding: 28px 32px;
-        position: relative;
-      }
-        width: 60%;
-      /* Theme Toggle Button */
-      .theme-toggle-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border: 2px solid var(--b-hi);
-        background: var(--card);
-        color: var(--yellow);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        flex-shrink: 0;
-        position: relative;
-        overflow: hidden;
-      }
-      .theme-toggle-btn:hover {
-        border-color: var(--yellow);
-        background: rgba(255, 221, 68, 0.1);
-        box-shadow: 0 0 18px rgba(255, 221, 68, 0.25);
-        transform: scale(1.08);
-      }
-      .theme-toggle-btn:active {
-        transform: scale(0.94);
-        transition: transform 0.12s;
-      }
-      .theme-toggle-btn svg {
-        width: 18px;
-        height: 18px;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s;
-        pointer-events: none;
-      }
-      .theme-toggle-btn .icon-moon {
-        position: absolute;
-      }
-      .theme-toggle-btn .icon-sun {
-        position: absolute;
-        opacity: 0;
-        transform: rotate(90deg) scale(0.5);
-      }
-      .theme-toggle-btn.day .icon-moon {
-        opacity: 0;
-        transform: rotate(-90deg) scale(0.5);
-      }
-      .theme-toggle-btn.day .icon-sun {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-      }
-      .theme-toggle-btn::before {
-        content: "";
-        position: absolute;
-        inset: -2px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,221,68,0.3) 0%, transparent 70%);
-        opacity: 0;
-        transition: opacity 0.35s;
-      }
-      .theme-toggle-btn:hover::before {
-        opacity: 1;
-      }
-      /* Hero Banner */
-      .hero-banner {
-        width: 100%;
-        height: 180px;
-        background-image: url("/hero-night.png");
-        background-size: cover;
-        background-position: center;
-        border: 2px solid #000;
-        box-shadow: inset 0 0 0 2px var(--b-hi);
-        margin-bottom: 24px;
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-      }
-
-      .game-scene.day-mode .hero-banner {
-        background-image: url("/hero-day.png");
-      }
-      .hero-banner::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          180deg,
-          transparent 50%,
-          var(--deep) 100%
-        );
-      }
-      .hero-overlay {
-        position: absolute;
-        bottom: 20px;
-        left: 24px;
-        z-index: 2;
-      }
-      .hero-overlay h2 {
-        font-family: var(--fp);
-        font-size: 28px;
-        font-weight: 700;
-        color: #fff;
-        text-shadow: 3px 3px 0 #000;
-        margin-bottom: 4px;
-      }
-      .hero-overlay p {
-        font-family: var(--fm);
-        font-size: 12px;
-        color: var(--pink);
-        letter-spacing: 2px;
-        min-height: 18px;
-        transition: opacity 0.3s;
-      }
-      /* Section Pages */
-      .section-page {
-        display: none;
-        flex-wrap: wrap;
-        gap: 20px;
-      }
-      .section-page.active {
-        display: flex;
-      }
-      .main-col {
-        flex: 1;
-        min-width: 0;
-      }
-      .side-col {
-        width: 280px;
-        flex-shrink: 0;
-      }
-      .section-title {
-        font-family: var(--fp);
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--cyan);
-        margin-bottom: 14px;
-        text-shadow: 2px 2px 0 #000;
-        letter-spacing: 1px;
-      }
-      /* Post Cards */
-      .post-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 20px;
-      }
-      .post-card {
-        border: 2px solid #000;
-        box-shadow: inset 0 0 0 2px var(--b-hi);
-        background: var(--card);
-        padding: 16px;
-        cursor: pointer;
-        transition: transform 0.15s, box-shadow 0.15s;
-        position: relative;
-        border-radius: 16px;
-      }
-      .post-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px 0 rgba(255, 102, 204, 0.25),
-          inset 0 0 0 1px var(--pink) !important;
-        background: rgba(22, 12, 48, 0.5) !important;
-      }
-      .post-card .post-date {
-        font-family: var(--fm);
-        font-size: 11px;
-        color: var(--dim);
-        margin-bottom: 4px;
-      }
-      .post-card .post-title {
-        font-family: var(--fp);
-        font-size: 15px;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 6px;
-        line-height: 1.3;
-      }
-      .post-card .post-excerpt {
-        font-family: var(--fb);
-        font-size: 13px;
-        color: var(--muted);
-        line-height: 1.6;
-        margin-bottom: 8px;
-      }
-      .post-card .post-meta {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-      }
-      .post-card .tag,
-      .post-card .cat {
-        display: inline-block;
-        font-family: var(--fm);
-        font-size: 10px;
-        padding: 3px 7px;
-        border: 1px solid var(--b-hi);
-        background: rgba(102, 68, 170, 0.2);
-        color: var(--muted);
-      }
-      .post-card .cat {
-        border-color: var(--pink);
-        color: var(--pink);
-        background: rgba(255, 102, 204, 0.12);
-      }
-      /* Stats */
-      .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 16px;
-      }
-      .stat-item {
-        text-align: center;
-        padding: 12px 8px;
-        border: 2px solid #000;
-        box-shadow: inset 0 0 0 2px var(--b-hi);
-        background: var(--card);
-        border-radius: 16px;
-      }
-      .stat-number {
-        font-family: var(--fp);
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--cyan);
-        text-shadow: 2px 2px 0 #000;
-        margin-bottom: 2px;
-      }
-      .stat-label {
-        font-family: var(--fm);
-        font-size: 10px;
-        color: var(--dim);
-      }
-      /* Categories */
-      .cat-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-bottom: 16px;
-      }
-      .cat-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 10px;
-        cursor: pointer;
-        font-family: var(--fm);
-        font-size: 11px;
-        color: var(--muted);
-        border: 2px solid transparent;
-        transition: all 0.15s;
-      }
-      .cat-item:hover {
-        color: var(--pink);
-        border-color: var(--b-hi);
-        background: rgba(255, 102, 204, 0.05);
-      }
-      /* Tags */
-      .tag-cloud {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        margin-bottom: 16px;
-      }
-      .tag-chip {
-        font-family: var(--fm);
-        font-size: 10px;
-        padding: 3px 8px;
-        border: 1px solid var(--b-hi);
-        color: var(--muted);
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .tag-chip:hover {
-        color: var(--cyan);
-        border-color: var(--cyan);
-        background: rgba(102, 255, 204, 0.08);
-      }
-      /* Projects */
-      .projects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 14px;
-        margin-bottom: 20px;
-      }
-      .project-card {
-        border: 2px solid #000;
-        box-shadow: inset 0 0 0 2px var(--b-hi);
-        background: var(--card);
-        padding: 16px;
-        transition: transform 0.15s;
-        border-radius: 16px;
-      }
-      .project-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px 0 rgba(255, 102, 204, 0.25),
-          inset 0 0 0 1px var(--pink) !important;
-        background: rgba(22, 12, 48, 0.5) !important;
-      }
-      .proj-icon {
-        font-family: var(--fp);
-        font-size: 24px;
-        color: var(--pink);
-        margin-bottom: 8px;
-      }
-      .proj-name {
-        font-family: var(--fp);
-        font-size: 14px;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 6px;
-      }
-      .proj-desc {
-        font-family: var(--fb);
-        font-size: 12px;
-        color: var(--muted);
-        line-height: 1.5;
-        margin-bottom: 8px;
-      }
-      .proj-status {
-        font-family: var(--fm);
-        font-size: 10px;
-        color: var(--cyan);
-      }
-      /* Announce Box */
-      .announce-box {
-        margin-bottom: 16px;
-        border: 2px solid var(--yellow);
-        box-shadow: inset 0 0 0 2px rgba(255, 221, 68, 0.3);
-        background: var(--card);
-        padding: 12px;
-        position: relative;
-        border-radius: 16px;
-      }
-      .announce-box .ann-text {
-        font-family: var(--fb);
-        font-size: 12px;
-        color: var(--text);
-        line-height: 1.6;
-        padding-right: 20px;
-      }
-      /* Footer */
-      .site-footer {
-        margin-top: 24px;
-        padding-top: 16px;
-        border-top: 2px solid var(--b-hi);
-        text-align: center;
-        font-family: var(--fm);
-        font-size: 11px;
-        color: var(--dim);
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet" />
   </head>
   <body>
     <SakuraEffect />
     <slot />
-
     <script>
-      // @ts-nocheck
+// @ts-nocheck
       (function() {
-        const SCENE_SEL = '.game-scene';
-        const BTN_SEL = '.theme-toggle-btn';
-        const STORAGE_KEY = 'fyh-theme';
-
-        function getScene() { var el = document.querySelector(SCENE_SEL); return /** @type {HTMLElement|null} */ (el); }
-        function getBtn() { var el = document.querySelector(BTN_SEL); return /** @type {HTMLElement|null} */ (el); }
-
-        function updateRippleOrigin() {
-          const btn = getBtn();
-          const /** @type {HTMLElement|null} */ scene = getScene();
+        var SCENE = '.game-scene';
+        var BTN = '.theme-toggle-btn';
+        var KEY = 'fyh-theme';
+        function gs(sel) { return document.querySelector(sel); }
+        function updateRipple() {
+          var btn = gs(BTN), scene = gs(SCENE);
           if (!btn || !scene) return;
-          const br = btn.getBoundingClientRect();
-          const sr = scene.getBoundingClientRect();
-          const cx = ((br.left + br.width / 2) - sr.left) / sr.width * 100;
-          const cy = ((br.top + br.height / 2) - sr.top) / sr.height * 100;
+          var br = btn.getBoundingClientRect(), sr = scene.getBoundingClientRect();
+          var cx = ((br.left + br.width / 2) - sr.left) / sr.width * 100;
+          var cy = ((br.top + br.height / 2) - sr.top) / sr.height * 100;
           scene.style.setProperty('--ripple-x', cx + '%');
           scene.style.setProperty('--ripple-y', cy + '%');
         }
-
-        /** @param {"day"|"night"} theme */
-        function setTheme(theme) {
-          const scene = getScene();
-          const btn = getBtn();
+        function setTheme(t) {
+          var scene = gs(SCENE), btn = gs(BTN);
           if (!scene || !btn) return;
-          updateRippleOrigin();
-          if (theme === 'day') {
-            scene.classList.add('day-mode');
-            btn.classList.add('day');
-          } else {
-            scene.classList.remove('day-mode');
-            btn.classList.remove('day');
-          }
-          try { localStorage.setItem(STORAGE_KEY, theme); } catch(e) {}
+          updateRipple();
+          if (t === 'day') { scene.classList.add('day-mode'); btn.classList.add('day'); }
+          else { scene.classList.remove('day-mode'); btn.classList.remove('day'); }
+          try { localStorage.setItem(KEY, t); } catch(e) {}
         }
-
-        function toggleTheme() {
-          const scene = getScene();
-          if (!scene) return;
-          const isDay = scene.classList.contains('day-mode');
-          setTheme(isDay ? 'night' : 'day');
+        function toggle() {
+          var scene = gs(SCENE); if (!scene) return;
+          setTheme(scene.classList.contains('day-mode') ? 'night' : 'day');
         }
-
-        function initTheme() {
-          let theme = 'night';
-          try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved === 'day' || saved === 'night') theme = saved;
-          } catch(e) {}
-          setTheme(theme);
+        function init() {
+          var t = 'night';
+          try { var s = localStorage.getItem(KEY); if (s === 'day' || s === 'night') t = s; } catch(e) {}
+          setTheme(t);
         }
-
         document.addEventListener('click', function(e) {
-          const target = /** @type {HTMLElement} */ (/** @type {unknown} */ (e.target));
-          const btn = target.closest(BTN_SEL);
-          if (btn) toggleTheme();
+          var b = e.target.closest(BTN); if (b) toggle();
         });
-
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initTheme);
-        } else {
-          initTheme();
-        }
-
-        window.addEventListener('resize', function() {
-          updateRippleOrigin();
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+        window.addEventListener('resize', updateRipple);
+        /* Mouse glow tracking for all glass cards */
+        document.addEventListener('mousemove', function(e) {
+          document.querySelectorAll('.post-card, .glass-card').forEach(function(c) {
+            var r = c.getBoundingClientRect();
+            c.style.setProperty('--mouse-x', ((e.clientX - r.left) / r.width) * 100 + '%');
+            c.style.setProperty('--mouse-y', ((e.clientY - r.top) / r.height) * 100 + '%');
+          });
+        });
+        /* Mouse tracking for glass-card mc-x/mc-y */
+        document.addEventListener('mousemove', function(e) {
+          document.querySelectorAll('.glass-card').forEach(function(c) {
+            var r = c.getBoundingClientRect();
+            c.style.setProperty('--mc-x', ((e.clientX - r.left) / r.width) * 100 + '%');
+            c.style.setProperty('--mc-y', ((e.clientY - r.top) / r.height) * 100 + '%');
+          });
         });
       })();
     </script>
