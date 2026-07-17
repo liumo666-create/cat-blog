@@ -1,0 +1,150 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+// 🌟 核心修改 1：额外引入 type CollectionEntry
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  // 🌟 核心修改 2：给 map 函数的参数 post 加上明确的类型
+  return posts.map((post: CollectionEntry<"blog">) => ({
+    params: { id: post.id }, 
+    props: { post },         
+  }));
+}
+
+// 🌟 核心修改 3：通过 interface 定义当前页面的 Props 结构
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+// 现在的 Astro.props 就知道 post 是一篇文章了，不再是 never！
+const { post } = Astro.props;
+const { Content } = await render(post); 
+---
+<Layout title={post.data.title}>
+  <div class="game-scene">
+    <div class="scroll-container" id="scrollContainer">
+      <div class="web-wrapper">
+        <NavBar />
+        
+        <!-- ===== 专属文章阅读区 ===== -->
+        <div class="article-container">
+          <!-- 丝滑返回按钮 -->
+          <a href="/" class="back-btn">← 返回知识库</a>
+          
+          <!-- 文章头部 (封面、标题、日期) -->
+          <div class="article-header">
+            {post.data.cover && <img src={post.data.cover} alt="封面" class="article-cover" />}
+            <h1 class="article-title">{post.data.title}</h1>
+            <div class="article-meta">
+              <span class="date">{post.data.date.toISOString().slice(0,10)}</span>
+              <span class="cat">{post.data.category}</span>
+            </div>
+          </div>
+
+          <!-- 核心：Markdown 正文渲染区 -->
+          <div class="markdown-body">
+            <Content />
+          </div>
+        </div>
+        <!-- ======================= -->
+
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* ===== 沉浸式阅读页专属 CSS ===== */
+  .article-container {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 40px 50px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-sub);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  /* 适配黑夜模式 */
+  .game-scene.day-mode .article-container {
+    background: rgba(30, 20, 40, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--pink);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    transition: transform 0.3s ease;
+  }
+  .back-btn:hover { transform: translateX(-6px); }
+
+  .article-cover {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .article-title {
+    font-size: 2.2rem;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-family: var(--font-body);
+  }
+  .game-scene.day-mode .article-title { color: #f0f0f0; }
+
+  .article-meta {
+    display: flex;
+    gap: 20px;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--border-sub);
+  }
+
+  /* ===== Markdown 内容美化 (图片、视频iframe、排版) ===== */
+  .markdown-body {
+    line-height: 1.8;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .game-scene.day-mode .markdown-body { color: #d0c8d8; }
+  
+  .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+    margin-top: 1.8em;
+    margin-bottom: 0.8em;
+    color: var(--pink);
+  }
+  .game-scene.day-mode .markdown-body h2 { color: var(--glow-cyan); }
+  
+  .markdown-body p { margin-bottom: 1.4em; }
+  
+  /* 图片自适应与圆角 */
+  .markdown-body img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 24px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  
+  /* B站/视频 iframe 完美适配 */
+  .markdown-body iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* 强制 16:9 比例 */
+    border-radius: 12px;
+    margin: 24px 0;
+    border: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+</style>

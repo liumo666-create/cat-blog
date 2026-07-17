@@ -2,30 +2,91 @@
 import Layout from "@layouts/Layout.astro";
 import NavBar from "@components/NavBar.astro";
 import HeroBanner from "@components/HeroBanner.astro";
+// 🌟 核心修改 1：额外引入 type CollectionEntry
+import { getCollection, type CollectionEntry } from "astro:content"; 
+
+const allPosts = await getCollection("blog");
+// 🌟 核心修改 2：明确指定 a 和 b 的类型为 CollectionEntry<"blog">
+const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout>
-  <div class="game-scene">
+  <div class="game-scene">  
     <div class="scroll-container" id="scrollContainer">
       <div class="web-wrapper">
         <NavBar />
         <HeroBanner />
 
-        <!-- ===== HOME PAGE ===== -->
+     <!-- ===== HOME PAGE ===== -->
         <div class="section-page active" id="page-home">
+          
+          <!-- 👇👇👇 请把你原来的 <div class="main-col">...</div> 全部替换成下面这一整块 👇👇👇 -->
           <div class="main-col">
-            <div class="section-title">最新文章</div>
-            <div class="post-list" id="postList"></div>
-          </div>
-          <div class="side-col">
-            <div class="glass-card" style="margin-bottom:12px;">
-              <div class="widget-date" id="widgetDate"></div>
-              <div class="widget-clock" id="widgetClock"></div>
-              <div class="widget-weather" id="widgetWeather">
-                <span class="temp" id="weatherTemp">--°</span>
-                <span id="weatherDesc">加载中...</span>
-              </div>
+            <div class="section-title">知识库</div>
+            
+            <!-- 🌟 全新由 Astro 静态生成的带封面文章列表 -->
+      
+            <div class="post-list">
+              <!-- 🌟 核心修改 3：标注 post 和 index 的类型 -->
+              {sortedPosts.map((post: CollectionEntry<"blog">, index: number) => (
+                <a href={`/post/${post.id}/`} class={`post-card-link post-item page-${Math.floor(index / 5) + 1}`} style={index >= 5 ? 'display: none;' : ''}>
+                  <div class="post-card has-cover">
+                    {/* 如果 md 文件配置了封面图，则显示精美左侧封面 */}
+                    {post.data.cover && (
+                      <div class="post-cover-wrap">
+                        <img src={post.data.cover} alt={post.data.title} class="post-cover" />
+                      </div>
+                    )}
+                    
+                    <div class="post-text-wrap">
+                      <div class="post-date">{post.data.date.toISOString().slice(0,10)}</div>
+                      <div class="post-title">{post.data.title}</div>
+                      <div class="post-excerpt">{post.data.excerpt || "点击阅读全文..."}</div>
+                      <div class="post-meta">
+                        <span class="cat">{post.data.category}</span>
+                        <!-- 🌟 核心修改 4：标注 tag 的类型为 string -->
+                        {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
+            
+            <!-- 🌟 精美的底部翻页控件 -->
+            {sortedPosts.length > 5 && (
+              <div class="pagination-controls">
+                <button class="glass-btn" id="prevPage" disabled style="opacity: 0.4;">上一页</button>
+                <span class="page-indicator" id="pageIndicator">1 / {Math.ceil(sortedPosts.length / 5)}</span>
+                <button class="glass-btn" id="nextPage" data-max={Math.ceil(sortedPosts.length / 5)}>下一页</button>
+              </div>
+            )}
+          </div>
+          <!-- 👆👆👆 替换到这里结束 👆👆👆 -->
+          <div class="side-col">
+<!-- 新代码：替换到 index.astro 中 -->
+<!-- ================== 天气卡片 HTML ================== -->
+<div class="glass-card widget-card" style="margin-bottom:12px;">
+  <div class="widget-date" id="widgetDate"></div>
+  <div class="widget-clock" id="widgetClock"></div>
+  
+  <div class="weather-box-clean">
+    <div class="weather-city"><span class="city-icon">📍</span> 荆州</div>
+    
+    <div class="widget-weather-flex">
+      <!-- 动画容器 -->
+      <div id="weatherAnim" class="weather-anim-icon">
+        <!-- 默认显示开源版小太阳，JS加载后会自动接管 -->
+        <div class="icon sunny"><div class="sun"><div class="rays"></div></div></div>
+      </div>
+      
+      <div class="weather-text-info">
+        <span class="temp" id="weatherTemp">--°</span>
+        <span id="weatherDesc">加载中...</span>
+      </div>
+    </div>
+  </div>
+</div>
             <div class="glass-card calendar-widget" style="margin-bottom:12px;">
               <div class="calendar-header">
                 <button class="calendar-btn" id="calPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="m15 18-6-6 6-6"/></svg></button>
@@ -433,34 +494,48 @@ import HeroBanner from "@components/HeroBanner.astro";
     </div>
   </div>
 </div>
-
 <script>
 // @ts-nocheck
   var KEYS = { articles: 'fyh_articles', calendar: 'fyh_calendar', albums: 'fyh_albums', weatherCache: 'fyh_weather' };
 
-  var DEFAULT_ARTICLES = [
-    { id: 1, title: '欢迎来到我的像素博客', excerpt: 'FYH像素世界——用代码和像素艺术构建的个人空间。记录学习、分享创作、偶尔碎碎念。', date: '2024-06-15', category: '生活', tags: ['像素', '博客', '生活'] },
-    { id: 2, title: 'Canvas像素画编辑器的开发记录', excerpt: '从零构建浏览器端像素画编辑器，支持图层管理、自定义调色板、GIF导出。', date: '2024-06-10', category: '开发', tags: ['Canvas', 'JavaScript', '像素画'] },
-    { id: 3, title: '像素画入门完全指南', excerpt: '分享像素画学习之路——工具选择、基础技法、配色理论到练习方法。零基础也能开始像素创作。', date: '2024-05-20', category: '像素画', tags: ['像素画', '设计', '创作'] },
-    { id: 4, title: '我的极简桌面布置分享', excerpt: '花了两个月重新设计桌面工作区——从显示器支架到键盘选择、理线到灯光，完整改造记录。', date: '2024-05-08', category: '生活', tags: ['桌面', '工具', '效率'] }
-  ];
-
-  function getArticles() { try { return JSON.parse(localStorage.getItem(KEYS.articles) || 'null') || DEFAULT_ARTICLES.slice(); } catch(e) { return DEFAULT_ARTICLES.slice(); } }
-  function saveArticles(a) { try { localStorage.setItem(KEYS.articles, JSON.stringify(a)); } catch(e) {} }
   function getCalendar() { try { return JSON.parse(localStorage.getItem(KEYS.calendar) || '{}'); } catch(e) { return {}; } }
   function saveCalendar(o) { try { localStorage.setItem(KEYS.calendar, JSON.stringify(o)); } catch(e) {} }
   function getAlbums() { try { return JSON.parse(localStorage.getItem(KEYS.albums) || '[]'); } catch(e) { return []; } }
   function saveAlbums(a) { try { localStorage.setItem(KEYS.albums, JSON.stringify(a)); } catch(e) {} }
 
-  /* ===== Render Posts ===== */
-  function renderPosts() {
-    var list = document.getElementById('postList'); if (!list) return;
-    var articles = getArticles();
-    list.innerHTML = articles.map(function(p) {
-      return '<div class="post-card"><div class="post-date">' + p.date + '</div><div class="post-title">' + p.title + '</div><div class="post-excerpt">' + p.excerpt + '</div><div class="post-meta"><span class="cat">' + p.category + '</span>' + (p.tags||[]).map(function(t){return '<span class="tag">'+t+'</span>';}).join('') + '</div></div>';
-    }).join('');
-    var s = document.getElementById('statPosts'); if (s) s.textContent = articles.length;
+  /* ===== Markdown 丝滑分页逻辑 ===== */
+  var currentPage = 1;
+  var maxPage = parseInt(document.getElementById('nextPage')?.dataset.max || 1);
+  var postItems = document.querySelectorAll('.post-item');
+  
+  function updatePagination() {
+    postItems.forEach(function(item) {
+      if (item.classList.contains('page-' + currentPage)) {
+        item.style.display = 'block';
+        item.style.animation = 'fadeInUp 0.4s ease forwards';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    
+    var prevBtn = document.getElementById('prevPage');
+    var nextBtn = document.getElementById('nextPage');
+    var indicator = document.getElementById('pageIndicator');
+    
+    if(prevBtn) { prevBtn.disabled = currentPage === 1; prevBtn.style.opacity = currentPage === 1 ? '0.4' : '1'; }
+    if(nextBtn) { nextBtn.disabled = currentPage === maxPage; nextBtn.style.opacity = currentPage === maxPage ? '0.4' : '1'; }
+    if(indicator) indicator.textContent = currentPage + ' / ' + maxPage;
+    
+    var sc = document.getElementById('scrollContainer');
+    if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  document.getElementById('prevPage')?.addEventListener('click', function() {
+    if (currentPage > 1) { currentPage--; updatePagination(); }
+  });
+  document.getElementById('nextPage')?.addEventListener('click', function() {
+    if (currentPage < maxPage) { currentPage++; updatePagination(); }
+  });
 
   /* ===== Clock ===== */
   function updateClock() {
@@ -472,12 +547,15 @@ import HeroBanner from "@components/HeroBanner.astro";
   }
   setInterval(updateClock, 1000); updateClock();
 
-  /* ===== Weather ===== */
+  /* ===== Weather (Dynamic Enhanced) ===== */
   function fetchWeather() {
     var cached = null;
     try { cached = JSON.parse(localStorage.getItem(KEYS.weatherCache) || 'null'); } catch(e) {}
+    // 注意这里多传入了 cached.code，以确保刷新时也能触发正确的动画
     if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=31.23&longitude=121.47&current_weather=true')
+    
+    // 【核心修改 1：将经纬度精准定位到 湖北荆州 (纬度 30.33, 经度 112.23)】
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=30.33&longitude=112.23&current_weather=true')
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var temp = data.current_weather.temperature;
@@ -488,7 +566,7 @@ import HeroBanner from "@components/HeroBanner.astro";
         for (var i = 51; i <= 55; i++) descs[i] = '毛毛雨';
         for (var i = 56; i <= 57; i++) descs[i] = '冻雨';
         for (var i = 61; i <= 65; i++) descs[i] = '雨';
-        for (var i = 66; i <= 67; i++) descs[i] = '冻雨';
+        for (var i = 66; i <= 67; i++) descs[i] = '大雨';
         for (var i = 71; i <= 75; i++) descs[i] = '雪';
         for (var i = 77; i <= 77; i++) descs[i] = '雪粒';
         for (var i = 80; i <= 82; i++) descs[i] = '阵雨';
@@ -496,14 +574,28 @@ import HeroBanner from "@components/HeroBanner.astro";
         for (var i = 95; i <= 95; i++) descs[i] = '雷暴';
         for (var i = 96; i <= 99; i++) descs[i] = '雷暴伴冰雹';
         var desc = descs[code] || '未知';
+        
         showWeather(temp, desc, code);
         try { localStorage.setItem(KEYS.weatherCache, JSON.stringify({ temp: temp, desc: desc, code: code, time: Date.now() })); } catch(e) {}
-      }).catch(function() { showWeather('--', '无法获取天气'); });
+      }).catch(function() { showWeather('--', '无法获取天气', -1); });
   }
-  function showWeather(temp, desc) {
-    var t = document.getElementById('weatherTemp'), d = document.getElementById('weatherDesc');
+
+  function showWeather(temp, desc, code) {
+    var t = document.getElementById('weatherTemp');
+    var d = document.getElementById('weatherDesc');
+    var rainEffect = document.querySelector('.pixel-rain'); // 获取我们在 HTML 中预埋的纯 CSS 雨滴层
+    
     if (t) t.textContent = temp + '°';
     if (d) d.textContent = desc;
+    
+    // 【核心修改 2：根据 Open-Meteo 的天气代码动态控制特效】
+    if (rainEffect) {
+      // 判断当前是否属于降水天气 (毛毛雨/雨/阵雨/雷暴等)
+      var isRaining = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99);
+      
+      // 如果是雨天，显示像素雨；如果是晴天或多云，则隐藏（保证逻辑严密）
+      rainEffect.style.display = isRaining ? 'block' : 'none';
+    }
   }
   fetchWeather();
 
@@ -901,7 +993,6 @@ import HeroBanner from "@components/HeroBanner.astro";
   }
 
   /* ===== Init ===== */
-  renderPosts();
   renderCalendar();
   renderAlbums();
   renderProjects();

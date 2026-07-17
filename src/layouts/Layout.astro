@@ -5,7 +5,8 @@ import SakuraEffect from "@components/SakuraEffect.astro";
 interface Props { title?: string; description?: string; }
 
 const { title, description } = Astro.props;
-const pageTitle = title ? `${title} - FYH BLOG` : "FYH BLOG - ????";
+// 👇 核心修改 1：将标题模板和默认乱码改为 "FYH的工作站"
+const pageTitle = title ? `${title} - FYH的工作站` : "FYH的工作站";
 const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u827a\u672f\u4e0e\u4ee3\u7801\u7684\u4e2a\u4eba\u7a7a\u95f4";
 ---
 
@@ -16,10 +17,13 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDesc} />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>\u732b</text></svg>" />
+    
+    <!-- 👇 核心修改 2：彻底移除 SVG 文字猫图标，引入 public 目录下的 cat.png -->
+    <link rel="icon" type="image/png" href="/cat.png" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <SakuraEffect />
