@@ -1,0 +1,86 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="项目 - FYH BLOG">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+        
+        <!-- 👇 我们要把你原本精美的代码搬到这里 👇 -->
+             
+
+        <!-- ===== ABOUT PAGE ===== -->
+        <div class="section-page active" id="page-about">
+          <div class="about-layout">
+            <div class="about-avatar-card animate-in">
+              <div class="about-avatar-ring">
+                <div class="about-avatar-inner">猫</div>
+              </div>
+              <div class="about-name">FYH</div>
+              <div class="about-role">DESIGNER & DEVELOPER</div>
+              <div class="about-divider"></div>
+              <div class="about-contact">
+                <a href="https://github.com/liumo666-create" target="_blank" rel="noopener" title="GitHub">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                </a>
+                <a href="https://space.bilibili.com/54055135" target="_blank" rel="noopener" title="Bilibili">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="2"/><line x1="8" x2="10" y1="4" y2="6"/><line x1="16" x2="14" y1="4" y2="6"/><line x1="9" x2="9.01" y1="13" y2="13"/><line x1="15" x2="15.01" y1="13" y2="13"/></svg>
+                </a>
+                <a href="https://www.douyin.com/user/MS4wLjABAAAAKD7gXoehr1Yq_yVSHfiRBmtKUISmPRnlXwGkDqRYWhM" target="_blank" rel="noopener" title="Douyin">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="about-main">
+              <div class="about-bio-card animate-in">
+                <div class="about-bio-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  关于我
+                </div>
+                <div class="about-bio-text">
+                  你好，我是 FYH，一个热爱像素艺术与代码创作的设计师兼开发者。<br/>
+                  我相信每一行代码都可以是有温度的，每一个像素都能讲述故事。<br/>
+                  这个空间是我记录学习、分享创作、偶尔碎碎念的地方。<br/>
+                  欢迎你来到这里 <span class="about-typewriter" id="aboutTypewriter"></span>
+                </div>
+              </div>
+              <div class="about-bio-card animate-in">
+                <div class="about-bio-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+                  技能
+                </div>
+                <div class="about-skills-grid">
+                  <div class="about-skill"><div class="about-skill-icon">△</div><div class="about-skill-name">JavaScript</div><div class="about-skill-level">熟练</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">◇</div><div class="about-skill-name">TypeScript</div><div class="about-skill-level">熟练</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">□</div><div class="about-skill-name">React/Vue</div><div class="about-skill-level">掌握</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">☆</div><div class="about-skill-name">Astro/Svelte</div><div class="about-skill-level">掌握</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">◎</div><div class="about-skill-name">Canvas</div><div class="about-skill-level">热爱</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">⬡</div><div class="about-skill-name">CSS/动画</div><div class="about-skill-level">热爱</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">▽</div><div class="about-skill-name">像素画</div><div class="about-skill-level">热爱</div></div>
+                  <div class="about-skill"><div class="about-skill-icon">◆</div><div class="about-skill-name">Python</div><div class="about-skill-level">熟悉</div></div>
+                </div>
+              </div>
+              <div class="about-now-card animate-in">
+                <div class="about-now-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  此刻正在...
+                </div>
+                <div class="about-now-items">
+                  <div class="about-now-item"><span class="about-now-dot pink"></span> 构建这个像素博客</div>
+                  <div class="about-now-item"><span class="about-now-dot cyan"></span> 学习 Canvas 动画技术</div>
+                  <div class="about-now-item"><span class="about-now-dot purple"></span> 喝一杯热咖啡</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 👆 搬运到这里结束 👆 -->
+
+      </div>
+    </div>
+  </div>
+</Layout>

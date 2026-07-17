@@ -1,0 +1,55 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="Pixel Painter - 项目详情">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+
+        <!-- ===== PROJECT DETAIL: Pixel Painter ===== -->
+        <div class="section-page active" id="page-project-detail-1">
+          <div class="main-col" style="width:100%">
+            <button class="proj-detail-back" onclick="window.location.href='/projects/'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </button>
+            <div class="proj-detail-page active proj-detail-painter">
+              <div class="painter-hero animate-in">
+                <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--cyan);margin-bottom:6px;">Pixel Painter</h3>
+                <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">基于 Canvas 的在线像素画编辑器，支持多图层、自定义调色板、GIF/PNG 导出、历史撤销。</p>
+                <div class="painter-canvas-demo" id="painterDemo">
+                  <canvas id="painterCanvas"></canvas>
+                </div>
+                <div class="painter-palette" id="painterPalette"></div>
+                <div class="painter-toolbar-row">
+                  <button class="painter-tool-btn active" data-tool="pen" title="画笔">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  </button>
+                  <button class="painter-tool-btn" data-tool="eraser" title="橡皮">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16c-.8-.8-.8-2 0-2.8L14.6 1.6c.8-.8 2-.8 2.8 0L20 4.2"/><path d="m17 17 3.3 3.3"/></svg>
+                  </button>
+                  <button class="painter-tool-btn" data-tool="fill" title="填充">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2Z"/></svg>
+                  </button>
+                  <button class="painter-tool-btn" data-tool="clear" title="清空">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                  </button>
+                </div>
+                <div class="painter-features-grid">
+                  <div class="painter-feature-card"><h4>多图层支持</h4><p>无限图层叠加，独立控制透明度、混合模式，自由排序。</p></div>
+                  <div class="painter-feature-card"><h4>自定义调色板</h4><p>16 色经典像素调色板，支持自定义颜色和保存配色方案。</p></div>
+                  <div class="painter-feature-card"><h4>GIF/PNG 导出</h4><p>支持静态 PNG 和动画 GIF 导出，可设帧率和循环次数。</p></div>
+                  <div class="painter-feature-card"><h4>历史撤销</h4><p>无限步撤销/重做，完整操作历史记录。</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>

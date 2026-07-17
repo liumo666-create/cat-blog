@@ -1,22 +1,23 @@
 ﻿---
 ---
-
 <header>
   <div class="logo-area">
     <div class="cat-wrap" id="catWrap">
       <img id="catLogo" src="/cat1.png" alt="cat" />
     </div>
     <div class="logo-text">
-      <h1>FYH BLOG</h1>
+      <!-- 字体图片 -->
+      <img src="/fyh%20blog.png" alt="FYH BLOG" class="fyh-title-img" />
       <p>像素天堂</p>
     </div>
   </div>
 
   <nav class="nav-links" id="mainNav">
-    <a data-page="home" class="nav-item active">
+    <a href="/" class="nav-item">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>首页</span>
     </a>
+    
     <div class="nav-dropdown" data-dropdown="links">
       <button class="nav-item nav-dropdown-trigger">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -38,6 +39,7 @@
         </a>
       </div>
     </div>
+    
     <div class="nav-dropdown" data-dropdown="space">
       <button class="nav-item nav-dropdown-trigger">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -45,9 +47,9 @@
         <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div class="dropdown-menu">
-        <a data-page="album" class="dropdown-item">
+        <a href="/gallery/" class="dropdown-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          <span>相册</span>
+          <span>光影画廊</span>
         </a>
         <a data-page="editor" class="dropdown-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -55,11 +57,12 @@
         </a>
       </div>
     </div>
-    <a data-page="projects" class="nav-item">
+    
+    <a href="/projects/" class="nav-item">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
       <span>项目</span>
     </a>
-    <a data-page="about" class="nav-item">
+    <a href="/about/" class="nav-item">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
       <span>关于</span>
     </a>
@@ -96,11 +99,23 @@
     transition: transform 0.15s;
   }
   .cat-wrap:hover img { transform: scale(1.12); }
-  .logo-text h1 {
-    font-family: var(--font-pixel); font-size: 20px; font-weight: 700;
-    color: #fff; margin-bottom: 2px; letter-spacing: 1px; line-height: 1.2;
+  
+  /* 🌟 核心修改：大幅调整图片尺寸与对齐细节 */
+  .fyh-title-img {
+    height: 52px; /* 高度翻倍，使其在视觉上达到原文字大小 */
+    width: auto;
+    display: block;
+    margin-top: -6px; /* 向上偏移，抵消顶部樱花的留白 */
+    margin-bottom: -4px; /* 向下偏移，拉近与“像素天堂”的间距 */
+    margin-left: -6px; /* 向左偏移，抵消左侧花朵留白，对齐下方文字 */
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); /* 增加微小阴影提升层次和清晰度 */
   }
-  .game-scene.day-mode .logo-text h1 { color: #1a1030; }
+  .fyh-title-img:hover {
+    transform: scale(1.03);
+  }
+
   .logo-text p {
     font-family: var(--font-body); font-size: 12px;
     color: var(--pink); letter-spacing: 2px;

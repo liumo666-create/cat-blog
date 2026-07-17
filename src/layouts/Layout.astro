@@ -24,6 +24,41 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    
+    <!-- 🌟 终极防闪烁：在浏览器绘制第一帧前，拦截并注入日间模式 🌟 -->
+    <script is:inline>
+      (function() {
+        // 1. 封杀所有动画，防止加载时的残留特效
+        var style = document.createElement('style');
+        style.id = 'theme-preload-blocker';
+        style.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+        document.head.appendChild(style);
+
+        // 2. 提前读取本地存储
+        try {
+          var theme = localStorage.getItem('fyh-theme');
+          if (theme === 'day') {
+            // 3. 使用 MutationObserver 蹲点，DOM 生成的一瞬间注入 class
+            var observer = new MutationObserver(function(mutations, obs) {
+              var scene = document.querySelector('.game-scene');
+              var btn = document.querySelector('.theme-toggle-btn');
+              
+              if (scene && !scene.classList.contains('day-mode')) {
+                scene.classList.add('day-mode');
+              }
+              if (btn && !btn.classList.contains('day')) {
+                btn.classList.add('day');
+              }
+              
+              if (scene && btn) {
+                obs.disconnect(); // 拦截完成，事了拂衣去
+              }
+            });
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+          }
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <SakuraEffect />
@@ -35,6 +70,7 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
         var BTN = '.theme-toggle-btn';
         var KEY = 'fyh-theme';
         function gs(sel) { return document.querySelector(sel); }
+        
         function updateRipple() {
           var btn = gs(BTN), scene = gs(SCENE);
           if (!btn || !scene) return;
@@ -44,29 +80,47 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
           scene.style.setProperty('--ripple-x', cx + '%');
           scene.style.setProperty('--ripple-y', cy + '%');
         }
-        function setTheme(t) {
+        
+        function setTheme(t, isClick) {
           var scene = gs(SCENE), btn = gs(BTN);
           if (!scene || !btn) return;
-          updateRipple();
+          
+          if (isClick) {
+            updateRipple();
+          }
+          
           if (t === 'day') { scene.classList.add('day-mode'); btn.classList.add('day'); }
           else { scene.classList.remove('day-mode'); btn.classList.remove('day'); }
           try { localStorage.setItem(KEY, t); } catch(e) {}
         }
+        
         function toggle() {
           var scene = gs(SCENE); if (!scene) return;
-          setTheme(scene.classList.contains('day-mode') ? 'night' : 'day');
+          setTheme(scene.classList.contains('day-mode') ? 'night' : 'day', true);
         }
+        
         function init() {
           var t = 'night';
           try { var s = localStorage.getItem(KEY); if (s === 'day' || s === 'night') t = s; } catch(e) {}
-          setTheme(t);
+          setTheme(t, false);
         }
+        
         document.addEventListener('click', function(e) {
           var b = e.target.closest(BTN); if (b) toggle();
         });
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-        else init();
+        
+        init();
+        
+        // 撤销封杀令，恢复完美点击扩散动画
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            var blocker = document.getElementById('theme-preload-blocker');
+            if (blocker) blocker.remove();
+          });
+        });
+        
         window.addEventListener('resize', updateRipple);
+        
         /* Mouse glow tracking for all glass cards */
         document.addEventListener('mousemove', function(e) {
           document.querySelectorAll('.post-card, .glass-card').forEach(function(c) {
@@ -75,6 +129,7 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
             c.style.setProperty('--mouse-y', ((e.clientY - r.top) / r.height) * 100 + '%');
           });
         });
+        
         /* Mouse tracking for glass-card mc-x/mc-y */
         document.addEventListener('mousemove', function(e) {
           document.querySelectorAll('.glass-card').forEach(function(c) {

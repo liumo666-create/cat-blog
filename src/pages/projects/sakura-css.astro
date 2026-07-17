@@ -1,0 +1,51 @@
+\---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="Sakura CSS - 项目详情">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+
+        <!-- ===== PROJECT DETAIL: Sakura CSS ===== -->
+        <div class="section-page active" id="page-project-detail-3">
+          <div class="main-col" style="width:100%">
+            <a href="/projects/" class="proj-detail-back" style="display:inline-flex; align-items:center; text-decoration:none; color:inherit; cursor:pointer;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </a>
+            <div class="proj-detail-page active proj-detail-sakura">
+              <div class="sakura-hero animate-in">
+                <div class="sakura-petals" id="sakuraPetals"></div>
+                <div class="sakura-content">
+                  <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--orange);margin-bottom:6px;">&#x1F338; Sakura CSS</h3>
+                  <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">纯 CSS 实现的樱花飘落效果库，零依赖、轻量级，支持自定义花瓣数量、速度和颜色。为你的网页添加一抹浪漫的春日气息。</p>
+                  <div class="sakura-feature-row">
+                    <div class="sakura-feature-item">
+                      <span class="sakura-feat-icon">&#x2B22;</span>
+                      <h4>零依赖</h4>
+                      <p>纯 CSS animation</p>
+                    </div>
+                    <div class="sakura-feature-item">
+                      <span class="sakura-feat-icon">&#x2699;</span>
+                      <h4>高度可定制</h4>
+                      <p>花瓣数/速度/颜色</p>
+                    </div>
+                    <div class="sakura-feature-item">
+                      <span class="sakura-feat-icon">&#x26A1;</span>
+                      <h4>轻量级</h4>
+                      <p>压缩后 &lt; 2KB</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>

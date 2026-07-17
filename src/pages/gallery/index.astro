@@ -1,0 +1,136 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+// 🌟 核心修改 1：额外引入 type CollectionEntry
+import { getCollection, type CollectionEntry } from "astro:content";
+
+const allAlbums = await getCollection("gallery");
+// 🌟 核心修改 2：明确指定 a 和 b 的类型为 CollectionEntry<"gallery">
+const sortedAlbums = allAlbums.sort((a: CollectionEntry<"gallery">, b: CollectionEntry<"gallery">) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title="光影画廊 - FYH的工作站">
+  <div class="game-scene"> <!-- 锁定沉浸式背景 -->
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+        
+        <div class="gallery-page-container">
+          <!-- 画廊标题区 -->
+          <div class="gallery-header">
+            <h1 class="gallery-title">光影画廊</h1>
+            <p class="gallery-subtitle">定格时间，封存虚拟与现实的每一次心跳</p>
+          </div>
+
+          <!-- 画廊网格区 -->
+<!-- 画廊网格区 -->
+          <div class="album-grid">
+            <!-- 🌟 核心修改 3：标注 album 的类型 -->
+            {sortedAlbums.map((album: CollectionEntry<"gallery">) => (
+              <a href={`/gallery/${album.id}/`} class="album-card">
+                <div class="album-stack">
+                  <!-- 散开动画：底层照片 -->
+                  <img src={album.data.photos[2] || album.data.photos[0]} class="stack-bg-2" alt="" />
+                  <img src={album.data.photos[1] || album.data.photos[0]} class="stack-bg-1" alt="" />
+                  
+                  <!-- 顶层照片与悬停遮罩 -->
+                  <div class="stack-front-wrap">
+                    <img src={album.data.photos[0]} class="stack-front" alt={album.data.title} />
+                    <div class="hover-overlay">
+                      <span class="photo-count">{album.data.photos.length} 张照片</span>
+                      <span class="click-hint">Click to Open</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="album-info">
+                  <h2 class="album-name">{album.data.title} <span class="album-date">{album.data.date.toISOString().slice(0,10)}</span></h2>
+                  <p class="album-desc">{album.data.description}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* ===== 光影画廊页面专属排版 ===== */
+  .gallery-page-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 40px;
+    animation: fadeInUp 0.8s ease forwards;
+  }
+  
+  .gallery-header { text-align: left; margin-bottom: 60px; border-left: 4px solid var(--pink); padding-left: 20px; }
+  .gallery-title { font-size: 2.8rem; color: var(--text); margin-bottom: 8px; font-family: var(--font-body); letter-spacing: 2px; }
+  .gallery-subtitle { color: var(--muted); font-size: 1rem; letter-spacing: 1px; }
+
+  .album-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 80px 50px;
+    justify-content: center;
+  }
+
+  /* ===== 核心：拍立得堆叠与悬停散开动效 ===== */
+  .album-card {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 320px;
+    outline: none;
+  }
+
+  .album-stack {
+    position: relative;
+    width: 260px;
+    height: 360px;
+    margin-bottom: 30px;
+    perspective: 1200px;
+  }
+
+  .album-stack img, .stack-front-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 6px solid #fff;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* 初始错落堆叠状态 */
+  .stack-bg-2 { transform: rotate(5deg) translate(8px, 8px); z-index: 1; filter: brightness(0.7); }
+  .stack-bg-1 { transform: rotate(-3deg) translate(-8px, 4px); z-index: 2; filter: brightness(0.85); }
+  .stack-front-wrap { transform: rotate(0deg); z-index: 3; overflow: hidden; }
+  .stack-front-wrap img { border: none; box-shadow: none; position: relative; width: 100%; height: 100%; }
+
+  /* 鼠标悬停时的华丽散开与放大 */
+  .album-card:hover .stack-bg-2 { transform: rotate(14deg) translate(30px, 20px); filter: brightness(0.9); }
+  .album-card:hover .stack-bg-1 { transform: rotate(-10deg) translate(-30px, 10px); filter: brightness(0.9); }
+  .album-card:hover .stack-front-wrap { transform: scale(1.06) translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+  /* 点击提示遮罩 (参考图2) */
+  .hover-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .album-card:hover .hover-overlay { opacity: 1; }
+  .photo-count { color: #fff; font-size: 1.6rem; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
+  .click-hint { color: #b4caff; font-size: 1rem; font-family: var(--font-mono); }
+
+  /* 底部文字信息 */
+  .album-info { text-align: center; }
+  .album-name { color: var(--text); font-size: 1.3rem; margin-bottom: 8px; font-weight: bold; }
+  .album-date { font-size: 0.8rem; background: var(--border-sub); padding: 2px 8px; border-radius: 4px; margin-left: 8px; color: var(--muted); vertical-align: middle; }
+  .album-desc { color: var(--muted); font-size: 0.95rem; }
+</style>

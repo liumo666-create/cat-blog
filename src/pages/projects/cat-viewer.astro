@@ -1,0 +1,45 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="CatViewer - 项目详情">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+
+        <!-- ===== PROJECT DETAIL: CatViewer ===== -->
+        <div class="section-page active" id="page-project-detail-2">
+          <div class="main-col" style="width:100%">
+            <a href="/projects/" class="proj-detail-back" style="display:inline-flex; align-items:center; text-decoration:none; color:inherit; cursor:pointer;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </a>
+            <div class="proj-detail-page active proj-detail-cat">
+              <div class="cat-hero animate-in">
+                <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--purple);margin-bottom:6px;">&#x1F431; CatViewer</h3>
+                <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">可爱的猫咪图片浏览器，支持懒加载和无限滚动，集成 Cat API 获取随机猫咪照片。点击猫咪卡片来发现更多毛茸茸的朋友！</p>
+                <div class="cat-showcase" id="catShowcase">
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(255,107,157,0.1));"><span class="cat-card-icon">&#x1F408;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(255,107,157,0.2),rgba(251,146,60,0.1));"><span class="cat-card-icon">&#x1F63A;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(94,234,212,0.2),rgba(167,139,250,0.1));"><span class="cat-card-icon">&#x1F63B;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(255,107,157,0.1));"><span class="cat-card-icon">&#x1F638;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(251,146,60,0.2),rgba(94,234,212,0.1));"><span class="cat-card-icon">&#x1F63C;</span></div>
+                  <div class="cat-card" style="background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(251,191,36,0.1));"><span class="cat-card-icon">&#x1F640;</span></div>
+                </div>
+                <div class="cat-facts-grid">
+                  <div class="cat-fact-card"><h4>懒加载</h4><p>Intersection Observer 实现，图片进入视口才开始加载，节省带宽。</p></div>
+                  <div class="cat-fact-card"><h4>无限滚动</h4><p>滚动到底自动加载更多，永无止境的猫咪瀑布流。</p></div>
+                  <div class="cat-fact-card"><h4>Cat API</h4><p>集成 The Cat API，海量猫咪图片随心浏览。</p></div>
+                  <div class="cat-fact-card"><h4>响应式设计</h4><p>自适应所有屏幕尺寸，手机和平板上同样可爱。</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>

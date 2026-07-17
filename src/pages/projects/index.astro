@@ -1,0 +1,60 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="项目 - FYH BLOG">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+        
+        <!-- ===== PROJECTS PAGE (index) ===== -->
+        <div class="section-page active" id="page-projects">
+          <div class="main-col" style="width:100%">
+            <div class="proj-page-layout">
+              <!-- 这里直接用 a 标签包裹，保留了您原本所有的类名和结构 -->
+              <a href="/projects/fyh-blog/" class="proj-featured animate-in" style="cursor:pointer; display:block; text-decoration:none;">
+                <div class="proj-feat-content">
+                  <div class="proj-feat-badge">★ Featured</div>
+                  <div class="proj-feat-name">FYH Blog</div>
+                  <div class="proj-feat-desc">你正在浏览的这个网站——像素风格个人空间。支持 Markdown 写作、相册管理、日历记事，以及昼夜主题切换。使用 Astro + Svelte 构建。</div>
+                  <div class="proj-feat-tags">
+                    <span class="proj-feat-tag">Astro</span>
+                    <span class="proj-feat-tag">Svelte</span>
+                    <span class="proj-feat-tag">CSS</span>
+                    <span class="proj-feat-tag">Canvas</span>
+                  </div>
+                </div>
+                <div class="proj-feat-visual">
+                  <div class="proj-feat-icon">猫</div>
+                </div>
+              </a>
+
+              <!-- 项目列表网格 -->
+              <div class="proj-grid" id="projGrid">
+                <a href="/projects/pixel-painter/" class="proj-card animate-in" style="display:block; text-decoration:none;">
+                  <div class="proj-card-title">Pixel Painter</div>
+                  <div class="proj-card-desc">基于 Canvas 的在线像素画编辑器</div>
+                </a>
+                <a href="/projects/cat-viewer/" class="proj-card animate-in" style="display:block; text-decoration:none;">
+                  <div class="proj-card-title">CatViewer</div>
+                  <div class="proj-card-desc">可爱的猫咪图片浏览器</div>
+                </a>
+                <a href="/projects/sakura-css/" class="proj-card animate-in" style="display:block; text-decoration:none;">
+                  <div class="proj-card-title">Sakura CSS</div>
+                  <div class="proj-card-desc">纯 CSS 实现的樱花飘落效果库</div>
+                </a>
+                <a href="/projects/pixel-weather/" class="proj-card animate-in" style="display:block; text-decoration:none;">
+                  <div class="proj-card-title">Pixel Weather</div>
+                  <div class="proj-card-desc">像素风天气卡片组件</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>

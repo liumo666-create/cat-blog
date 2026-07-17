@@ -1,0 +1,79 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const albums = await getCollection("gallery");
+  return albums.map((album: CollectionEntry<"gallery">) => ({
+    params: { id: album.id },
+    props: { album },
+  }));
+}
+
+interface Props {
+  album: CollectionEntry<"gallery">;
+}
+
+const { album } = Astro.props;
+---
+
+<Layout title={`${album.data.title} - 光影画廊`}>
+  <div class="game-scene day-mode">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+        
+        <div class="photo-viewer-container">
+          <a href="/gallery/" class="back-btn">← 返回光影画廊</a>
+          
+          <div class="viewer-header">
+            <h1 class="viewer-title">{album.data.title}</h1>
+            <p class="viewer-desc">{album.data.description} <span class="viewer-date">({album.data.date.toISOString().slice(0,10)})</span></p>
+          </div>
+
+          <!-- 纵向依次陈列的照片墙 -->
+          <div class="photo-column">
+            {album.data.photos.map((photoStr: string) => (
+              <div class="photo-frame">
+                <img src={photoStr} alt="相册图片" loading="lazy" />
+              </div>
+            ))}
+          </div>
+          
+          <div class="viewer-footer">
+            <p>- END -</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .photo-viewer-container { max-width: 900px; margin: 40px auto; padding: 0 20px; animation: fadeInUp 0.6s ease forwards; }
+  
+  .back-btn { display: inline-block; color: var(--pink); font-size: 16px; text-decoration: none; margin-bottom: 40px; transition: transform 0.3s; }
+  .back-btn:hover { transform: translateX(-8px); }
+
+  .viewer-header { text-align: center; margin-bottom: 60px; }
+  .viewer-title { font-size: 2.5rem; color: #fff; margin-bottom: 12px; font-family: var(--font-body); }
+  .viewer-desc { color: #aaa; font-size: 1.1rem; }
+  .viewer-date { font-family: var(--font-mono); font-size: 0.9rem; opacity: 0.7; }
+
+  /* 纵向陈列大图排版 */
+  .photo-column { display: flex; flex-direction: column; gap: 60px; align-items: center; }
+  .photo-frame {
+    width: 100%;
+    padding: 12px;
+    background: #fff; /* 拍立得白底 */
+    border-radius: 6px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    transition: transform 0.4s;
+  }
+  .photo-frame:hover { transform: scale(1.02); }
+  .photo-frame img { width: 100%; display: block; border-radius: 4px; object-fit: cover; }
+
+  .viewer-footer { text-align: center; margin-top: 80px; margin-bottom: 60px; color: #666; font-family: var(--font-mono); letter-spacing: 4px; }
+</style>

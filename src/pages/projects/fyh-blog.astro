@@ -1,0 +1,51 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="FYH Blog 详情 - 项目">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+        
+        <!-- ===== PROJECT DETAIL: FYH Blog ===== -->
+        <div class="section-page active" id="page-project-detail-0">
+          <div class="main-col" style="width:100%">
+            <a href="/projects/" class="proj-detail-back" style="display:inline-flex; align-items:center; text-decoration:none; color:inherit; cursor:pointer;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </a>
+            <div class="proj-detail-page active proj-detail-blog">
+              <div class="blog-hero animate-in">
+                <div class="blog-hero-content">
+                  <div class="blog-hero-badge">&#x2605; Featured Project</div>
+                  <div class="blog-hero-title">FYH Blog</div>
+                  <div class="blog-hero-desc">你正在浏览的这个网站——像素风格个人空间。支持 Markdown 写作、相册管理、日历记事，以及昼夜主题切换。使用 Astro + Svelte 构建，CSS 变量驱动的主题系统。</div>
+                </div>
+                <div class="blog-hero-visual">
+                  <div class="blog-cat-icon">&#x1F431;</div>
+                </div>
+              </div>
+              <div class="blog-stats-row animate-in">
+                <div class="blog-stat-card"><div class="stat-val">5</div><div class="stat-lbl">子页面</div></div>
+                <div class="blog-stat-card"><div class="stat-val">3</div><div class="stat-lbl">功能模块</div></div>
+                <div class="blog-stat-card"><div class="stat-val">CSS</div><div class="stat-lbl">动画变量</div></div>
+                <div class="blog-stat-card"><div class="stat-val">100+</div><div class="stat-lbl">样式规则</div></div>
+              </div>
+              <div class="blog-tech-grid animate-in">
+                <div class="blog-tech-card"><span class="tech-icon">&#x25C6;</span><div class="tech-name">Astro</div><div class="tech-ver">v5.x</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25B3;</span><div class="tech-name">Svelte</div><div class="tech-ver">v5.x</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25A0;</span><div class="tech-name">TypeScript</div><div class="tech-ver">latest</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x2606;</span><div class="tech-name">CSS Custom</div><div class="tech-ver">Properties</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25CB;</span><div class="tech-name">Canvas API</div><div class="tech-ver">2D</div></div>
+                <div class="blog-tech-card"><span class="tech-icon">&#x25C7;</span><div class="tech-name">localStorage</div><div class="tech-ver">Persist</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>

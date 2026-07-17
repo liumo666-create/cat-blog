@@ -1,0 +1,46 @@
+---
+import Layout from "@layouts/Layout.astro";
+import NavBar from "@components/NavBar.astro";
+---
+
+<Layout title="Pixel Weather - 项目详情">
+  <div class="game-scene">
+    <div class="scroll-container">
+      <div class="web-wrapper">
+        <NavBar />
+
+        <!-- ===== PROJECT DETAIL: Pixel Weather ===== -->
+        <div class="section-page active" id="page-project-detail-4">
+          <div class="main-col" style="width:100%">
+            <a href="/projects/" class="proj-detail-back" style="display:inline-flex; align-items:center; text-decoration:none; color:inherit; cursor:pointer;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              返回项目列表
+            </a>
+            <div class="proj-detail-page active proj-detail-weather">
+              <div class="weather-hero animate-in">
+                <h3 style="font-family:var(--font-pixel);font-size:20px;color:var(--yellow);margin-bottom:6px;">&#x26C5; Pixel Weather</h3>
+                <p style="font-family:var(--font-body);font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.7;">像素风天气卡片组件，集成 Open-Meteo API，支持实时天气和七日预报展示。让天气数据也变得可爱！</p>
+                <div class="weather-forecast-row" id="weatherForecast">
+                  <div class="weather-day-card"><span class="day-icon">&#x2600;</span><span class="day-name">今天</span><span class="day-temp">28&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x26C5;</span><span class="day-name">明天</span><span class="day-temp">26&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x2614;</span><span class="day-name">后天</span><span class="day-temp">22&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x2601;</span><span class="day-name">周四</span><span class="day-temp">24&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x2600;</span><span class="day-name">周五</span><span class="day-temp">29&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x26C5;</span><span class="day-name">周六</span><span class="day-temp">27&deg;</span></div>
+                  <div class="weather-day-card"><span class="day-icon">&#x1F32C;</span><span class="day-name">周日</span><span class="day-temp">30&deg;</span></div>
+                </div>
+                <div class="weather-features-grid">
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F310;</span><div><h4>Open-Meteo API</h4><p>免费开源天气 API，无需 API Key，全球覆盖。</p></div></div>
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F4C5;</span><div><h4>七日预报</h4><p>未来一周天气一目了然，支持温度/湿度/风速展示。</p></div></div>
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F3A8;</span><div><h4>像素风格</h4><p>像素风图标和排版，复古游戏般的天气体验。</p></div></div>
+                  <div class="weather-feat-card"><span class="feat-icon">&#x1F3E0;</span><div><h4>组件化</h4><p>React 组件，开箱即用，支持完整的 TypeScript 类型。</p></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>
