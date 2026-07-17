@@ -151,14 +151,21 @@ img { max-width: 100%; display: block; }
   --deep: #f6f1e8;
   --deep-alt: #ede5d8;
   --web: rgba(255,252,246,0.9);
-  --card: rgba(255,250,244,0.7);
-  --card-hover: rgba(255,248,240,0.82);
+  
+  /* 👇 核心修改：将卡片底色调为几乎纯白，拉开与底板的差距 */
+  --card: rgba(255, 255, 255, 0.95);
+  --card-hover: rgba(255, 255, 255, 1);
+  
   --hover: rgba(220,200,180,0.5);
   --glass: rgba(255,252,246,0.72);
   --glass-strong: rgba(255,250,242,0.88);
-  --border-sub: rgba(0,0,0,0.06);
-  --border-hi: rgba(0,0,0,0.1);
+  
+  /* 👇 核心修改：加深日间模式的边框颜色，勾勒出清晰的轮廓 */
+  --border-sub: rgba(0, 0, 0, 0.12);
+  --border-hi: rgba(0, 0, 0, 0.2);
+  
   --border-ac: rgba(217,70,111,0.25);
+  /* ...其余 glow 变量保持不变... */
   --glow-pink: rgba(217,70,111,0.08);
   --glow-cyan: rgba(13,148,136,0.07);
   --glow-purple: rgba(124,109,184,0.07);
@@ -171,7 +178,30 @@ img { max-width: 100%; display: block; }
     radial-gradient(ellipse at var(--glow-x2) var(--glow-y2), rgba(124,109,184,0.05) 0%, transparent 55%),
     radial-gradient(ellipse at var(--glow-y1) var(--glow-x2), rgba(194,131,42,0.03) 0%, transparent 50%);
 }
+/* ===== 日间模式专属优化 & 导航栏修复 ===== */
 
+/* 1. 强制覆盖 NavBar.astro 中可能写死的白色 Logo，使其跟随主题自动切换 */
+.logo-text, 
+.logo-text h1, 
+.logo-text span {
+  color: var(--text) !important;
+}
+
+/* 2. 为日间模式的各类卡片添加真实的物理阴影，瞬间产生“悬浮感” */
+.game-scene.day-mode .post-card,
+.game-scene.day-mode .glass-card,
+.game-scene.day-mode .stat-item,
+.game-scene.day-mode .project-card,
+.game-scene.day-mode .album-set {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* 让日间模式卡片悬停时的阴影更深一点，增强交互反馈 */
+.game-scene.day-mode .post-card:hover,
+.game-scene.day-mode .glass-card:hover,
+.game-scene.day-mode .project-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px var(--border-ac);
+}
 /* ===== Scroll Container ===== */
 .scroll-container {
   position: absolute;
@@ -462,18 +492,39 @@ img { max-width: 100%; display: block; }
 .theme-toggle-btn:hover::before { opacity: 1; }
 
 /* ===== Hero Banner ===== */
+/* ===== Hero Banner ===== */
 .hero-banner {
   width: 100%; height: 200px;
   background-image: url("/hero-night.png");
   background-size: cover; background-position: center;
+  
+  /* 核心修复 1：严格限制背景图只在内边距内渲染，绝不允许图片钻到半透明边框底下去！ */
+  background-clip: padding-box; 
+  
   border: 1px solid var(--border-hi); border-radius: var(--radius-lg);
   margin-bottom: 24px; position: relative; overflow: hidden;
+  
+  /* 防御性修复 2：开启硬件加速，强制消除部分浏览器在 border-radius + overflow:hidden 时的子像素渲染缝隙 */
+  transform: translateZ(0);
 }
-.game-scene.day-mode .hero-banner { background-image: url("/hero-day.png"); }
+
+.game-scene.day-mode .hero-banner { 
+  background-image: url("/hero-day.png"); 
+}
+
 .hero-banner::before {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 30%, var(--deep) 100%);
+  content: "";
+  position: absolute;
+  inset: 0;
+  
+  /* 核心修复 3：在 85% 的位置就让渐变彻底结束。这意味着最底部有整整 30px 高度是绝对不透明的纯色，死死封住边缘 */
+  background: linear-gradient(180deg, transparent 40%, var(--deep) 85%);
+  
+  pointer-events: none;
+  z-index: 1;
 }
+
+/* 叠加层文字样式保持不变 */
 .hero-overlay { position: absolute; bottom: 22px; left: 28px; z-index: 2; }
 .hero-overlay h2 {
   font-family: var(--font-pixel); font-size: 30px; font-weight: 700;
@@ -485,7 +536,6 @@ img { max-width: 100%; display: block; }
   color: var(--pink); letter-spacing: 2px;
   min-height: 20px; transition: opacity 0.3s;
 }
-
 /* ===== Right Sidebar Widgets ===== */
 .widget-clock {
   font-family: var(--font-mono); font-size: 32px; font-weight: 700;
