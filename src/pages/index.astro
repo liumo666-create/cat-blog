@@ -2,12 +2,17 @@
 import Layout from "@layouts/Layout.astro";
 import NavBar from "@components/NavBar.astro";
 import HeroBanner from "@components/HeroBanner.astro";
-// 🌟 核心修改 1：额外引入 type CollectionEntry
-import { getCollection, type CollectionEntry } from "astro:content"; 
+import { getCollection } from "astro:content"; 
 
 const allPosts = await getCollection("blog");
-// 🌟 核心修改 2：明确指定 a 和 b 的类型为 CollectionEntry<"blog">
-const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) => b.data.date.valueOf() - a.data.date.valueOf());
+// 保证这里不报错
+const sortedPosts = allPosts.sort((a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 🌟 终极修复：在顶部处理好 JSON 数据，不要在 HTML 里写类型推断！
+const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
+  title: p.data.title,
+  date: p.data.date.toISOString().slice(0, 10)
+})));
 ---
 
 <Layout>
@@ -18,33 +23,26 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
         <HeroBanner />
 
      <!-- ===== HOME PAGE ===== -->
+       <!-- ===== HOME PAGE ===== -->
         <div class="section-page active" id="page-home">
-          
-          <!-- 👇👇👇 请把你原来的 <div class="main-col">...</div> 全部替换成下面这一整块 👇👇👇 -->
+          <!-- 左侧：文章列表 -->
           <div class="main-col">
             <div class="section-title">知识库</div>
-            
-            <!-- 🌟 全新由 Astro 静态生成的带封面文章列表 -->
-      
             <div class="post-list">
-              <!-- 🌟 核心修改 3：标注 post 和 index 的类型 -->
-              {sortedPosts.map((post: CollectionEntry<"blog">, index: number) => (
+              {sortedPosts.map((post: any, index: number) => (
                 <a href={`/post/${post.id}/`} class={`post-card-link post-item page-${Math.floor(index / 5) + 1}`} style={index >= 5 ? 'display: none;' : ''}>
                   <div class="post-card has-cover">
-                    {/* 如果 md 文件配置了封面图，则显示精美左侧封面 */}
                     {post.data.cover && (
                       <div class="post-cover-wrap">
                         <img src={post.data.cover} alt={post.data.title} class="post-cover" />
                       </div>
                     )}
-                    
                     <div class="post-text-wrap">
                       <div class="post-date">{post.data.date.toISOString().slice(0,10)}</div>
                       <div class="post-title">{post.data.title}</div>
                       <div class="post-excerpt">{post.data.excerpt || "点击阅读全文..."}</div>
                       <div class="post-meta">
                         <span class="cat">{post.data.category}</span>
-                        <!-- 🌟 核心修改 4：标注 tag 的类型为 string -->
                         {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
                       </div>
                     </div>
@@ -53,7 +51,6 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
               ))}
             </div>
             
-            <!-- 🌟 精美的底部翻页控件 -->
             {sortedPosts.length > 5 && (
               <div class="pagination-controls">
                 <button class="glass-btn" id="prevPage" disabled style="opacity: 0.4;">上一页</button>
@@ -62,39 +59,53 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
               </div>
             )}
           </div>
-          <!-- 👆👆👆 替换到这里结束 👆👆👆 -->
+
+          <!-- 🌟 右侧：完美修复排版的侧边栏 🌟 -->
           <div class="side-col">
-<!-- 新代码：替换到 index.astro 中 -->
-<!-- ================== 天气卡片 HTML ================== -->
-<div class="glass-card widget-card" style="margin-bottom:12px;">
-  <div class="widget-date" id="widgetDate"></div>
-  <div class="widget-clock" id="widgetClock"></div>
-  
-  <div class="weather-box-clean">
-    <div class="weather-city"><span class="city-icon">📍</span> 荆州</div>
-    
-    <div class="widget-weather-flex">
-      <!-- 动画容器 -->
-      <div id="weatherAnim" class="weather-anim-icon">
-        <!-- 默认显示开源版小太阳，JS加载后会自动接管 -->
-        <div class="icon sunny"><div class="sun"><div class="rays"></div></div></div>
-      </div>
-      
-      <div class="weather-text-info">
-        <span class="temp" id="weatherTemp">--°</span>
-        <span id="weatherDesc">加载中...</span>
-      </div>
-    </div>
-  </div>
-</div>
+            
+            <!-- 1. 紧凑版天气卡片 -->
+            <div class="glass-card widget-card ultra-weather-card">
+              <div class="uw-top-bar">
+                <div class="uw-date" id="widgetDate">加载中...</div>
+                <div class="uw-city-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  荆州
+                </div>
+              </div>
+              <div class="uw-clock" id="widgetClock">--:--:--</div>
+              <div class="uw-bottom-bar">
+                <div class="uw-main-anim" id="weatherAnim">
+                  <div class="uw-loading-ring"></div>
+                </div>
+                <div class="uw-temp-wrap">
+                  <div class="uw-temp" id="weatherTemp">--°</div>
+                  <div class="uw-desc" id="weatherDesc">探测中</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. 聚合热力日历看板 -->
             <div class="glass-card calendar-widget" style="margin-bottom:12px;">
+              <!-- 使用顶部生成好的纯净字符串，杜绝报错 -->
+              <div id="astroPostsData" data-posts={calendarPostsData} style="display:none;"></div>
+              
               <div class="calendar-header">
                 <button class="calendar-btn" id="calPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="m15 18-6-6 6-6"/></svg></button>
                 <span class="month-label" id="calMonthLabel"></span>
                 <button class="calendar-btn" id="calNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="m9 18 6-6-6-6"/></svg></button>
+                <button class="calendar-btn" id="calAddNote" title="手动添加记录" style="margin-left:auto; border-color:transparent; color:var(--cyan);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
               </div>
+              
               <div class="calendar-grid" id="calGrid"></div>
+              <div class="cal-heatmap-container" id="calHeatmap"></div>
+              <div class="cal-activity-wrap">
+                <div class="cal-activity-list" id="calActivityList"></div>
+              </div>
             </div>
+
+            <!-- 3. 原有的统计与标签代码 -->
             <div class="stats-grid">
               <div class="stat-item"><div class="stat-number" id="statPosts">0</div><div class="stat-label">文章</div></div>
               <div class="stat-item"><div class="stat-number" id="statPhotos">0</div><div class="stat-label">相册</div></div>
@@ -122,6 +133,244 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
           </div>
         </div>
 
+<style is:global>
+/* =================================================================== */
+/* 🌟 像素朋友圈/碎片日记 专属样式 */
+/* =================================================================== */
+.diary-container { max-width: 680px; margin: 0 auto; width: 100%; padding-bottom: 40px; }
+
+/* 顶部封面图 */
+.diary-header-cover {
+  height: 260px; border-radius: 16px; position: relative; margin-bottom: 60px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop') center/cover;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+}
+.diary-header-avatar { position: absolute; right: 24px; bottom: -30px; display: flex; align-items: flex-end; gap: 16px; }
+.diary-header-avatar span { color: #fff; font-weight: 700; font-size: 22px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); margin-bottom: 40px; font-family: var(--font-pixel); letter-spacing: 2px;}
+.diary-header-avatar img { width: 84px; height: 84px; border-radius: 16px; border: 4px solid var(--bg); box-shadow: 0 6px 16px rgba(0,0,0,0.3); background: var(--bg); object-fit: cover; }
+.game-scene.day-mode .diary-header-avatar img { border-color: #f8fafc; }
+
+/* 发布编辑器 */
+.diary-composer { padding: 16px 20px; margin-bottom: 30px; border-radius: 16px; transition: all 0.3s; }
+.diary-composer:focus-within { border-color: var(--cyan); box-shadow: 0 0 20px rgba(94, 234, 212, 0.15); }
+.diary-composer textarea { width: 100%; min-height: 80px; background: transparent; border: none; color: var(--text); font-family: var(--font-body); font-size: 15px; resize: none; outline: none; margin-bottom: 12px; line-height: 1.6; }
+.diary-composer textarea::placeholder { color: var(--muted); }
+
+/* 图片预览区 */
+.diary-image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.diary-preview-item { position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.diary-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+.diary-preview-del { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(4px); }
+.diary-preview-del:hover { background: #f87171; transform: scale(1.1); }
+
+/* 发布工具栏 */
+.diary-toolbar { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border-hi); padding-top: 14px; }
+.diary-tool-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; transition: all 0.2s; background: rgba(255,255,255,0.03); }
+.diary-tool-btn:hover { background: rgba(94, 234, 212, 0.15); color: var(--cyan); transform: translateY(-2px); }
+
+/* 信息流单条动态 */
+.diary-post { display: flex; gap: 16px; padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,0.05); animation: fadeInUp 0.5s ease; }
+.game-scene.day-mode .diary-post { border-bottom-color: rgba(0,0,0,0.05); }
+.diary-avatar { flex-shrink: 0; }
+.diary-avatar img { width: 46px; height: 46px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.diary-body { flex: 1; min-width: 0; }
+.diary-author { font-weight: 700; color: var(--cyan); font-size: 16px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; font-family: var(--font-body); }
+.diary-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(255,107,157,0.1); color: var(--pink); font-weight: normal; border: 1px solid rgba(255,107,157,0.3); }
+.diary-content { font-size: 15px; color: var(--text); line-height: 1.7; word-wrap: break-word; }
+.diary-content p { margin-bottom: 8px; }
+.diary-content p:last-child { margin-bottom: 0; }
+
+/* 微信同款九宫格相册排版 */
+.diary-img-grid { display: grid; gap: 6px; margin-top: 12px; }
+.diary-img-grid.grid-1 { grid-template-columns: 1fr; max-width: 240px; }
+.diary-img-grid.grid-2 { grid-template-columns: repeat(2, 1fr); max-width: 260px; }
+.diary-img-grid.grid-multi { grid-template-columns: repeat(3, 1fr); max-width: 340px; }
+.diary-img-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: zoom-in; transition: transform 0.2s, filter 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.diary-img-grid img:hover { filter: brightness(1.15); }
+.diary-img-grid.grid-1 img { aspect-ratio: auto; max-height: 300px; }
+
+.diary-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+.diary-time { color: var(--muted); }
+.diary-delete { color: #f87171; cursor: pointer; opacity: 0; transition: opacity 0.2s; font-family: var(--font-body); font-size: 13px; font-weight: 500; }
+.diary-post:hover .diary-delete { opacity: 1; }
+
+.diary-empty { text-align: center; padding: 60px 0; color: var(--muted); font-size: 15px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed var(--border-hi); }
+.diary-lightbox .lightbox-counter { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 16px; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+
+
+/* =================================================================== */
+/* 🌟 修复点 2：将天气和日历的 CSS 安全打包，绝不干扰 JS 引擎 */
+/* =================================================================== */
+
+/* ----- 天气卡片样式 ----- */
+.ultra-weather-card { display: flex; flex-direction: column; padding: 16px 18px; margin-bottom: 12px; position: relative; background: transparent; }
+.uw-top-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
+.uw-date { font-family: var(--font-body); font-size: 12px; color: var(--muted); letter-spacing: 1px; font-weight: 500; }
+.game-scene.day-mode .uw-date { color: #666; }
+.uw-city-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: rgba(255, 107, 157, 0.08); border: 1px solid rgba(255, 107, 157, 0.25); border-radius: 20px; color: var(--pink); font-size: 12px; font-weight: 600; box-shadow: 0 2px 8px rgba(255, 107, 157, 0.1); animation: pill-breathe 3.5s ease-in-out infinite; }
+.uw-city-pill svg { width: 12px; height: 12px; }
+.game-scene.day-mode .uw-city-pill { background: rgba(217, 70, 111, 0.08); border-color: rgba(217, 70, 111, 0.25); color: #d9466f; }
+@keyframes pill-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,107,157,0.2); } }
+.uw-clock { font-family: var(--font-pixel); font-size: 38px; font-weight: 700; color: var(--cyan); letter-spacing: 2px; line-height: 1; text-align: center; text-shadow: 0 4px 12px rgba(94, 234, 212, 0.3); margin-bottom: 12px; }
+.game-scene.day-mode .uw-clock { color: #0d9488; text-shadow: 0 2px 8px rgba(13,148,136,0.15); }
+.uw-bottom-bar { display: flex; justify-content: center; align-items: center; gap: 16px; width: 100%; }
+.uw-temp-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.uw-temp { font-family: var(--font-pixel); font-size: 36px; font-weight: 700; color: var(--yellow); line-height: 1; text-shadow: 0 4px 16px rgba(251, 191, 36, 0.3); }
+.game-scene.day-mode .uw-temp { color: #d97706; text-shadow: none; }
+.uw-desc { font-family: var(--font-body); font-size: 14px; color: var(--text); font-weight: 600; letter-spacing: 1px; }
+.uw-main-anim { width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; position: relative; }
+.wi-sun-wrapper { position: relative; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; }
+.wi-sun { width: 28px; height: 28px; background: #fbbf24; border-radius: 50%; box-shadow: 0 0 20px rgba(251,191,36,0.8); position: relative; z-index: 2; animation: sun-pulse 3s infinite alternate ease-in-out; }
+.wi-sun-aura { position: absolute; width: 46px; height: 46px; border: 2px dashed rgba(251,191,36,0.5); border-radius: 50%; animation: sun-spin 12s linear infinite; z-index: 1; }
+@keyframes sun-spin { 100% { transform: rotate(360deg); } }
+@keyframes sun-pulse { 0% { transform: scale(0.95); } 100% { transform: scale(1.05); box-shadow: 0 0 30px rgba(251,191,36,1); } }
+.wi-moon-wrapper { position: relative; width: 44px; height: 44px; }
+.wi-moon { width: 36px; height: 36px; border-radius: 50%; box-shadow: inset -10px -5px 0 0 #fde047; filter: drop-shadow(0 0 10px rgba(253,224,71,0.5)); animation: moon-float 4s ease-in-out infinite; position: absolute; top: 4px; left: 4px; }
+.wi-star { position: absolute; color: #fff; font-size: 12px; animation: star-twinkle 2s infinite alternate; }
+.wi-star.s1 { top: -2px; left: -6px; animation-delay: 0s; }
+.wi-star.s2 { top: 18px; left: -16px; font-size: 8px; animation-delay: 1s; }
+@keyframes moon-float { 0%, 100% { transform: translateY(0) rotate(-10deg); } 50% { transform: translateY(-4px) rotate(5deg); } }
+@keyframes star-twinkle { 0% { opacity: 0.2; transform: scale(0.6); } 100% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 8px #fff; } }
+.game-scene.day-mode .wi-moon { box-shadow: inset -10px -5px 0 0 #fbbf24; }
+.game-scene.day-mode .wi-star { color: #fbbf24; }
+.wi-cloud-group { position: relative; width: 56px; height: 40px; }
+.wi-cloud { width: 46px; height: 16px; background: #e2e8f0; border-radius: 20px; position: absolute; bottom: 4px; left: 0; z-index: 2; animation: cloud-float 4s ease-in-out infinite; box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+.wi-cloud::before { content: ''; position: absolute; width: 22px; height: 22px; background: inherit; border-radius: 50%; top: -12px; left: 6px; }
+.wi-cloud::after { content: ''; position: absolute; width: 28px; height: 28px; background: inherit; border-radius: 50%; top: -16px; right: 4px; }
+.wi-cloud-back { width: 36px; height: 12px; background: #94a3b8; border-radius: 20px; position: absolute; bottom: 16px; right: 0; opacity: 0.7; z-index: 1; animation: cloud-float 5s ease-in-out infinite alternate; }
+.wi-cloud-back::before { content: ''; position: absolute; width: 18px; height: 18px; background: inherit; border-radius: 50%; top: -10px; left: 4px; }
+@keyframes cloud-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.game-scene.day-mode .wi-cloud { background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.wi-rain-group { position: relative; width: 56px; height: 50px; }
+.wi-rain-group .wi-cloud { background: #64748b; bottom: 20px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+.wi-rain-group .wi-cloud::before, .wi-rain-group .wi-cloud::after { background: inherit; }
+.wi-rain-drops { position: absolute; bottom: 0; left: 8px; display: flex; gap: 10px; z-index: 1; }
+.wi-drop { width: 2px; height: 10px; background: #38bdf8; border-radius: 2px; animation: rain-fall 0.7s linear infinite; }
+@keyframes rain-fall { 0% { transform: translateY(0) rotate(15deg); opacity: 1; } 100% { transform: translateY(20px) rotate(15deg); opacity: 0; } }
+.wi-snow-group { position: relative; width: 56px; height: 50px; }
+.wi-snow-group .wi-cloud { background: #94a3b8; bottom: 20px; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+.wi-snow-group .wi-cloud::before, .wi-snow-group .wi-cloud::after { background: inherit; }
+.wi-snowflakes { position: absolute; bottom: 0; left: 8px; display: flex; gap: 12px; z-index: 1; }
+.wi-flake { width: 5px; height: 5px; background: #fff; border-radius: 50%; animation: snow-fall 1.5s ease-in infinite; box-shadow: 0 0 3px rgba(255,255,255,0.8); }
+@keyframes snow-fall { 0% { transform: translateY(0) rotate(10deg); opacity: 1; } 100% { transform: translateY(20px) rotate(-10deg); opacity: 0; } }
+.uw-loading-ring { width: 24px; height: 24px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--cyan); border-radius: 50%; animation: sun-spin 1s linear infinite; }
+.game-scene.day-mode .uw-loading-ring { border-color: rgba(0,0,0,0.1); border-top-color: #0d9488; }
+
+/* ----- 日历看板样式 ----- */
+/* ----- 🌟 高级极客版日历看板样式 ----- */
+.calendar-widget { padding: 20px 18px; }
+.calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.month-label { font-family: var(--font-body); font-weight: 800; font-size: 18px; color: var(--text); letter-spacing: 1px; }
+.calendar-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
+.calendar-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+.calendar-btn.add-btn { background: transparent; border: none; }
+.calendar-btn.add-btn:hover { transform: scale(1.15) rotate(90deg); }
+
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin-bottom: 20px; }
+.day-header { font-size: 12px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+.day-cell { 
+  position: relative; height: 34px; display: flex; align-items: center; justify-content: center; 
+  font-size: 15px; font-family: 'JetBrains Mono', var(--font-body); font-weight: 700; color: var(--text); 
+  border-radius: 8px; cursor: pointer; transition: all 0.2s; user-select: none;
+}
+.day-cell:hover { background: rgba(255,255,255,0.08); }
+.day-cell.other-month { opacity: 0.25; font-weight: 500; }
+.day-cell.selected { border: 1px solid rgba(94,234,212,0.8); box-shadow: 0 0 12px rgba(94,234,212,0.15); background: rgba(94,234,212,0.05); }
+
+/* 🌟 图一同款：右上角数字角标与底部蓝点 */
+.day-badge { position: absolute; top: 0px; right: 2px; font-size: 10px; color: var(--cyan); font-weight: 800; font-family: 'JetBrains Mono', monospace; text-shadow: 0 0 4px rgba(94,234,212,0.5); }
+.day-dot { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 6px var(--cyan); }
+
+/* 🌟 年度 12x4 月/周 热力图与悬浮气泡 */
+.cal-heatmap-container { 
+  display: flex; flex-direction: column; gap: 6px; 
+  margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); 
+}
+.game-scene.day-mode .cal-heatmap-container { border-bottom-color: rgba(0,0,0,0.1); }
+
+/* 顶部的月份数字 1-12 */
+.hm-months { 
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; 
+  text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 2px; font-family: 'JetBrains Mono', monospace;
+}
+
+/* 12x4 的格子网格 */
+.hm-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+.hm-cell { 
+  position: relative; width: 100%; aspect-ratio: 1; border-radius: 4px; 
+  background: rgba(255,255,255,0.05); /* 夜间模式空闲格子 */
+  transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent;
+}
+/* 🌟 修复：日间模式的空闲格子清晰可见 */
+.game-scene.day-mode .hm-cell { background: rgba(0,0,0,0.06); }
+
+.hm-cell:hover { transform: scale(1.15); border-radius: 2px; z-index: 10; border-color: rgba(94,234,212,0.8); }
+.hm-cell.selected { border-color: var(--cyan); box-shadow: 0 0 10px rgba(94,234,212,0.3); transform: scale(1.1); z-index: 5; }
+
+/* 热力等级颜色 */
+.hm-cell.lvl-1 { background: rgba(94,234,212,0.3); }
+.hm-cell.lvl-2 { background: rgba(94,234,212,0.6); }
+.hm-cell.lvl-3 { background: rgba(94,234,212,1); box-shadow: 0 0 8px rgba(94,234,212,0.6); }
+/* 🌟 修复：日间模式的热力等级颜色 */
+.game-scene.day-mode .hm-cell.lvl-1 { background: rgba(13,148,136,0.25); }
+.game-scene.day-mode .hm-cell.lvl-2 { background: rgba(13,148,136,0.55); }
+.game-scene.day-mode .hm-cell.lvl-3 { background: rgba(13,148,136,0.9); }
+
+/* 高级悬浮气泡 */
+.hm-cell::before {
+  content: attr(data-tooltip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%) scale(0.8);
+  background: #1a1a1a; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-family: var(--font-body);
+  white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none; z-index: 100; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+.hm-cell::after {
+  content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 5px; border-style: solid;
+  border-color: #1a1a1a transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100;
+}
+.hm-cell:hover::before { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); }
+.hm-cell:hover::after { opacity: 1; visibility: visible; }
+/* 🌟 极简透明活动列表（图一同款） */
+.cal-activity-wrap { max-height: 180px; overflow-y: auto; padding-right: 4px; }
+.cal-activity-wrap::-webkit-scrollbar { width: 4px; }
+.cal-activity-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+.act-item { 
+  display: flex; align-items: center; justify-content: space-between; 
+  padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); 
+  background: transparent; margin-bottom: 0; transition: all 0.2s;
+}
+.act-item.clickable { cursor: pointer; }
+.act-item.clickable:hover { background: rgba(255,255,255,0.04); border-radius: 6px; border-bottom-color: transparent; padding-left: 12px; }
+.act-left { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+.act-icon { font-size: 14px; opacity: 0.8; filter: grayscale(0.5); }
+.act-title { font-family: var(--font-body); font-size: 14px; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.act-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+.act-empty { text-align: center; color: var(--muted); font-size: 12px; padding: 24px 0; font-family: var(--font-body); }
+</style>
+<!-- ================== 🌟 高级定制版聚合热力日历 ================== -->
+            <div class="glass-card calendar-widget" style="margin-bottom:12px;">
+              <!-- 🌟 修复：注入文章 ID 以实现精准跳转 -->
+              <div id="astroPostsData" data-posts={JSON.stringify(sortedPosts.map((p: any) => ({ id: p.id, title: p.data.title, date: p.data.date.toISOString().slice(0,10) })))} style="display:none;"></div>
+              
+              <div class="calendar-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button class="calendar-btn" id="calPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m15 18-6-6 6-6"/></svg></button>
+                  <span class="month-label" id="calMonthLabel"></span>
+                  <button class="calendar-btn" id="calNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m9 18 6-6-6-6"/></svg></button>
+                </div>
+                <!-- 高级感天蓝色加号 -->
+                <button class="calendar-btn add-btn" id="calAddNote" title="添加记录">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              
+              <div class="calendar-grid" id="calGrid"></div>
+              <div class="cal-heatmap-container" id="calHeatmap"></div>
+              <div class="cal-activity-wrap">
+                <div class="cal-activity-list" id="calActivityList"></div>
+              </div>
+            </div>
+          
         
 
         <!-- ===== ABOUT PAGE ===== -->
@@ -410,37 +659,39 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
             <input type="file" id="albumFileInput" accept="image/*" multiple style="display:none" />
           </div>
         </div>
-<!-- ===== EDITOR PAGE ===== -->
-        <div class="section-page" id="page-editor">
-          <div class="main-col" style="width:100%">
-            <div class="section-title">写文章</div>
-            <div class="editor-toolbar" style="margin-bottom:12px;">
-              <input type="text" id="articleTitle" placeholder="文章标题..." />
-              <button class="glass-btn" id="btnPublish">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
-                发布
-              </button>
-              <button class="glass-btn" id="btnDraft" style="color:var(--muted);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                存草稿
-              </button>
+<!-- ===== DIARY / MOMENTS PAGE ===== -->
+        <div class="section-page" id="page-diary">
+          <div class="diary-container">
+            <!-- 朋友圈顶部背景与头像 -->
+            <div class="diary-header-cover animate-in">
+              <div class="diary-header-avatar">
+                <span>FYH</span>
+                <img src="/cat1.png" alt="Avatar" />
+              </div>
             </div>
-            <div class="editor-layout">
-              <div class="editor-pane">
-                <label>Markdown 编辑</label>
-                <textarea id="mdEditor" placeholder="# 开始写作...
 
-支持 Markdown 语法
-输入你的想法吧"></textarea>
-              </div>
-              <div class="editor-pane">
-                <label>预览</label>
-                <div class="editor-preview" id="mdPreview"></div>
+            <!-- 发布框 (Glassmorphism) -->
+            <div class="diary-composer glass-card animate-in" style="animation-delay: 0.1s;">
+              <textarea id="diaryInput" placeholder="这一刻的想法... (支持 Markdown)" rows="3"></textarea>
+              <div class="diary-image-previews" id="diaryImagePreviews" style="display:none;"></div>
+              
+              <div class="diary-toolbar">
+                <button class="diary-tool-btn" id="btnDiaryImg" title="插入图片">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </button>
+                <input type="file" id="diaryImgUpload" accept="image/*" multiple style="display:none;" />
+                
+                <button class="glass-btn" id="btnPublishDiary" style="border-color:var(--cyan); color:var(--cyan);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                  发送
+                </button>
               </div>
             </div>
+
+            <!-- 动态时间线列表 -->
+            <div class="diary-feed" id="diaryFeed"></div>
           </div>
         </div>
-
         <div class="site-footer">© 2026 FYH BLOG · 像素天堂</div>
       </div>
     </div>
@@ -537,82 +788,165 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
     if (currentPage < maxPage) { currentPage++; updatePagination(); }
   });
 
-  /* ===== Clock ===== */
+/* ===== 极客像素时钟排版 ===== */
   function updateClock() {
     var now = new Date();
     var clk = document.getElementById('widgetClock');
     var dat = document.getElementById('widgetDate');
-    if (clk) clk.textContent = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    if (dat) dat.textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+    if (clk) {
+      clk.textContent = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+    if (dat) {
+      var y = now.getFullYear();
+      var m = String(now.getMonth() + 1).padStart(2, '0');
+      var d = String(now.getDate()).padStart(2, '0');
+      var w = ['日','一','二','三','四','五','六'][now.getDay()];
+      dat.textContent = y + ' / ' + m + ' / ' + d + ' · 周' + w;
+    }
   }
   setInterval(updateClock, 1000); updateClock();
 
-  /* ===== Weather (Dynamic Enhanced) ===== */
+  /* ===== 高精度、零缓存动态天气引擎 (逻辑已修复) ===== */
   function fetchWeather() {
-    var cached = null;
-    try { cached = JSON.parse(localStorage.getItem(KEYS.weatherCache) || 'null'); } catch(e) {}
-    // 注意这里多传入了 cached.code，以确保刷新时也能触发正确的动画
-    if (cached && Date.now() - cached.time < 1800000) { showWeather(cached.temp, cached.desc, cached.code); return; }
-    
-    // 【核心修改 1：将经纬度精准定位到 湖北荆州 (纬度 30.33, 经度 112.23)】
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=30.33&longitude=112.23&current_weather=true')
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=30.33&longitude=112.23&current_weather=true&timezone=Asia%2FShanghai', { cache: 'no-store' })
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var temp = data.current_weather.temperature;
         var code = data.current_weather.weathercode;
-        var descs = {};
-        for (var i = 0; i <= 3; i++) descs[i] = '晴朗';
-        for (var i = 45; i <= 48; i++) descs[i] = '雾';
-        for (var i = 51; i <= 55; i++) descs[i] = '毛毛雨';
-        for (var i = 56; i <= 57; i++) descs[i] = '冻雨';
-        for (var i = 61; i <= 65; i++) descs[i] = '雨';
-        for (var i = 66; i <= 67; i++) descs[i] = '大雨';
-        for (var i = 71; i <= 75; i++) descs[i] = '雪';
-        for (var i = 77; i <= 77; i++) descs[i] = '雪粒';
-        for (var i = 80; i <= 82; i++) descs[i] = '阵雨';
-        for (var i = 85; i <= 86; i++) descs[i] = '阵雪';
-        for (var i = 95; i <= 95; i++) descs[i] = '雷暴';
-        for (var i = 96; i <= 99; i++) descs[i] = '雷暴伴冰雹';
+        var isDay = data.current_weather.is_day;
+        
+        // 🌟 修复核心：精准翻译气象代码，绝不乱入
+        var descs = {
+          0: '晴朗', 
+          1: '晴朗', 
+          2: '多云',     // 此前 2 被错误翻译为晴朗
+          3: '阴天',     // 此前 3 被错误翻译为晴朗
+          45: '雾天', 48: '雾天',
+          51: '微雨', 53: '微雨', 55: '微雨',
+          56: '冻雨', 57: '冻雨',
+          61: '阵雨', 63: '阵雨', 65: '大雨',
+          66: '大雨', 67: '大雨',
+          71: '小雪', 73: '中雪', 75: '大雪',
+          77: '雪粒',
+          80: '阵雨', 81: '阵雨', 82: '暴雨',
+          85: '阵雪', 86: '阵雪',
+          95: '雷暴', 96: '雷雨冰雹', 99: '雷雨冰雹'
+        };
         var desc = descs[code] || '未知';
         
-        showWeather(temp, desc, code);
-        try { localStorage.setItem(KEYS.weatherCache, JSON.stringify({ temp: temp, desc: desc, code: code, time: Date.now() })); } catch(e) {}
-      }).catch(function() { showWeather('--', '无法获取天气', -1); });
+        showWeather(temp, desc, code, isDay);
+      }).catch(function() { showWeather('--', '信号丢失', -1, 1); });
   }
 
-  function showWeather(temp, desc, code) {
+  function showWeather(temp, desc, code, isDay) {
     var t = document.getElementById('weatherTemp');
     var d = document.getElementById('weatherDesc');
-    var rainEffect = document.querySelector('.pixel-rain'); // 获取我们在 HTML 中预埋的纯 CSS 雨滴层
+    var anim = document.getElementById('weatherAnim');
     
     if (t) t.textContent = temp + '°';
     if (d) d.textContent = desc;
     
-    // 【核心修改 2：根据 Open-Meteo 的天气代码动态控制特效】
-    if (rainEffect) {
-      // 判断当前是否属于降水天气 (毛毛雨/雨/阵雨/雷暴等)
-      var isRaining = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99);
-      
-      // 如果是雨天，显示像素雨；如果是晴天或多云，则隐藏（保证逻辑严密）
-      rainEffect.style.display = isRaining ? 'block' : 'none';
+    if (anim) {
+      var iconHtml = '';
+      if (code === 0 || code === 1) {
+        // 0 和 1 判定为晴朗动画
+        iconHtml = isDay 
+          ? '<div class="wi-sun-wrapper"><div class="wi-sun-aura"></div><div class="wi-sun"></div></div>' 
+          : '<div class="wi-moon-wrapper"><div class="wi-moon"></div><div class="wi-star s1">✦</div><div class="wi-star s2">✦</div></div>';
+      } else if (code >= 2 && code <= 48) {
+        // 2, 3, 45, 48 判定为多云/阴天动画
+        iconHtml = '<div class="wi-cloud-group"><div class="wi-cloud-back"></div><div class="wi-cloud"></div></div>';
+      } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99)) {
+        // 雨天动画
+        iconHtml = '<div class="wi-rain-group"><div class="wi-cloud"></div><div class="wi-rain-drops">' +
+                   '<div class="wi-drop" style="animation-delay: 0s"></div>' +
+                   '<div class="wi-drop" style="animation-delay: 0.3s"></div>' +
+                   '<div class="wi-drop" style="animation-delay: 0.1s"></div>' +
+                   '</div></div>';
+      } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
+        // 雪天动画
+        iconHtml = '<div class="wi-snow-group"><div class="wi-cloud"></div><div class="wi-snowflakes">' +
+                   '<div class="wi-flake" style="animation-delay: 0s"></div>' +
+                   '<div class="wi-flake" style="animation-delay: 0.5s"></div>' +
+                   '<div class="wi-flake" style="animation-delay: 0.2s"></div>' +
+                   '</div></div>';
+      } else {
+        iconHtml = isDay 
+          ? '<div class="wi-sun-wrapper"><div class="wi-sun-aura"></div><div class="wi-sun"></div></div>' 
+          : '<div class="wi-moon-wrapper"><div class="wi-moon"></div><div class="wi-star s1">✦</div><div class="wi-star s2">✦</div></div>';
+      }
+      anim.innerHTML = iconHtml;
     }
   }
+  
   fetchWeather();
+  /* ===== 🌟 终极极客版日历数据引擎 ===== */
+  var calYear, calMonth, activeDateStr = null, calSelectedDate = null;
+  var unifiedActivities = {}; 
 
-  /* ===== Calendar ===== */
-  var calYear, calMonth, calendarData = getCalendar(), calSelectedDate = null, entryType = 'note';
+  // 修复工具：确保将任意格式的时间转为用户当前时区的 YYYY-MM-DD
+  function getLocalYMD(dateStringOrObj) {
+    if (!dateStringOrObj) return '';
+    var d = new Date(dateStringOrObj);
+    if (isNaN(d)) return '';
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function fetchAllActivities() {
+    var acts = {};
+    
+    // A. 抓取文章 (Astro 已预先处理为安全字符串)
+    var astroDataEl = document.getElementById('astroPostsData');
+    if (astroDataEl) {
+      try {
+        var posts = JSON.parse(astroDataEl.dataset.posts || '[]');
+        posts.forEach(function(p) {
+          if (!acts[p.date]) acts[p.date] = [];
+          acts[p.date].push({ type: 'article', id: p.id, title: p.title, date: p.date, icon: '📄' });
+        });
+      } catch(e) {}
+    }
+    
+    // B. 抓取相册 (修复时区 Bug，强制转为本地日)
+    var albums = getAlbums(); 
+    albums.forEach(function(a) {
+      var d = getLocalYMD(a.created); // 彻底解决相册时区差问题
+      if (d) {
+        if (!acts[d]) acts[d] = [];
+        acts[d].push({ type: 'photo', title: '相册集: ' + a.name, date: d, icon: '📸' });
+      }
+    });
+    
+    // C. 抓取笔记备忘录 (修复时区 Bug)
+    var notes = getCalendar(); 
+    Object.keys(notes).forEach(function(dateKey) {
+      var d = getLocalYMD(dateKey) || dateKey;
+      notes[dateKey].forEach(function(n) {
+        if (!acts[d]) acts[d] = [];
+        acts[d].push({ type: n.type, title: n.title, date: d, icon: n.type === 'note' ? '📌' : '📝' });
+      });
+    });
+    
+    unifiedActivities = acts;
+  }
+
   function renderCalendar() {
+    fetchAllActivities(); 
     var now = new Date();
     if (!calYear) { calYear = now.getFullYear(); calMonth = now.getMonth(); }
+    
     var label = document.getElementById('calMonthLabel');
-    if (label) label.textContent = calYear + '年 ' + (calMonth + 1) + '月';
+    if (label) label.textContent = calYear + '年' + (calMonth + 1) + '月';
+    
     var grid = document.getElementById('calGrid'); if (!grid) return;
     var headers = ['日','一','二','三','四','五','六'];
     var html = headers.map(function(h){return '<div class="day-header">'+h+'</div>';}).join('');
+    
     var firstDay = new Date(calYear, calMonth, 1).getDay();
     var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
     var prevDays = new Date(calYear, calMonth, 0).getDate();
-    var todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    var todayStr = getLocalYMD(now);
+    
     for (var i = firstDay - 1; i >= 0; i--) {
       var d = prevDays - i;
       var m = calMonth === 0 ? 12 : calMonth;
@@ -620,13 +954,22 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
       var ds = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
       html += '<div class="day-cell other-month" data-date="'+ds+'">'+d+'</div>';
     }
+    
     for (var d = 1; d <= daysInMonth; d++) {
       var ds = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
       var classes = ['day-cell'];
       if (ds === todayStr) classes.push('today');
-      if (calendarData[ds] && calendarData[ds].length > 0) classes.push('has-entry');
-      html += '<div class="'+classes.join(' ')+'" data-date="'+ds+'">'+d+'</div>';
+      if (ds === activeDateStr) classes.push('selected');
+      
+      var acts = unifiedActivities[ds] || [];
+      var badgeHtml = '';
+      if (acts.length > 0) {
+        // 渲染图一同款天蓝角标与圆点
+        badgeHtml = '<div class="day-badge">' + acts.length + '</div><div class="day-dot"></div>';
+      }
+      html += '<div class="'+classes.join(' ')+'" data-date="'+ds+'">' + d + badgeHtml + '</div>';
     }
+    
     var remaining = 42 - (firstDay + daysInMonth);
     for (var d = 1; d <= remaining; d++) {
       var m = calMonth === 11 ? 1 : calMonth + 2;
@@ -634,19 +977,177 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
       var ds = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
       html += '<div class="day-cell other-month" data-date="'+ds+'">'+d+'</div>';
     }
+    
     grid.innerHTML = html;
+    renderHeatmap();
+    renderActivityList(activeDateStr); 
   }
 
-  /* Calendar nav */
-  (function(){
-    document.getElementById('calPrev').addEventListener('click', function(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); });
-    document.getElementById('calNext').addEventListener('click', function(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); });
-    document.getElementById('calGrid').addEventListener('click', function(e){
-      var cell = e.target.closest('.day-cell');
-      if (cell && cell.dataset.date) { calSelectedDate = cell.dataset.date; openEntryModal(calSelectedDate); }
-    });
-  })();
+ // 3. 渲染年度 12x4 月/周热力网格 (严格还原参考图)
+  var activeMode = 'all'; // 状态管理: 'all'(看全部), 'date'(按日看), 'week'(按周看)
+  var activeMW = null;    // 存储点击的月份和周，例如 '7-1' 代表7月第1周
 
+  function renderHeatmap() {
+    var hm = document.getElementById('calHeatmap'); if(!hm) return;
+    
+    // 生成顶部月份 1-12
+    var html = '<div class="hm-months">' + [1,2,3,4,5,6,7,8,9,10,11,12].map(function(m){ return '<span>'+m+'</span>'; }).join('') + '</div>';
+    html += '<div class="hm-grid">';
+
+    // 预先统计本年度中，每个月(1-12)每周(1-4)的记录总数
+    var mwCounts = {}; 
+    Object.keys(unifiedActivities).forEach(function(ds) {
+      var dObj = new Date(ds);
+      if (dObj.getFullYear() === calYear) {
+        var m = dObj.getMonth() + 1;
+        var day = dObj.getDate();
+        var w = Math.ceil(day / 7);
+        if (w > 4) w = 4; // 每个月封顶算 4 周，完美塞入 4 行格子
+        
+        var key = m + '-' + w;
+        mwCounts[key] = (mwCounts[key] || 0) + unifiedActivities[ds].length;
+      }
+    });
+
+    // 生成 4 行 (周) × 12 列 (月) = 48 格
+    for (var w = 1; w <= 4; w++) {
+      for (var m = 1; m <= 12; m++) {
+        var key = m + '-' + w;
+        var count = mwCounts[key] || 0;
+        var lvl = count === 0 ? 0 : count <= 2 ? 1 : count <= 5 ? 2 : 3;
+        var tip = m + '月第' + w + '周，' + count + ' 篇记录';
+        var selectedCls = (activeMode === 'week' && activeMW === key) ? ' selected' : '';
+        
+        html += '<div class="hm-cell lvl-' + lvl + selectedCls + '" data-month="'+m+'" data-week="'+w+'" data-tooltip="'+tip+'"></div>';
+      }
+    }
+    html += '</div>';
+    hm.innerHTML = html;
+  }
+
+  // 4. 渲染底部活动列表 (增加按周筛选逻辑)
+  function renderActivityList() {
+    var list = document.getElementById('calActivityList'); if(!list) return;
+    var items = [];
+    
+    // 根据当前点击的状态（日/周/全部）进行过滤
+    Object.keys(unifiedActivities).forEach(function(ds) {
+      var dObj = new Date(ds);
+      var m = dObj.getMonth() + 1;
+      var w = Math.ceil(dObj.getDate() / 7);
+      if (w > 4) w = 4;
+
+      var isMatch = false;
+      if (activeMode === 'date' && ds === activeDateStr) isMatch = true;
+      else if (activeMode === 'week' && dObj.getFullYear() === calYear && (m+'-'+w) === activeMW) isMatch = true;
+      else if (activeMode === 'all') isMatch = true;
+
+      if (isMatch) items = items.concat(unifiedActivities[ds]);
+    });
+
+    items.sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+    if (activeMode === 'all') items = items.slice(0, 15); // 全局状态最多展示 15 条
+    
+    if (items.length === 0) {
+      list.innerHTML = '<div class="act-empty">所选时段无记录，宇宙很安静 ✨</div>';
+      return;
+    }
+    
+    var html = items.map(function(item) {
+      var dParts = item.date.split('-');
+      var shortDate = parseInt(dParts[1]) + '-' + parseInt(dParts[2]); 
+      var clickAttr = '';
+      var cursorClass = '';
+      
+      if (item.type === 'article' && item.id) {
+        clickAttr = 'onclick="window.location.href=\'/post/' + item.id + '/\'"';
+        cursorClass = 'clickable';
+      } else if (item.type === 'photo') {
+        clickAttr = 'onclick="navigateTo(\'album\')"';
+        cursorClass = 'clickable';
+      }
+
+      return '<div class="act-item ' + cursorClass + '" ' + clickAttr + '>' +
+             '<div class="act-left"><span class="act-icon">' + item.icon + '</span><span class="act-title" title="'+item.title+'">' + item.title + '</span></div>' +
+             '<span class="act-date">' + shortDate + '</span>' +
+             '</div>';
+    }).join('');
+    list.innerHTML = html;
+  }
+
+  // 5. 事件绑定区
+  document.getElementById('calPrev').addEventListener('click', function(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} activeMode='all'; renderCalendar(); });
+  document.getElementById('calNext').addEventListener('click', function(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} activeMode='all'; renderCalendar(); });
+  
+  // 交互 1：点击上方日历网格 -> 查看当天列表
+  document.getElementById('calGrid').addEventListener('click', function(e){
+    var cell = e.target.closest('.day-cell');
+    if (cell && cell.dataset.date) { 
+      document.querySelectorAll('.day-cell').forEach(function(c){ c.classList.remove('selected'); });
+      cell.classList.add('selected');
+      
+      // 取消下方热力图的高亮
+      document.querySelectorAll('.hm-cell').forEach(function(c){ c.classList.remove('selected'); });
+      
+      activeMode = 'date';
+      activeDateStr = cell.dataset.date;
+      calSelectedDate = activeDateStr; 
+      renderActivityList();
+    }
+  });
+
+  // 交互 2：点击下方年度热力格子 -> 查看当周所有记录
+  document.getElementById('calHeatmap').addEventListener('click', function(e){
+    var box = e.target.closest('.hm-cell');
+    if (box && box.dataset.month) { 
+      document.querySelectorAll('.hm-cell').forEach(function(c){ c.classList.remove('selected'); });
+      box.classList.add('selected');
+      
+      // 取消上方日历的高亮
+      document.querySelectorAll('.day-cell').forEach(function(c){ c.classList.remove('selected'); });
+      
+      activeMode = 'week';
+      activeMW = box.dataset.month + '-' + box.dataset.week;
+      renderActivityList();
+    }
+  });
+
+  var btnAddNote = document.getElementById('calAddNote');
+  if (btnAddNote) {
+    btnAddNote.addEventListener('click', function() {
+      var targetDate = activeDateStr || getLocalYMD(new Date());
+      calSelectedDate = targetDate; 
+      if (typeof openEntryModal === 'function') openEntryModal(targetDate); 
+    });
+  }
+
+  // 👇 就是这里！这段代码完好无损地跟在最后面
+  var oldSaveBtn = document.getElementById('btnEntrySave');
+  if (oldSaveBtn) {
+    var oldSaveClone = oldSaveBtn.cloneNode(true);
+    oldSaveBtn.parentNode.replaceChild(oldSaveClone, oldSaveBtn);
+    oldSaveClone.addEventListener('click', function(){
+      var title = document.getElementById('entryTitle').value.trim();
+      if (!title) { alert('请输入标题'); return; }
+      
+      var calendarData = getCalendar();
+      if (!calSelectedDate) calSelectedDate = getLocalYMD(new Date());
+      if (!calendarData[calSelectedDate]) calendarData[calSelectedDate] = [];
+      
+      calendarData[calSelectedDate].push({
+        title: title,
+        content: document.getElementById('entryContent').value.trim(),
+        type: typeof entryType !== 'undefined' ? entryType : 'note', 
+        time: new Date().toISOString()
+      });
+      saveCalendar(calendarData);
+      
+      document.getElementById('entryTitle').value = '';
+      document.getElementById('entryContent').value = '';
+      document.getElementById('entryModal').style.display = 'none';
+      renderCalendar(); 
+    });
+  }
   /* ===== Entry Modal ===== */
   function openEntryModal(dateStr) {
     document.getElementById('entryModalTitle').textContent = dateStr + ' 的记录';
@@ -722,38 +1223,214 @@ const sortedPosts = allPosts.sort((a: CollectionEntry<"blog">, b: CollectionEntr
     return '<p>'+html+'</p>';
   }
 
-  /* ===== Editor ===== */
-  var mdEditor = document.getElementById('mdEditor');
-  var mdPreview = document.getElementById('mdPreview');
-  if (mdEditor && mdPreview) {
-    mdEditor.addEventListener('input', function(){ mdPreview.innerHTML = simpleMarkdown(mdEditor.value); });
-  }
-  document.getElementById('btnPublish').addEventListener('click', function(){
-    var title = document.getElementById('articleTitle').value.trim();
-    var content = mdEditor.value.trim();
-    if (!title || !content) { alert('请输入标题和内容'); return; }
-    var articles = getArticles();
-    articles.unshift({
-      id: Date.now(),
-      title: title,
-      excerpt: content.replace(/[#*`\[\]!()]/g, '').substring(0, 120) + '...',
-      date: new Date().toISOString().split('T')[0],
-      category: '文章',
-      tags: ['原创']
-    });
-    saveArticles(articles);
-    renderPosts();
-    document.getElementById('articleTitle').value = '';
-    mdEditor.value = '';
-    mdPreview.innerHTML = '';
-    /* Navigate to home */
-    document.querySelectorAll('.section-page').forEach(function(s){ s.classList.remove('active'); });
-    document.getElementById('page-home').classList.add('active');
-    document.querySelectorAll('#mainNav .nav-item').forEach(function(l){ l.classList.remove('active'); });
-    var hn = document.querySelector('[data-page="home"]');
-    if (hn) hn.classList.add('active');
-  });
+  /* ===== 🌟 碎片日记/朋友圈 动态引擎 ===== */
+  var DIARY_KEY = 'fyh_diaries';
+  var pendingDiaryImages = []; // 暂存待发送的图片
 
+  function getDiaries() { try { return JSON.parse(localStorage.getItem(DIARY_KEY) || '[]'); } catch(e) { return []; } }
+  function saveDiaries(d) { try { localStorage.setItem(DIARY_KEY, JSON.stringify(d)); } catch(e) {} }
+
+  // 1. 渲染朋友圈信息流
+  function renderDiaries() {
+    var feed = document.getElementById('diaryFeed'); if (!feed) return;
+    var diaries = getDiaries();
+    
+    if (diaries.length === 0) {
+      feed.innerHTML = '<div class="diary-empty">你的像素宇宙很安静，来说点什么吧~</div>';
+      return;
+    }
+    
+    feed.innerHTML = diaries.map(function(d, idx) {
+      // 格式化时间：例如 "7月18日 17:30"
+      var dateObj = new Date(d.time);
+      var timeStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日 ' + String(dateObj.getHours()).padStart(2,'0') + ':' + String(dateObj.getMinutes()).padStart(2,'0');
+      
+      // 智能排版图片九宫格
+      var imgs = d.images || [];
+      var gridClass = 'grid-multi';
+      if (imgs.length === 1) gridClass = 'grid-1';
+      else if (imgs.length === 2 || imgs.length === 4) gridClass = 'grid-2';
+      
+      var imgHtml = '';
+      if (imgs.length > 0) {
+        imgHtml = '<div class="diary-img-grid ' + gridClass + '">' + 
+                  imgs.map(function(img, i) { 
+                    return '<img src="'+img+'" loading="lazy" data-diary-idx="'+idx+'" data-img-idx="'+i+'" class="diary-zoom-img" />'; 
+                  }).join('') + '</div>';
+      }
+      
+      // 使用现有的 simpleMarkdown 函数渲染内容
+      return '<div class="diary-post">' +
+               '<div class="diary-avatar"><img src="/cat1.png" /></div>' +
+               '<div class="diary-body">' +
+                 '<div class="diary-author">FYH <span class="diary-badge">博主</span></div>' +
+                 '<div class="diary-content">' + simpleMarkdown(d.content) + '</div>' +
+                 imgHtml +
+                 '<div class="diary-footer">' +
+                   '<span class="diary-time">' + timeStr + '</span>' +
+                   '<span class="diary-delete" data-idx="'+idx+'">删除</span>' +
+                 '</div>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+  }
+
+  // 2. 图片选择与预览逻辑
+  var diaryImgUpload = document.getElementById('diaryImgUpload');
+  var btnDiaryImg = document.getElementById('btnDiaryImg');
+  if (btnDiaryImg && diaryImgUpload) {
+    btnDiaryImg.addEventListener('click', function() { diaryImgUpload.click(); });
+    diaryImgUpload.addEventListener('change', function(e) {
+      var files = e.target.files;
+      if (!files.length) return;
+      
+      if (pendingDiaryImages.length + files.length > 9) {
+        alert('朋友圈最多只能发 9 张图片哦！'); return;
+      }
+
+      var loaded = 0;
+      for (var i = 0; i < files.length; i++) {
+        (function(file){
+          var r = new FileReader();
+          r.onload = function(ev) {
+            pendingDiaryImages.push(ev.target.result);
+            loaded++;
+            if (loaded === files.length) renderPendingImages();
+          };
+          r.readAsDataURL(file);
+        })(files[i]);
+      }
+      e.target.value = '';
+    });
+  }
+
+  function renderPendingImages() {
+    var container = document.getElementById('diaryImagePreviews');
+    if (!container) return;
+    if (pendingDiaryImages.length === 0) {
+      container.innerHTML = ''; container.style.display = 'none'; return;
+    }
+    container.style.display = 'flex';
+    container.innerHTML = pendingDiaryImages.map(function(img, i) {
+      return '<div class="diary-preview-item"><img src="'+img+'" /><span class="diary-preview-del" data-idx="'+i+'">×</span></div>';
+    }).join('');
+  }
+
+  var previews = document.getElementById('diaryImagePreviews');
+  if (previews) {
+    previews.addEventListener('click', function(e) {
+      var del = e.target.closest('.diary-preview-del');
+      if (del) {
+        var idx = parseInt(del.dataset.idx);
+        pendingDiaryImages.splice(idx, 1);
+        renderPendingImages();
+      }
+    });
+  }
+
+  // 3. 发布按钮逻辑（并联节日历数据）
+  var btnPublishDiary = document.getElementById('btnPublishDiary');
+  if (btnPublishDiary) {
+    btnPublishDiary.addEventListener('click', function() {
+      var input = document.getElementById('diaryInput');
+      var content = input.value.trim();
+      
+      if (!content && pendingDiaryImages.length === 0) {
+        alert('写点什么或者发张图片吧！'); return;
+      }
+      
+      // 存入日记数据库
+      var diaries = getDiaries();
+      diaries.unshift({
+        id: Date.now(),
+        content: content,
+        images: [].concat(pendingDiaryImages),
+        time: new Date().toISOString()
+      });
+      saveDiaries(diaries);
+      
+      // 🌟 核心打通：同步写入右侧日历组件，让其亮起蓝点
+      var calData = getCalendar();
+      var d = new Date();
+      var todayStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      if (!calData[todayStr]) calData[todayStr] = [];
+      calData[todayStr].push({
+        title: content ? content.replace(/\n/g, ' ').substring(0, 15) + (content.length>15?'...':'') : '发布了碎片相片',
+        content: content,
+        type: pendingDiaryImages.length > 0 ? 'photo' : 'note',
+        time: new Date().toISOString()
+      });
+      saveCalendar(calData);
+      
+      // 清理输入框并刷新所有 UI
+      input.value = ''; input.style.height = 'auto';
+      pendingDiaryImages = [];
+      renderPendingImages();
+      renderDiaries();
+      renderCalendar(); // 刷新日历，显示最新蓝点与热力
+    });
+  }
+
+  // 文本框高度自适应
+  var diaryInput = document.getElementById('diaryInput');
+  if (diaryInput) {
+    diaryInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+  }
+
+  // 4. 动态删除与图片放大 Lightbox
+  var diaryFeed = document.getElementById('diaryFeed');
+  if (diaryFeed) {
+    diaryFeed.addEventListener('click', function(e) {
+      // 删除逻辑
+      var delBtn = e.target.closest('.diary-delete');
+      if (delBtn) {
+        if (!confirm('确定要删除这条动态吗？')) return;
+        var idx = parseInt(delBtn.dataset.idx);
+        var diaries = getDiaries();
+        diaries.splice(idx, 1);
+        saveDiaries(diaries);
+        renderDiaries();
+      }
+      // 放大图片逻辑
+      var img = e.target.closest('.diary-zoom-img');
+      if (img) {
+        var dIdx = parseInt(img.dataset.diaryIdx);
+        var iIdx = parseInt(img.dataset.imgIdx);
+        var diaries = getDiaries();
+        showDiaryLightbox(diaries[dIdx].images, iIdx);
+      }
+    });
+  }
+
+  // 朋友圈专属图片浏览器
+  var diaryLightboxEl = null;
+  function showDiaryLightbox(images, index) {
+    closeDiaryLightbox();
+    diaryLightboxEl = document.createElement('div');
+    diaryLightboxEl.className = 'lightbox-overlay diary-lightbox';
+    
+    var navPrev = index > 0 ? '<span class="lightbox-nav prev" data-go="'+(index-1)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="m15 18-6-6 6-6"/></svg></span>' : '';
+    var navNext = index < images.length - 1 ? '<span class="lightbox-nav next" data-go="'+(index+1)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="m9 18 6-6-6-6"/></svg></span>' : '';
+    var counter = '<div class="lightbox-counter">' + (index + 1) + ' / ' + images.length + '</div>';
+    
+    diaryLightboxEl.innerHTML = '<span class="lightbox-close">×</span>' + counter + navPrev + navNext + '<img src="'+images[index]+'" />';
+    
+    diaryLightboxEl.addEventListener('click', function(e) {
+      if (e.target.classList.contains('lightbox-close') || e.target === diaryLightboxEl) { closeDiaryLightbox(); return; }
+      var nav = e.target.closest('.lightbox-nav');
+      if (nav) { showDiaryLightbox(images, parseInt(nav.dataset.go)); }
+    });
+    document.body.appendChild(diaryLightboxEl);
+  }
+  function closeDiaryLightbox() {
+    if (diaryLightboxEl) { diaryLightboxEl.remove(); diaryLightboxEl = null; }
+  }
+
+  // 初始渲染朋友圈
+  setTimeout(renderDiaries, 100);
   /* ===== Albums ===== */
   function renderAlbums() {
     var grid = document.getElementById('albumGrid'); if (!grid) return;
