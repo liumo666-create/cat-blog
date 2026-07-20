@@ -4,33 +4,49 @@ import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  // 保持 Serverless 云端渲染模式
   output: 'server',
   
-  // 接入 Cloudflare
   adapter: cloudflare({
     platformProxy: {
       enabled: true 
     }
   }),
   
-  // 恢复你的 Svelte 支持
   integrations: [svelte()],
   
   vite: {
     plugins: [
       tailwindcss(),
       
-      // 👇 极客补丁：专门拦截 Tailwind v4 的无理要求
+      // 👇 终极防御：无视路径，全盘绞杀任何 HTML 注入
       {
-        name: 'fix-tailwind-ssr-bug',
-        enforce: 'post', // 确保在 Tailwind 之后运行
+        name: 'crush-tailwind-html-injection',
+        enforce: 'post',
         config(config, { isSsrBuild }) {
-          if (isSsrBuild && config.build?.rollupOptions) {
+          if (isSsrBuild && config.build?.rollupOptions?.input) {
             const input = config.build.rollupOptions.input;
-            // 如果是服务端编译，且 Tailwind 强行塞了 HTML，直接清空它！
-            if (input === 'index.html' || (Array.isArray(input) && input.includes('index.html'))) {
+            
+            // 1. 如果是单字符串绝对路径，且以 .html 结尾
+            if (typeof input === 'string' && input.endsWith('.html')) {
               config.build.rollupOptions.input = undefined;
+            } 
+            // 2. 如果是数组，过滤掉所有 .html 文件
+            else if (Array.isArray(input)) {
+              config.build.rollupOptions.input = input.filter(i => !i.endsWith('.html'));
+              if (config.build.rollupOptions.input.length === 0) {
+                config.build.rollupOptions.input = undefined;
+              }
+            } 
+            // 3. 如果是对象形式的入口，剔除 .html 属性
+            else if (typeof input === 'object' && input !== null) {
+              for (const key in input) {
+                if (input[key].endsWith('.html')) {
+                  delete input[key];
+                }
+              }
+              if (Object.keys(input).length === 0) {
+                config.build.rollupOptions.input = undefined;
+              }
             }
           }
         }
