@@ -1747,110 +1747,52 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
       this.style.height = Math.max(this.scrollHeight, 250) + 'px';
     });
   }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+<script>
   // @ts-nocheck
-  window.currentDiariesData = []; 
-
-  function simpleMarkdown(text) {
-    if (!text) return '';
-    return text
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;" />')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br />');
+  
+  // 2. 渲染核心
+  async function loadData() {
+    const [dRes, cRes] = await Promise.all([fetch('/api/diary'), fetch('/api/comment')]);
+    const diaries = await dRes.json();
+    const comments = await cRes.json();
+    
+    const feed = document.getElementById('diaryFeed');
+    feed.innerHTML = diaries.map(d => {
+      const postComments = comments.filter(c => c.diary_id === d.id);
+      return `
+        <div class="diary-post">
+          <p>${simpleMarkdown(d.content)}</p>
+          <div id="comments-${d.id}">
+             ${postComments.map(c => `<div>${c.email}: ${c.content}</div>`).join('')}
+          </div>
+          <button onclick="toggleBox('${d.id}')">回复</button>
+          <div id="box-${d.id}" style="display:none">
+            <input id="email-${d.id}" placeholder="邮箱" />
+            <textarea id="text-${d.id}"></textarea>
+            <button onclick="sendComment('${d.id}')">提交</button>
+          </div>
+        </div>`;
+    }).join('');
   }
 
-  async function fetchAndRenderDiaries() {
-    var feed = document.getElementById('diaryFeed'); 
-    if (!feed) return;
-    
-    try {
-      const [diariesRes, commentsRes] = await Promise.all([
-        fetch('/api/diary'),
-        fetch('/api/comment')
-      ]);
-      const diaries = await diariesRes.json();
-      const comments = await commentsRes.json();
-      window.currentDiariesData = diaries;
-      
-      feed.innerHTML = diaries.map(function(d, idx) {
-        var dateObj = new Date(d.created_at + 'Z'); 
-        var timeStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日 ' + String(dateObj.getHours()).padStart(2,'0') + ':' + String(dateObj.getMinutes()).padStart(2,'0');
-        
-        var imgs = d.images ? JSON.parse(d.images) : [];
-        var imgHtml = imgs.length > 0 ? `<div class="diary-img-grid">${imgs.map(img => `<img src="${img}" loading="lazy" class="diary-zoom-img" />`).join('')}</div>` : '';
-        
-        var postComments = comments.filter(c => c.diary_id === d.id);
-        var commentsHtml = postComments.length > 0 ? `
-          <div class="diary-comments-list">${postComments.map(c => `
-            <div class="diary-comment-item">
-              <img src="${c.avatar_url}" class="comment-avatar" />
-              <div class="comment-content-box">
-                <span class="comment-email">${c.email ? c.email.split('@')[0] : '匿名'}</span>
-                <span class="comment-text">${c.content}</span>
-              </div>
-            </div>`).join('')}</div>` : '';
-
-        return `
-          <div class="diary-post">
-            <div class="diary-avatar"><img src="/cat1.png" /></div>
-            <div class="diary-body">
-              <div class="diary-author">FYH <span class="diary-badge">博主</span></div>
-              <div class="diary-content">${simpleMarkdown(d.content)}</div>${imgHtml}
-              <div class="diary-footer">
-                <span class="diary-time">${timeStr}</span>
-                <span class="diary-reply-btn" onclick="toggleReplyBox('${d.id}')">💬 回复</span>
-              </div>
-              ${commentsHtml}
-              <div class="diary-reply-box" id="reply-box-${d.id}" style="display:none;">
-                <input type="email" id="reply-email-${d.id}" placeholder="输入邮箱获取头像" class="reply-input" />
-                <textarea id="reply-content-${d.id}" placeholder="说点什么吧..." class="reply-textarea"></textarea>
-                <button class="reply-submit-btn" onclick="submitComment('${d.id}')">发送回复</button>
-              </div>
-            </div>
-          </div>`;
-      }).join('');
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  window.toggleReplyBox = function(id) {
-    var box = document.getElementById('reply-box-' + id);
-    if(box) box.style.display = box.style.display === 'none' ? 'flex' : 'none';
-  };
-
-  window.submitComment = async function(diary_id) {
-    var emailInput = document.getElementById('reply-email-' + diary_id);
-    var contentInput = document.getElementById('reply-content-' + diary_id);
-    if(!emailInput || !contentInput) return;
-    
-    var email = emailInput.value.trim();
-    var content = contentInput.value.trim();
-    
-    if(!email || !content) return alert('请填全信息');
-    
-    var avatar_url = 'https://cravatar.cn/avatar/' + md5(email.toLowerCase()) + '?d=identicon';
-    
-    const res = await fetch('/api/comment', {
+  // 3. 提交评论
+  window.sendComment = async function(id) {
+    const email = document.getElementById(`email-${id}`).value;
+    const content = document.getElementById(`text-${id}`).value;
+    const avatar_url = 'https://cravatar.cn/avatar/' + md5(email.toLowerCase()) + '?d=identicon';
+    await fetch('/api/comment', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ diary_id, email, content, avatar_url })
+      body: JSON.stringify({ diary_id: id, email, content, avatar_url })
     });
-    
-    if((await res.json()).success) {
-      alert('回复成功！');
-      fetchAndRenderDiaries();
-    } else {
-      alert('回复失败');
-    }
+    loadData();
   };
 
-  setTimeout(fetchAndRenderDiaries, 100);
+  window.toggleBox = (id) => {
+    const b = document.getElementById('box-' + id);
+    b.style.display = b.style.display === 'none' ? 'block' : 'none';
+  };
+
+  loadData();
 </script>
