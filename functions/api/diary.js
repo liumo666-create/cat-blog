@@ -1,10 +1,17 @@
-// functions/api/diary.js (Cloudflare 原生函数语法)
+// functions/api/diary.js (Cloudflare 原生函数语法 - 带密码锁)
 
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
     const data = await request.json();
-    const { content, images } = data;
+    
+    // 👇 1. 在这里增加 password 的提取
+    const { content, images, password } = data;
+    
+    // 👇 2. 增加拦截器：密码不对，直接打回！
+    if (password !== '1472580369') {
+      return new Response(JSON.stringify({ success: false, error: '权限拒绝：你不是博主！' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+    }
     
     // 直接从 env 中读取你的数据库和 Token
     const DB = env.DB;

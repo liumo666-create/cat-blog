@@ -1,0 +1,68 @@
+<script>
+  // 1. 明确声明 pendingImages 是一个字符串数组
+  let pendingImages: string[] = [];
+  
+  // 获取 DOM 元素并明确它们的类型，添加 null 安全检查
+  const imgUpload = document.getElementById('imgUpload') as HTMLInputElement | null;
+  const diaryInput = document.getElementById('diaryInput') as HTMLTextAreaElement | null;
+  const adminPwd = document.getElementById('adminPwd') as HTMLInputElement | null;
+  const preview = document.getElementById('preview') as HTMLElement | null;
+  const btnSend = document.getElementById('btnSend') as HTMLButtonElement | null;
+
+  // 图片预览逻辑
+  imgUpload?.addEventListener('change', (e) => {
+    const target = e.target as HTMLInputElement;
+    const files = target.files;
+    if (!files) return;
+    
+    for (let file of Array.from(files)) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const result = ev.target?.result as string;
+        if (result) {
+          pendingImages.push(result);
+          if (preview) {
+            preview.innerHTML = pendingImages.map(img => `<img src="${img}" />`).join('');
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // 发送逻辑
+  btnSend?.addEventListener('click', async (e) => {
+    const btn = e.target as HTMLButtonElement;
+    const pwd = adminPwd?.value;
+    const content = diaryInput?.value.trim();
+
+    if (!pwd) return alert('请先输入密码！');
+    if (!content && pendingImages.length === 0) return alert('不能发送空宇宙电波哦！');
+
+    btn.disabled = true;
+    btn.innerText = '正在穿越虫洞...';
+
+    try {
+      const res = await fetch('/api/diary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd, content: content, images: pendingImages })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert('发射成功！快去主页看看吧。');
+        if (diaryInput) diaryInput.value = '';
+        pendingImages = [];
+        if (preview) preview.innerHTML = '';
+      } else {
+        alert('发射失败: ' + data.error);
+      }
+    } catch (err) {
+      alert('网络波动，连接云端失败！');
+    } finally {
+      btn.disabled = false;
+      btn.innerText = '🚀 发送动态';
+    }
+  });
+</script>

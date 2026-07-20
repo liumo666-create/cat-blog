@@ -1,4 +1,4 @@
-﻿---
+---
 import Layout from "@layouts/Layout.astro";
 import NavBar from "@components/NavBar.astro";
 import HeroBanner from "@components/HeroBanner.astro";
@@ -670,7 +670,24 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
               </div>
             </div>
 
-        
+            <!-- 发布框 (Glassmorphism) -->
+            <div class="diary-composer glass-card animate-in" style="animation-delay: 0.1s;">
+              <textarea id="diaryInput" placeholder="这一刻的想法... (支持 Markdown)" rows="3"></textarea>
+              <div class="diary-image-previews" id="diaryImagePreviews" style="display:none;"></div>
+              
+              <div class="diary-toolbar">
+                <button class="diary-tool-btn" id="btnDiaryImg" title="插入图片">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </button>
+                <input type="file" id="diaryImgUpload" accept="image/*" multiple style="display:none;" />
+                
+                <button class="glass-btn" id="btnPublishDiary" style="border-color:var(--cyan); color:var(--cyan);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                  发送
+                </button>
+              </div>
+            </div>
+
             <!-- 动态时间线列表 -->
             <div class="diary-feed" id="diaryFeed"></div>
           </div>
@@ -1205,30 +1222,27 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
       .replace(/\n/g, '<br />');
     return '<p>'+html+'</p>';
   }
-/* ===== 🌟 碎片日记/朋友圈 动态引擎 (带评论版) ===== */
-  window.currentDiariesData = []; 
+/* ===== 🌟 碎片日记/朋友圈 动态引擎 ===== */
+  var pendingDiaryImages = []; // 暂存待发送的图片
+  window.currentDiariesData = []; // 用于在内存中暂存云端拉取的数据，供相册放大使用
 
+  // 1. 从云端拉取并渲染朋友圈
   async function fetchAndRenderDiaries() {
     var feed = document.getElementById('diaryFeed'); if (!feed) return;
     feed.innerHTML = '<div class="diary-empty">正在接收宇宙电波...</div>'; 
     
     try {
-      // 🌟 同时拉取日记和所有评论数据
-      const [diariesRes, commentsRes] = await Promise.all([
-        fetch('/api/diary'),
-        fetch('/api/comment')
-      ]);
-      const diaries = await diariesRes.json();
-      const comments = await commentsRes.json();
-      window.currentDiariesData = diaries; 
+      const response = await fetch('/api/diary');
+      const diaries = await response.json();
+      window.currentDiariesData = diaries; // 存入内存
       
       if (diaries.length === 0) {
-        feed.innerHTML = '<div class="diary-empty">你的像素宇宙很安静~</div>';
+        feed.innerHTML = '<div class="diary-empty">你的像素宇宙很安静，来说点什么吧~</div>';
         return;
       }
       
       feed.innerHTML = diaries.map(function(d, idx) {
-        var dateObj = new Date(d.created_at + 'Z'); 
+        var dateObj = new Date(d.created_at + 'Z'); // 保证时区正确
         var timeStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日 ' + String(dateObj.getHours()).padStart(2,'0') + ':' + String(dateObj.getMinutes()).padStart(2,'0');
         
         var imgs = d.images ? JSON.parse(d.images) : [];
@@ -1244,30 +1258,7 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
                     }).join('') + '</div>';
         }
         
-        // 🌟 筛选并渲染属于当前日记的评论
-        var postComments = comments.filter(c => c.diary_id === d.id);
-        var commentsHtml = '';
-        if (postComments.length > 0) {
-          commentsHtml = '<div class="diary-comments-list">' + postComments.map(c => `
-            <div class="diary-comment-item">
-              <img src="${c.avatar_url}" class="comment-avatar" />
-              <div class="comment-content-box">
-                <span class="comment-email">${c.email.split('@')[0]}</span>
-                <span class="comment-text">${c.content}</span>
-              </div>
-            </div>
-          `).join('') + '</div>';
-        }
-
-        // 🌟 隐藏的回复框结构
-        var replyBoxHtml = `
-          <div class="diary-reply-box" id="reply-box-${d.id}" style="display:none;">
-            <input type="email" id="reply-email-${d.id}" placeholder="输入你的邮箱 (将自动获取全球通用头像)" class="reply-input" />
-            <textarea id="reply-content-${d.id}" placeholder="说点什么吧..." class="reply-textarea"></textarea>
-            <button class="reply-submit-btn" onclick="submitComment('${d.id}')">发送</button>
-          </div>
-        `;
-        
+        // 注意：为了云端安全，暂时移除了前端直接删除的按钮
         return '<div class="diary-post">' +
                  '<div class="diary-avatar"><img src="/cat1.png" /></div>' +
                  '<div class="diary-body">' +
@@ -1276,10 +1267,7 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
                    imgHtml +
                    '<div class="diary-footer">' +
                      '<span class="diary-time">' + timeStr + '</span>' +
-                     '<span class="diary-reply-btn" onclick="toggleReplyBox(\''+d.id+'\')">💬 回复</span>' +
                    '</div>' +
-                   commentsHtml +
-                   replyBoxHtml +
                  '</div>' +
                '</div>';
       }).join('');
@@ -1288,53 +1276,131 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
     }
   }
 
-  // 控制回复框的展开与折叠
-  window.toggleReplyBox = function(id) {
-    var box = document.getElementById('reply-box-' + id);
-    box.style.display = box.style.display === 'none' ? 'flex' : 'none';
-  };
-
-  // 提交评论的核心逻辑
-  window.submitComment = async function(diary_id) {
-    var emailInput = document.getElementById('reply-email-' + diary_id);
-    var contentInput = document.getElementById('reply-content-' + diary_id);
-    var email = emailInput.value.trim();
-    var content = contentInput.value.trim();
-    var btn = event.target;
-
-    if (!email || !content) { alert('邮箱和回复内容都不能为空哦！'); return; }
-    if (!email.includes('@')) { alert('请填写正确的邮箱格式！'); return; }
-
-    btn.disabled = true;
-    btn.innerText = '发送中...';
-
-    try {
-      // 🌟 使用国内镜像站 Cravatar，通过邮箱的 MD5 值精准拉取全球通用头像
-      var hash = md5(email.toLowerCase());
-      var avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
-
-      const response = await fetch('/api/comment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ diary_id, email, content, avatar_url })
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        fetchAndRenderDiaries(); // 评论成功，重新渲染信息流
-      } else {
-        alert('回复失败: ' + result.error);
-        btn.disabled = false;
-        btn.innerText = '发送';
+  // 2. 图片选择与预览逻辑
+  var diaryImgUpload = document.getElementById('diaryImgUpload');
+  var btnDiaryImg = document.getElementById('btnDiaryImg');
+  if (btnDiaryImg && diaryImgUpload) {
+    btnDiaryImg.addEventListener('click', function() { diaryImgUpload.click(); });
+    diaryImgUpload.addEventListener('change', function(e) {
+      var files = e.target.files;
+      if (!files.length) return;
+      
+      if (pendingDiaryImages.length + files.length > 9) {
+        alert('朋友圈最多只能发 9 张图片哦！'); return;
       }
-    } catch (e) {
-      alert('网络波动，请重试！');
-      btn.disabled = false;
-      btn.innerText = '发送';
-    }
-  };
 
-  // 4. 图片放大 Lightbox (保持原有逻辑)
+      var loaded = 0;
+      for (var i = 0; i < files.length; i++) {
+        (function(file){
+          var r = new FileReader();
+          r.onload = function(ev) {
+            pendingDiaryImages.push(ev.target.result);
+            loaded++;
+            if (loaded === files.length) renderPendingImages();
+          };
+          r.readAsDataURL(file);
+        })(files[i]);
+      }
+      e.target.value = '';
+    });
+  }
+
+  function renderPendingImages() {
+    var container = document.getElementById('diaryImagePreviews');
+    if (!container) return;
+    if (pendingDiaryImages.length === 0) {
+      container.innerHTML = ''; container.style.display = 'none'; return;
+    }
+    container.style.display = 'flex';
+    container.innerHTML = pendingDiaryImages.map(function(img, i) {
+      return '<div class="diary-preview-item"><img src="'+img+'" /><span class="diary-preview-del" data-idx="'+i+'">×</span></div>';
+    }).join('');
+  }
+
+  var previews = document.getElementById('diaryImagePreviews');
+  if (previews) {
+    previews.addEventListener('click', function(e) {
+      var del = e.target.closest('.diary-preview-del');
+      if (del) {
+        var idx = parseInt(del.dataset.idx);
+        pendingDiaryImages.splice(idx, 1);
+        renderPendingImages();
+      }
+    });
+  }
+
+  // 3. 发布按钮逻辑（对接云端 Serverless API）
+  var btnPublishDiary = document.getElementById('btnPublishDiary');
+  if (btnPublishDiary) {
+    btnPublishDiary.addEventListener('click', async function() {
+      var input = document.getElementById('diaryInput');
+      var content = input.value.trim();
+      
+      if (!content && pendingDiaryImages.length === 0) {
+        alert('写点什么或者发张图片吧！'); return;
+      }
+      
+      // 禁用按钮，防止手抖点多次
+      btnPublishDiary.disabled = true;
+      btnPublishDiary.innerHTML = '发送中...';
+
+      try {
+        // 向云端 API 发射数据
+        const response = await fetch('/api/diary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: content,
+            images: pendingDiaryImages
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          input.value = ''; 
+          input.style.height = 'auto';
+          pendingDiaryImages = [];
+          renderPendingImages();
+          
+          // 重新拉取云端数据
+          fetchAndRenderDiaries();
+          
+          // 日历联动逻辑保留
+          var calData = getCalendar();
+          var d = new Date();
+          var todayStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+          if (!calData[todayStr]) calData[todayStr] = [];
+          calData[todayStr].push({
+            title: content ? content.replace(/\n/g, ' ').substring(0, 15) + (content.length>15?'...':'') : '发布了碎片相片',
+            content: content,
+            type: pendingDiaryImages.length > 0 ? 'photo' : 'note',
+            time: new Date().toISOString()
+          });
+          saveCalendar(calData);
+          renderCalendar();
+        } else {
+          alert('发送失败: ' + result.error);
+        }
+      } catch (error) {
+        alert('网络波动，请检查连接！');
+      } finally {
+        btnPublishDiary.disabled = false;
+        btnPublishDiary.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg> 发送';
+      }
+    });
+  }
+
+  // 文本框高度自适应
+  var diaryInput = document.getElementById('diaryInput');
+  if (diaryInput) {
+    diaryInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+  }
+
+  // 4. 图片放大 Lightbox
   var diaryFeed = document.getElementById('diaryFeed');
   if (diaryFeed) {
     diaryFeed.addEventListener('click', function(e) {
@@ -1342,6 +1408,7 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
       if (img) {
         var dIdx = parseInt(img.dataset.diaryIdx);
         var iIdx = parseInt(img.dataset.imgIdx);
+        // 从内存中读取云端下发的数据
         var currentPost = window.currentDiariesData[dIdx];
         if (currentPost && currentPost.images) {
            var imagesArr = JSON.parse(currentPost.images);
@@ -1352,8 +1419,27 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
   }
 
   var diaryLightboxEl = null;
-  function showDiaryLightbox(images, index) { /* 保持原有代码 */ }
-  function closeDiaryLightbox() { /* 保持原有代码 */ }
+  function showDiaryLightbox(images, index) {
+    closeDiaryLightbox();
+    diaryLightboxEl = document.createElement('div');
+    diaryLightboxEl.className = 'lightbox-overlay diary-lightbox';
+    
+    var navPrev = index > 0 ? '<span class="lightbox-nav prev" data-go="'+(index-1)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="m15 18-6-6 6-6"/></svg></span>' : '';
+    var navNext = index < images.length - 1 ? '<span class="lightbox-nav next" data-go="'+(index+1)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="m9 18 6-6-6-6"/></svg></span>' : '';
+    var counter = '<div class="lightbox-counter">' + (index + 1) + ' / ' + images.length + '</div>';
+    
+    diaryLightboxEl.innerHTML = '<span class="lightbox-close">×</span>' + counter + navPrev + navNext + '<img src="'+images[index]+'" />';
+    
+    diaryLightboxEl.addEventListener('click', function(e) {
+      if (e.target.classList.contains('lightbox-close') || e.target === diaryLightboxEl) { closeDiaryLightbox(); return; }
+      var nav = e.target.closest('.lightbox-nav');
+      if (nav) { showDiaryLightbox(images, parseInt(nav.dataset.go)); }
+    });
+    document.body.appendChild(diaryLightboxEl);
+  }
+  function closeDiaryLightbox() {
+    if (diaryLightboxEl) { diaryLightboxEl.remove(); diaryLightboxEl = null; }
+  }
 
   // 初始渲染朋友圈
   setTimeout(fetchAndRenderDiaries, 100);
@@ -1747,110 +1833,4 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
       this.style.height = Math.max(this.scrollHeight, 250) + 'px';
     });
   }
-  // @ts-nocheck
-  window.currentDiariesData = []; 
-
-  function simpleMarkdown(text) {
-    if (!text) return '';
-    return text
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;" />')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br />');
-  }
-
-  async function fetchAndRenderDiaries() {
-    var feed = document.getElementById('diaryFeed'); 
-    if (!feed) return;
-    
-    try {
-      const [diariesRes, commentsRes] = await Promise.all([
-        fetch('/api/diary'),
-        fetch('/api/comment')
-      ]);
-      const diaries = await diariesRes.json();
-      const comments = await commentsRes.json();
-      window.currentDiariesData = diaries;
-      
-      feed.innerHTML = diaries.map(function(d, idx) {
-        var dateObj = new Date(d.created_at + 'Z'); 
-        var timeStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日 ' + String(dateObj.getHours()).padStart(2,'0') + ':' + String(dateObj.getMinutes()).padStart(2,'0');
-        
-        var imgs = d.images ? JSON.parse(d.images) : [];
-        var imgHtml = imgs.length > 0 ? `<div class="diary-img-grid">${imgs.map(img => `<img src="${img}" loading="lazy" class="diary-zoom-img" />`).join('')}</div>` : '';
-        
-        var postComments = comments.filter(c => c.diary_id === d.id);
-        var commentsHtml = postComments.length > 0 ? `
-          <div class="diary-comments-list">${postComments.map(c => `
-            <div class="diary-comment-item">
-              <img src="${c.avatar_url}" class="comment-avatar" />
-              <div class="comment-content-box">
-                <span class="comment-email">${c.email ? c.email.split('@')[0] : '匿名'}</span>
-                <span class="comment-text">${c.content}</span>
-              </div>
-            </div>`).join('')}</div>` : '';
-
-        return `
-          <div class="diary-post">
-            <div class="diary-avatar"><img src="/cat1.png" /></div>
-            <div class="diary-body">
-              <div class="diary-author">FYH <span class="diary-badge">博主</span></div>
-              <div class="diary-content">${simpleMarkdown(d.content)}</div>${imgHtml}
-              <div class="diary-footer">
-                <span class="diary-time">${timeStr}</span>
-                <span class="diary-reply-btn" onclick="toggleReplyBox('${d.id}')">💬 回复</span>
-              </div>
-              ${commentsHtml}
-              <div class="diary-reply-box" id="reply-box-${d.id}" style="display:none;">
-                <input type="email" id="reply-email-${d.id}" placeholder="输入邮箱获取头像" class="reply-input" />
-                <textarea id="reply-content-${d.id}" placeholder="说点什么吧..." class="reply-textarea"></textarea>
-                <button class="reply-submit-btn" onclick="submitComment('${d.id}')">发送回复</button>
-              </div>
-            </div>
-          </div>`;
-      }).join('');
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  window.toggleReplyBox = function(id) {
-    var box = document.getElementById('reply-box-' + id);
-    if(box) box.style.display = box.style.display === 'none' ? 'flex' : 'none';
-  };
-
-  window.submitComment = async function(diary_id) {
-    var emailInput = document.getElementById('reply-email-' + diary_id);
-    var contentInput = document.getElementById('reply-content-' + diary_id);
-    if(!emailInput || !contentInput) return;
-    
-    var email = emailInput.value.trim();
-    var content = contentInput.value.trim();
-    
-    if(!email || !content) return alert('请填全信息');
-    
-    var avatar_url = 'https://cravatar.cn/avatar/' + md5(email.toLowerCase()) + '?d=identicon';
-    
-    const res = await fetch('/api/comment', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ diary_id, email, content, avatar_url })
-    });
-    
-    if((await res.json()).success) {
-      alert('回复成功！');
-      fetchAndRenderDiaries();
-    } else {
-      alert('回复失败');
-    }
-  };
-
-  setTimeout(fetchAndRenderDiaries, 100);
 </script>
