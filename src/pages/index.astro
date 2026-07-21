@@ -1851,16 +1851,23 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
         }
 
         // 处理评论
-        var postComments = comments.filter(function(c) { return c.diary_id === d.id; });
+      var postComments = comments.filter(function(c) { return c.diary_id === d.id; });
         var commentsHtml = '';
         if (postComments.length > 0) {
           commentsHtml = '\x3Cdiv class="diary-comments-list"\x3E' +
                          postComments.map(function(c) {
-                           var emailName = c.email ? c.email.split('@')[0] : '匿名用户';
+                           // 🌟 核心魔法：从头像 URL 中解密出我们藏在里面的昵称
+                           var hiddenName = '';
+                           if (c.avatar_url && c.avatar_url.includes('#name=')) {
+                             hiddenName = decodeURIComponent(c.avatar_url.split('#name=')[1]);
+                           }
+                           // 优先级：真实name字段 > 隐藏解密name > 邮箱前缀 > 匿名用户
+                           var displayName = c.name ? c.name : (hiddenName ? hiddenName : (c.email ? c.email.split('@')[0] : '匿名用户'));
+                           
                            return '\x3Cdiv class="diary-comment-item"\x3E' +
                                     '\x3Cimg src="' + (c.avatar_url || '/cat1.png') + '" class="comment-avatar" onerror="this.src=\'/cat1.png\'" \x3E' +
                                     '\x3Cdiv class="comment-content-box"\x3E' +
-                                      '\x3Cspan class="comment-email"\x3E' + emailName + '\x3C/span\x3E' +
+                                      '\x3Cspan class="comment-email"\x3E' + displayName + '\x3C/span\x3E' +
                                       '\x3Cspan class="comment-text"\x3E' + c.content + '\x3C/span\x3E' +
                                     '\x3C/div\x3E' +
                                   '\x3C/div\x3E';
@@ -1892,34 +1899,85 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
   }
 
   // 3. 提交与展开逻辑
-  window.toggleReplyBox = function(id) {
+window.toggleReplyBox = function(id) {
     var b = document.getElementById('box-' + id);
     if(b) b.style.display = b.style.display === 'none' ? 'flex' : 'none';
   };
 
   window.submitComment = async function(id, btn) {
-    var email = document.getElementById('email-' + id).value.trim();
-    var content = document.getElementById('text-' + id).value.trim();
+    // 1. 获取所有的输入框（包括咱们新加的昵称框）
+    var nameInput = document.getElementById('name-' + id);
+    var emailInput = document.getElementById('email-' + id);
+    var contentInput = document.getElementById('text-' + id);
+    
+    if(!emailInput || !contentInput) return;
+
+    var name = nameInput ? nameInput.value.trim() : '';
+    var email = emailInput.value.trim();
+    var content = contentInput.value.trim();
+
     if(!email || !content) return alert('邮箱和内容不能为空哦！');
+    if(!email.includes('@')) return alert('请填写正确的邮箱格式！');
 
     btn.disabled = true;
+    var oldText = btn.innerText;
     btn.innerText = '发送中...';
+    
     try {
-      var hash = typeof md5 === 'function' ? md5(email.toLowerCase()) : Date.now().toString();
-      var avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
-      await fetch('/api/comment', {
+      var avatar_url = '';
+      
+      // 2. QQ 邮箱匹配与官方头像拉取
+      var qqMatch = email.match(/^([1-9][0-9]{4,10})@qq\.com$/i);
+      if (qqMatch) {
+        var qqNum = qqMatch[1];
+        avatar_url = 'https://q1.qlogo.cn/g?b=qq&nk=' + qqNum + '&s=100';
+        if (!name) name = 'QQ网友'; // 如果没填昵称，默认给个称呼
+      } else {
+        // 非 QQ 邮箱，使用通用哈希头像
+        var hash = typeof md5 === 'function' ? md5(email.toLowerCase()) : Date.now().toString();
+        avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
+        if (!name) name = email.split('@')[0]; // 如果没填昵称，截取邮箱前缀
+      }
+
+      // 🌟 3. 偷天换日：把昵称编码后藏在头像 URL 的尾巴上
+      if (name) {
+        avatar_url = avatar_url + '#name=' + encodeURIComponent(name);
+      }
+
+      // 4. 发送数据给云端
+      const response = await fetch('/api/comment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ diary_id: id, email: email, content: content, avatar_url: avatar_url })
+        body: JSON.stringify({ diary_id: id, name: name, email: email, content: content, avatar_url: avatar_url })
       });
-      fetchAndRenderDiaries();
+
+      // 5. 终极防崩溃校验（防止云端数据库报错导致前端瘫痪）
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (data.success) {
+          // 发送成功，清空输入框并刷新动态
+          if (nameInput) nameInput.value = '';
+          emailInput.value = '';
+          contentInput.value = '';
+          fetchAndRenderDiaries(); 
+        } else {
+          alert('发送失败: ' + (data.error || '未知错误'));
+        }
+      } else {
+        // 如果后端返回 HTML 报错信息
+        console.error("🚨 后端异常日志:", await response.text());
+        alert('服务器开小差了，请按 F12 看控制台的红字报错！');
+      }
     } catch(e) {
-      alert('网络连接失败');
+      console.error(e);
+      alert('网络连接失败，请重试');
+    } finally {
+      // 无论成功失败，恢复按钮状态
       btn.disabled = false;
-      btn.innerText = '发送';
+      btn.innerText = oldText;
     }
   };
-
   // 4. 图片放大功能 (Lightbox)
   var diaryFeed = document.getElementById('diaryFeed');
   if (diaryFeed) {
