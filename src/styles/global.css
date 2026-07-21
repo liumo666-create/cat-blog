@@ -2357,3 +2357,511 @@ img { max-width: 100%; display: block; }
   .proj-detail-sakura .sakura-feature-row { grid-template-columns: 1fr; }
   .proj-detail-weather .weather-forecast-row { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 }
+
+
+/* ================================================================
+   MOBILE RESPONSIVE STYLES (max-width: 768px)
+   Liquid glass effects + mobile-optimized layout
+   Does NOT affect desktop display
+   ================================================================ */
+@media (max-width: 768px) {
+
+  /* ---- Reset base constraints ---- */
+  html { font-size: 14px; }
+  body { overflow: auto; overflow-x: hidden; }
+
+  /* ---- Touch & scroll optimization ---- */
+  html {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .scroll-container {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
+  }
+  /* Bottom safe area for notched phones */
+  .web-wrapper {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  .mobile-bottom-indicator {
+    bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* Enhanced touch feedback: ripple on contact */
+  @keyframes mobileTouchPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+  .glass-card:active, .post-card:active, .proj-card:active,
+  .cat-card:active, .cat-fact-card:active, .painter-feature-card:active,
+  .weather-day-card:active, .weather-feat-card:active, .sakura-feature-item:active,
+  .album-set:active {
+    animation: mobileTouchPulse 0.25s ease;
+    transition: none;
+  }
+  /* Nav items touch feedback */
+  .nav-links.mobile-open .nav-item:active {
+    background: rgba(255,255,255,0.08);
+    transform: scale(0.97);
+  }
+  /* Input font-size fix (prevents iOS zoom on focus) */
+  input, textarea, select { font-size: 16px !important; }
+
+  /* ---- Game Scene: remove absolute centering, go full viewport ---- */
+  .game-scene {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    min-width: 100%; min-height: 100vh;
+    aspect-ratio: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  /* Hide background gradient animation on mobile */
+  .game-scene::before {
+    display: none;
+  }
+  /* Day/night ripple still works but simplified */
+  .game-scene::after {
+    background-size: 100% 100%;
+  }
+
+  /* ---- Foreground layer: hide on mobile (no background scene) ---- */
+  .foreground-layer { display: none; }
+
+  /* ---- Scroll Container: full width, natural flow ---- */
+  .scroll-container {
+    position: relative;
+    width: 100%; height: auto;
+    top: auto; left: auto;
+    transform: none;
+    overflow: visible;
+  }
+
+  /* ---- Web Wrapper: full-width glass panel ---- */
+  .web-wrapper {
+    border-radius: 0;
+    padding: 16px 14px;
+    min-height: 100vh;
+    box-shadow: none;
+    border-left: none; border-right: none;
+  }
+
+  /* ---- Section Pages: column layout ---- */
+  .section-page.active { flex-direction: column; gap: 16px; }
+  .main-col { flex: auto; width: 100%; }
+  .side-col { width: 100%; flex-shrink: 0; }
+
+  /* ---- Header / NavBar mobile overrides ---- */
+  header {
+    padding-bottom: 12px; margin-bottom: 14px;
+    flex-wrap: nowrap; gap: 8px;
+    position: relative;
+  }
+  .logo-area { gap: 8px; }
+  .cat-wrap { width: 44px; height: 44px; }
+  .fyh-title-img { height: 38px; margin-top: -4px; margin-bottom: -3px; margin-left: -4px; }
+  .logo-text p { font-size: 10px; letter-spacing: 1px; }
+
+  /* Hide desktop nav links */
+  .nav-links { display: none; }
+  /* Hamburger button shown via JS/NavBar */
+  .nav-links.mobile-open {
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; right: 0;
+    width: 75vw; max-width: 320px; height: 100vh;
+    background: var(--glass-strong);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border-left: 1px solid var(--border-hi);
+    padding: 70px 20px 20px;
+    z-index: 1500;
+    gap: 4px;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.5);
+    animation: slideInRight 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Mobile nav items */
+  .nav-links.mobile-open .nav-item {
+    width: 100%; justify-content: flex-start;
+    padding: 12px 16px; border-radius: 12px;
+    font-size: 15px;
+  }
+  .nav-links.mobile-open .nav-dropdown { width: 100%; }
+  .nav-links.mobile-open .dropdown-menu {
+    position: static; transform: none;
+    box-shadow: none; border: none;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding-left: 20px;
+    opacity: 1; visibility: visible;
+    pointer-events: auto;
+  }
+  .nav-links.mobile-open .nav-dropdown.open .dropdown-menu {
+    display: block;
+  }
+  .nav-links.mobile-open .nav-dropdown:not(.open) .dropdown-menu {
+    display: none;
+  }
+  .nav-links.mobile-open .nav-chevron { display: none; }
+
+  /* Hamburger button */
+  .mobile-menu-btn {
+    display: flex;
+    width: 38px; height: 38px;
+    align-items: center; justify-content: center;
+    border: 1px solid var(--border-hi);
+    border-radius: 10px;
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text-secondary);
+    cursor: pointer;
+    flex-shrink: 0;
+    z-index: 1600;
+    transition: all 0.25s ease;
+  }
+  .mobile-menu-btn:active { transform: scale(0.94); }
+  .mobile-menu-btn svg { width: 20px; height: 20px; }
+
+  /* Mobile nav overlay */
+  .mobile-nav-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1400;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Theme toggle on mobile */
+  .theme-toggle-btn { width: 38px; height: 38px; }
+
+  /* ---- Hero Banner ---- */
+  .hero-banner {
+    height: auto;
+    min-height: 160px;
+    aspect-ratio: 16/7;
+    margin-bottom: 18px;
+    border-radius: var(--radius-md);
+  }
+  .hero-banner::before {
+    background: linear-gradient(180deg, transparent 30%, var(--deep) 90%);
+  }
+  .hero-overlay { bottom: 14px; left: 18px; }
+  .hero-overlay h2 { font-size: 22px; }
+  .hero-overlay p { font-size: 11px; letter-spacing: 1px; }
+
+  /* ---- Post Cards ---- */
+  .post-card { padding: 16px; }
+  .post-card.has-cover { flex-direction: column; gap: 12px; padding: 12px; }
+  .post-cover-wrap { width: 100%; height: 140px; }
+  .post-card .post-title { font-size: 15px; }
+  .post-card .post-excerpt { font-size: 13px; }
+  .post-card .post-date { font-size: 10px; }
+  .post-card .tag, .post-card .cat { font-size: 10px; padding: 2px 8px; }
+
+  /* ---- Pagination ---- */
+  .pagination-controls { gap: 12px; }
+  .pagination-controls .glass-btn { padding: 7px 14px; font-size: 13px; }
+
+  /* ---- Glass Cards ---- */
+  .glass-card { padding: 14px; border-radius: var(--radius-md); }
+
+  /* ---- Stats Grid ---- */
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .stat-item { padding: 12px 6px; }
+  .stat-number { font-size: 22px; }
+
+  /* ---- Categories & Tags ---- */
+  .cat-item { padding: 8px 12px; font-size: 13px; }
+  .tag-chip { font-size: 11px; padding: 4px 10px; }
+
+  /* ---- Section Title ---- */
+  .section-title { font-size: 12px; }
+
+  /* ---- Announce Box ---- */
+  .announce-box { padding: 12px 14px; }
+  .announce-box .ann-text { font-size: 12px; }
+
+  /* ---- Footer ---- */
+  .site-footer { font-size: 11px; margin-top: 18px; padding-top: 12px; }
+
+  /* ---- Widget / Weather Card ---- */
+  .uw-clock { font-size: 34px; }
+  .uw-temp { font-size: 24px; }
+  .uw-date { font-size: 11px; }
+
+  /* ---- Calendar Widget ---- */
+  .calendar-grid .day-cell { font-size: 12px; padding: 5px 1px; }
+  .calendar-grid .day-header { font-size: 10px; }
+
+  /* ---- About Page ---- */
+  .about-layout { grid-template-columns: 1fr; gap: 16px; }
+  .about-avatar-card { max-width: 280px; margin: 0 auto; padding: 20px 16px; }
+  .about-avatar-ring { width: 80px; height: 80px; margin-bottom: 14px; }
+  .about-name { font-size: 18px; }
+  .about-bio-card { padding: 18px; }
+  .about-bio-text { font-size: 14px; line-height: 1.8; }
+  .about-skills-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .about-skill { padding: 10px 8px; }
+
+  /* ---- Projects Page ---- */
+  .proj-featured { grid-template-columns: 1fr; min-height: auto; }
+  .proj-feat-content { padding: 20px; }
+  .proj-feat-name { font-size: 22px; }
+  .proj-feat-desc { font-size: 14px; }
+  .proj-feat-visual { min-height: 120px; }
+  .proj-feat-icon { font-size: 48px; }
+  .proj-grid { grid-template-columns: 1fr; gap: 12px; }
+  .proj-card { padding: 18px; }
+  .proj-card-name { font-size: 15px; }
+  .proj-card-desc { font-size: 13px; }
+
+  /* ---- Project Detail Pages ---- */
+  .proj-detail-blog .blog-hero { grid-template-columns: 1fr; }
+  .proj-detail-blog .blog-hero-content { padding: 20px; }
+  .proj-detail-blog .blog-hero-visual { min-height: 120px; }
+  .proj-detail-blog .blog-hero-title { font-size: 20px; }
+  .proj-detail-blog .blog-hero-desc { font-size: 14px; }
+  .proj-detail-blog .blog-stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .proj-detail-blog .blog-stat-card { padding: 14px 10px; }
+  .proj-detail-blog .blog-stat-num { font-size: 22px; }
+  .proj-detail-sakura .sakura-feature-row { grid-template-columns: 1fr; }
+  .proj-detail-weather .weather-forecast-row { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  .proj-detail-back { padding: 6px 12px; font-size: 12px; margin-bottom: 14px; }
+  /* ---- CatViewer Project ---- */
+  .proj-detail-cat .cat-showcase { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .proj-detail-cat .cat-card { border-radius: var(--radius-sm); }
+  .proj-detail-cat .cat-card:hover { transform: none; border-color: var(--border-sub); }
+  .proj-detail-cat .cat-card:hover .cat-card-icon { transform: none; }
+  .proj-detail-cat .cat-card .cat-card-icon { font-size: 28px; }
+  .proj-detail-cat .cat-facts-grid { grid-template-columns: 1fr; gap: 10px; }
+  .proj-detail-cat .cat-fact-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  .proj-detail-cat .cat-fact-card h4 { font-size: 13px; }
+  .proj-detail-cat .cat-fact-card p { font-size: 12px; }
+  /* ---- Pixel Painter Project ---- */
+  .proj-detail-painter .painter-canvas-demo { height: 150px; }
+  .proj-detail-painter .painter-palette { gap: 6px; margin-bottom: 14px; }
+  .proj-detail-painter .painter-toolbar-row { gap: 6px; margin-bottom: 14px; }
+  .proj-detail-painter .painter-tool-btn { width: 36px; height: 36px; border-radius: 8px; }
+  .proj-detail-painter .painter-tool-btn svg { width: 16px; height: 16px; }
+  .proj-detail-painter .painter-features-grid { grid-template-columns: 1fr; gap: 10px; }
+  .proj-detail-painter .painter-feature-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  .proj-detail-painter .painter-feature-card h4 { font-size: 13px; }
+  .proj-detail-painter .painter-feature-card p { font-size: 12px; }
+  /* ---- Pixel Weather Project ---- */
+  .proj-detail-weather .weather-hero { padding: 16px; }
+  .proj-detail-weather .weather-features-grid { grid-template-columns: 1fr; gap: 10px; }
+  .proj-detail-weather .weather-feat-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  .proj-detail-weather .weather-feat-card h4 { font-size: 13px; }
+  .proj-detail-weather .weather-feat-card p { font-size: 12px; }
+  .proj-detail-weather .weather-day-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  .proj-detail-weather .weather-day-card:hover .day-icon { transform: none; animation: none; }
+  .proj-detail-weather .weather-day-card .day-icon { font-size: 28px; }
+  .proj-detail-weather .weather-day-card .day-temp { font-size: 18px; }
+  /* ---- Sakura CSS Project ---- */
+  .proj-detail-sakura .sakura-feature-item:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  .proj-detail-sakura .sakura-feature-item:hover .sakura-feat-icon { transform: none; }
+  .proj-detail-sakura .sakura-feature-item .sakura-feat-icon { font-size: 24px; }
+  .proj-detail-sakura .sakura-feature-item h4 { font-size: 13px; }
+  .proj-detail-sakura .sakura-feature-item p { font-size: 11px; }
+
+
+  /* ---- Gallery / Album Pages ---- */
+  .album-page-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .album-page-hero { flex-direction: column; text-align: center; padding: 18px; gap: 14px; }
+  .album-page-hero-icon { width: 60px; height: 60px; font-size: 28px; border-radius: 16px; }
+  .album-page-hero-info h3 { font-size: 18px; }
+  .album-page-hero-stats { justify-content: center; gap: 16px; }
+  .album-page-hero-stat .num { font-size: 22px; }
+  .album-masonry { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .album-masonry-enhanced { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .album-masonry-item.wide { grid-column: span 1; }
+  .album-masonry-item.tall { grid-row: span 1; }
+  .album-masonry-item .masonry-scatter { display: none; }
+  .album-upload-card-enhanced { grid-column: span 1; min-height: 100px; }
+  .album-set .scatter-photo { width: 30px; height: 30px; }
+  .album-set:hover .scatter-photo:nth-child(1) { transform: translate(-28px, -22px) rotate(-12deg) scale(1); }
+  .album-set:hover .scatter-photo:nth-child(2) { transform: translate(26px, -18px) rotate(10deg) scale(1); }
+  .album-set:hover .scatter-photo:nth-child(3) { transform: translate(-24px, 24px) rotate(-8deg) scale(1); }
+  .album-set:hover .scatter-photo:nth-child(4) { transform: translate(28px, 22px) rotate(14deg) scale(1); }
+
+  /* ---- Gallery Detail Page ---- */
+  .lightbox-nav { width: 38px; height: 38px; font-size: 16px; }
+  .lightbox-nav.prev { left: 8px; }
+  .lightbox-nav.next { right: 8px; }
+
+  /* ---- Admin Page ---- */
+  .editor-layout { grid-template-columns: 1fr; height: auto; }
+  .editor-pane textarea, .editor-preview { min-height: 220px; }
+  .entry-modal { width: 94vw; padding: 18px; }
+  .entry-modal h3 { font-size: 16px; }
+
+  /* ===== LIQUID GLASS EFFECT ON MOBILE ===== */
+  /* Apply SVG filter to glass cards for edge chromatic aberration */
+  .glass-card,
+  .post-card,
+  .stat-item,
+  .project-card,
+  .proj-card,
+  .album-set,
+  .about-bio-card,
+  .about-avatar-card,
+  .about-skill,
+  .announce-box,
+  .proj-detail-blog .blog-hero,
+  .proj-detail-blog .blog-stat-card,
+  .album-page-hero {
+    filter: url(#liquid-glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  /* Hover effects are disabled on mobile (touch devices) */
+  .glass-card:hover,
+  .post-card:hover,
+  .proj-card:hover {
+    transform: none;
+  }
+
+  /* ===== MOBILE-ONLY ANIMATIONS ===== */
+  /* Subtle entrance animation for cards */
+  @keyframes mobileFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .post-card, .glass-card, .proj-card, .stat-item, .album-set {
+    animation: mobileFadeUp 0.45s cubic-bezier(0.4,0,0.2,1) backwards;
+  }
+  .post-card:nth-child(1) { animation-delay: 0.05s; }
+  .post-card:nth-child(2) { animation-delay: 0.10s; }
+  .post-card:nth-child(3) { animation-delay: 0.15s; }
+  .post-card:nth-child(4) { animation-delay: 0.20s; }
+  .post-card:nth-child(5) { animation-delay: 0.25s; }
+
+  /* Touch ripple feedback */
+  .glass-card:active,
+  .post-card:active,
+  .proj-card:active {
+    transform: scale(0.98);
+    transition: transform 0.12s ease;
+  }
+
+  /* Scroll-triggered shimmer for mobile */
+  @keyframes mobileShimmer {
+    0%, 100% { background-position: -200% center; }
+    50% { background-position: 200% center; }
+  }
+  .web-wrapper::after {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none; z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.015) 45%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 55%, transparent 60%);
+    background-size: 200% 100%;
+    animation: mobileShimmer 6s ease-in-out infinite;
+  }
+
+  /* ---- Disable custom cursors on mobile ---- */
+  body { cursor: auto !important; }
+  a, button, .cat-wrap, .post-card, .cat-item, .tag-chip, .project-card, .album-set,
+  .day-cell, .album-upload-zone, .glass-btn, .dropdown-item, .nav-item, .calendar-btn {
+    cursor: pointer !important;
+  }
+
+  /* ---- Glass Button ---- */
+  .glass-btn { padding: 7px 14px; font-size: 13px; }
+
+  /* ---- Sakura canvas: hidden on mobile ---- */
+  #canvas_sakura { display: none !important; }
+  .click-sakura { display: none !important; }
+
+  /* ---- Liquid glass enhanced card borders ---- */
+  .glass-card, .post-card {
+    border-width: 1.5px;
+  }
+
+  /* Mobile bottom nav indicator */
+  .mobile-bottom-indicator {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--cyan), var(--purple));
+    z-index: 2000;
+    opacity: 0.7;
+  }
+
+
+  /* ---- Post/Article Detail Page ---- */
+  .article-container { padding: 0 4px; }
+  .article-header { margin-bottom: 20px; }
+  .article-cover {
+    width: 100%; height: auto;
+    max-height: 220px; object-fit: cover;
+    border-radius: var(--radius-md);
+  }
+  .article-title {
+    font-size: 22px; line-height: 1.3;
+    margin: 14px 0 8px;
+  }
+  .article-meta { font-size: 12px; gap: 10px; }
+  .article-meta .date { font-size: 11px; }
+  .article-meta .cat { font-size: 11px; padding: 2px 10px; }
+  .back-btn {
+    font-size: 13px; padding: 6px 12px;
+    margin-bottom: 14px;
+  }
+  .markdown-body {
+    font-size: 15px; line-height: 1.8;
+    padding: 0;
+  }
+  .markdown-body h2 { font-size: 20px; }
+  .markdown-body h3 { font-size: 17px; }
+  .markdown-body pre { font-size: 12px; padding: 12px; margin: 12px 0; }
+  .markdown-body code { font-size: 13px; }
+  .markdown-body img {
+    width: 100%; height: auto;
+    border-radius: var(--radius-sm);
+  }
+  .markdown-body blockquote {
+    margin: 12px 0; padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  /* ---- Gallery Detail Page ---- */
+  .photo-viewer-container { max-width: 100%; padding: 0 8px; margin: 20px auto; }
+  .viewer-title { font-size: 1.6rem; }
+  .viewer-desc { font-size: 0.95rem; }
+  .viewer-header { margin-bottom: 30px; }
+  .photo-column { gap: 30px; }
+  .photo-frame { padding: 8px; }
+  .photo-frame:hover { transform: none; }
+  .viewer-footer { margin-top: 40px; margin-bottom: 30px; }
+
+  /* ---- Comment Section ---- */
+  .comment-form textarea { font-size: 14px; }
+  .comment-item { padding: 12px; }
+  .comment-author { font-size: 13px; }
+  .comment-text { font-size: 14px; }
+
+  /* ---- Diary Section ---- */
+  .diary-post { padding: 14px; }
+  .diary-header-avatar img { width: 36px; height: 36px; }
+  .diary-content { font-size: 14px; }
+  .reply-input, .reply-textarea { font-size: 14px; }
+
+  /* ---- Entry Modal ---- */
+  .entry-modal-overlay { padding: 16px; }
+  .entry-modal { max-width: 96vw; max-height: 88vh; padding: 16px; }
+  .entry-modal label { font-size: 13px; }
+  .entry-modal input, .entry-modal textarea { font-size: 14px; }
+
+  /* ---- Sakura detail project page ---- */
+  .proj-detail-sakura .sakura-hero { flex-direction: column; gap: 16px; }
+}

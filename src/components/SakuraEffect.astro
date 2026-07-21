@@ -36,7 +36,9 @@
 <script>
 // @ts-nocheck
   function initSakura() {
-    var sakuraCanvas = document.getElementById("canvas_sakura");
+    /* Disable on mobile screens */
+    if (window.innerWidth <= 768) return;
+        var sakuraCanvas = document.getElementById("canvas_sakura");
     if (!sakuraCanvas) return;
     sakuraCanvas.width = window.innerWidth;
     sakuraCanvas.height = window.innerHeight;
