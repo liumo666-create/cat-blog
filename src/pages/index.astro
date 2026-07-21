@@ -134,6 +134,24 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
         </div>
 
 <style is:global>
+
+  /* =================================================================== */
+/* 🌟 高颜值回复框与评论区样式 */
+/* =================================================================== */
+.diary-comments-list { margin-top: 16px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; }
+.diary-comment-item { display: flex; gap: 10px; font-size: 13px; align-items: flex-start; animation: fadeIn 0.4s ease forwards; }
+.comment-avatar { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+.comment-content-box { flex: 1; background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 4px 12px 12px 12px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.02); }
+.comment-email { font-weight: 800; color: var(--pink); margin-right: 8px; font-family: 'JetBrains Mono', monospace; }
+.comment-text { color: #e2e8f0; }
+
+.diary-reply-box { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.25); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.reply-input, .reply-textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-size: 13px; outline: none; transition: all 0.3s ease; box-sizing: border-box; font-family: inherit; }
+.reply-input:focus, .reply-textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.15); background: rgba(0,0,0,0.6); }
+.reply-textarea { resize: vertical; min-height: 60px; }
+.reply-submit-btn { align-self: flex-end; background: rgba(255, 107, 157, 0.1); color: var(--pink); border: 1px solid var(--pink); padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s ease; }
+.reply-submit-btn:hover { background: var(--pink); color: #fff; box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3); transform: translateY(-1px); }
 /* =================================================================== */
 /* 🌟 像素朋友圈/碎片日记 专属样式 */
 /* =================================================================== */
@@ -1294,23 +1312,30 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
     box.style.display = box.style.display === 'none' ? 'flex' : 'none';
   };
 
-  // 提交评论的核心逻辑
-  window.submitComment = async function(diary_id) {
+ // 提交评论的核心逻辑 (超级防弹版)
+  window.submitComment = async function(diary_id, btnElement) {
     var emailInput = document.getElementById('reply-email-' + diary_id);
     var contentInput = document.getElementById('reply-content-' + diary_id);
+    
+    // 兼容不同的传参方式
+    var btn = btnElement || window.event?.target;
+
+    if (!emailInput || !contentInput) return;
+
     var email = emailInput.value.trim();
     var content = contentInput.value.trim();
-    var btn = event.target;
 
     if (!email || !content) { alert('邮箱和回复内容都不能为空哦！'); return; }
     if (!email.includes('@')) { alert('请填写正确的邮箱格式！'); return; }
 
-    btn.disabled = true;
-    btn.innerText = '发送中...';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerText = '发送中...';
+    }
 
     try {
       // 🌟 使用国内镜像站 Cravatar，通过邮箱的 MD5 值精准拉取全球通用头像
-      var hash = md5(email.toLowerCase());
+      var hash = typeof md5 === 'function' ? md5(email.toLowerCase()) : Date.now().toString();
       var avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
 
       const response = await fetch('/api/comment', {
@@ -1319,21 +1344,31 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
         body: JSON.stringify({ diary_id, email, content, avatar_url })
       });
 
-      const result = await response.json();
-      if (result.success) {
-        fetchAndRenderDiaries(); // 评论成功，重新渲染信息流
+      // 🚨 【核心修复】防止后端数据库报错返回 HTML 导致前端解析崩溃
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const result = await response.json();
+        if (result.success) {
+          if (emailInput) emailInput.value = '';
+          if (contentInput) contentInput.value = '';
+          fetchAndRenderDiaries(); // 评论成功，重新渲染信息流
+        } else {
+          alert('回复失败: ' + (result.error || '未知错误'));
+          if (btn) { btn.disabled = false; btn.innerText = '发送'; }
+        }
       } else {
-        alert('回复失败: ' + result.error);
-        btn.disabled = false;
-        btn.innerText = '发送';
+        // 如果后端返回的不是 JSON，说明 Cloudflare 后端或 D1 数据库崩溃了！
+        const errorText = await response.text();
+        console.error("🚨 后端崩溃日志 (交给博主排查):", errorText);
+        alert('服务器数据库开小差了，请按键盘 F12 打开控制台查看红色报错日志！');
+        if (btn) { btn.disabled = false; btn.innerText = '发送'; }
       }
     } catch (e) {
+      console.error(e);
       alert('网络波动，请重试！');
-      btn.disabled = false;
-      btn.innerText = '发送';
+      if (btn) { btn.disabled = false; btn.innerText = '发送'; }
     }
   };
-
   // 4. 图片放大 Lightbox (保持原有逻辑)
   var diaryFeed = document.getElementById('diaryFeed');
   if (diaryFeed) {
