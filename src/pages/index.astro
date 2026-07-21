@@ -135,6 +135,20 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
 
 <style is:global>
 
+  /* 🌟 修复日间模式评论区文字和输入框看不清的问题 */
+.game-scene.day-mode .comment-text { color: #475569 !important; }
+.game-scene.day-mode .diary-reply-btn { color: #0d9488 !important; font-weight: 600; }
+.game-scene.day-mode .reply-input, 
+.game-scene.day-mode .reply-textarea { 
+  background: rgba(255,255,255,0.8) !important; 
+  color: #1e293b !important; 
+  border: 1px solid rgba(0,0,0,0.2) !important; 
+}
+.game-scene.day-mode .reply-input::placeholder, 
+.game-scene.day-mode .reply-textarea::placeholder { 
+  color: #94a3b8 !important; 
+}
+
   /* =================================================================== */
 /* 🌟 高颜值回复框与评论区样式 */
 /* =================================================================== */
@@ -1226,146 +1240,144 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
 /* ===== 🌟 碎片日记/朋友圈 动态引擎 (带评论版) ===== */
   window.currentDiariesData = []; 
 
+ // 1. 渲染动态与评论 (带昵称版)
   async function fetchAndRenderDiaries() {
-    var feed = document.getElementById('diaryFeed'); if (!feed) return;
-    feed.innerHTML = '<div class="diary-empty">正在接收宇宙电波...</div>'; 
-    
+    var feed = document.getElementById('diaryFeed');
+    if (!feed) return;
+    feed.innerHTML = '\x3Cdiv class="diary-empty"\x3E正在连接宇宙电波... 📡\x3C/div\x3E';
+
     try {
-      // 🌟 同时拉取日记和所有评论数据
-      const [diariesRes, commentsRes] = await Promise.all([
-        fetch('/api/diary'),
-        fetch('/api/comment')
-      ]);
-      const diaries = await diariesRes.json();
-      const comments = await commentsRes.json();
-      window.currentDiariesData = diaries; 
-      
-      if (diaries.length === 0) {
-        feed.innerHTML = '<div class="diary-empty">你的像素宇宙很安静~</div>';
-        return;
-      }
-      
+      const [dRes, cRes] = await Promise.all([fetch('/api/diary'), fetch('/api/comment')]);
+      const diaries = await dRes.json();
+      const comments = await cRes.json();
+      window.currentDiariesData = diaries;
+
+      var svgReply = '\x3Csvg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"\x3E\x3Cpath d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"\x3E\x3C/path\x3E\x3C/svg\x3E';
+
       feed.innerHTML = diaries.map(function(d, idx) {
-        var dateObj = new Date(d.created_at + 'Z'); 
+        var dateObj = new Date(d.created_at + 'Z');
         var timeStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日 ' + String(dateObj.getHours()).padStart(2,'0') + ':' + String(dateObj.getMinutes()).padStart(2,'0');
-        
+
         var imgs = d.images ? JSON.parse(d.images) : [];
-        var gridClass = 'grid-multi';
-        if (imgs.length === 1) gridClass = 'grid-1';
-        else if (imgs.length === 2 || imgs.length === 4) gridClass = 'grid-2';
-        
         var imgHtml = '';
         if (imgs.length > 0) {
-          imgHtml = '<div class="diary-img-grid ' + gridClass + '">' + 
-                    imgs.map(function(img, i) { 
-                      return '<img src="'+img+'" loading="lazy" data-diary-idx="'+idx+'" data-img-idx="'+i+'" class="diary-zoom-img" />'; 
-                    }).join('') + '</div>';
-        }
-        
-        // 🌟 筛选并渲染属于当前日记的评论
-        var postComments = comments.filter(c => c.diary_id === d.id);
-        var commentsHtml = '';
-        if (postComments.length > 0) {
-          commentsHtml = '<div class="diary-comments-list">' + postComments.map(c => `
-            <div class="diary-comment-item">
-              <img src="${c.avatar_url}" class="comment-avatar" />
-              <div class="comment-content-box">
-                <span class="comment-email">${c.email.split('@')[0]}</span>
-                <span class="comment-text">${c.content}</span>
-              </div>
-            </div>
-          `).join('') + '</div>';
+          var gridClass = imgs.length === 1 ? 'grid-1' : (imgs.length === 2 || imgs.length === 4 ? 'grid-2' : 'grid-multi');
+          imgHtml = '\x3Cdiv class="diary-img-grid ' + gridClass + '"\x3E' +
+                    imgs.map(function(img, i) {
+                      return '\x3Cimg src="' + img + '" loading="lazy" class="diary-zoom-img" data-diary-idx="' + idx + '" data-img-idx="' + i + '" \x3E';
+                    }).join('') + '\x3C/div\x3E';
         }
 
-        // 🌟 隐藏的回复框结构
-        var replyBoxHtml = `
-          <div class="diary-reply-box" id="reply-box-${d.id}" style="display:none;">
-            <input type="email" id="reply-email-${d.id}" placeholder="输入你的邮箱 (将自动获取全球通用头像)" class="reply-input" />
-            <textarea id="reply-content-${d.id}" placeholder="说点什么吧..." class="reply-textarea"></textarea>
-            <button class="reply-submit-btn" onclick="submitComment('${d.id}')">发送</button>
-          </div>
-        `;
-        
-        return '<div class="diary-post">' +
-                 '<div class="diary-avatar"><img src="/cat1.png" /></div>' +
-                 '<div class="diary-body">' +
-                   '<div class="diary-author">FYH <span class="diary-badge">博主</span></div>' +
-                   '<div class="diary-content">' + simpleMarkdown(d.content) + '</div>' +
+        var postComments = comments.filter(function(c) { return c.diary_id === d.id; });
+        var commentsHtml = '';
+        if (postComments.length > 0) {
+          commentsHtml = '\x3Cdiv class="diary-comments-list"\x3E' +
+                         postComments.map(function(c) {
+                           // 优先使用传上来的 name，如果没有再用邮箱前缀
+                           var displayName = c.name ? c.name : (c.email ? c.email.split('@')[0] : '匿名用户');
+                           return '\x3Cdiv class="diary-comment-item"\x3E' +
+                                    '\x3Cimg src="' + (c.avatar_url || '/cat1.png') + '" class="comment-avatar" onerror="this.src=\'/cat1.png\'" \x3E' +
+                                    '\x3Cdiv class="comment-content-box"\x3E' +
+                                      '\x3Cspan class="comment-email"\x3E' + displayName + '\x3C/span\x3E' +
+                                      '\x3Cspan class="comment-text"\x3E' + c.content + '\x3C/span\x3E' +
+                                    '\x3C/div\x3E' +
+                                  '\x3C/div\x3E';
+                         }).join('') + '\x3C/div\x3E';
+        }
+
+        return '\x3Cdiv class="diary-post" style="animation: fadeInUp 0.5s ease backwards; animation-delay: ' + (idx * 0.05) + 's;"\x3E' +
+                 '\x3Cdiv class="diary-avatar"\x3E\x3Cimg src="/cat1.png" \x3E\x3C/div\x3E' +
+                 '\x3Cdiv class="diary-body"\x3E' +
+                   '\x3Cdiv class="diary-author"\x3EFYH \x3Cspan class="diary-badge"\x3E博主\x3C/span\x3E\x3C/div\x3E' +
+                   '\x3Cdiv class="diary-content"\x3E' + simpleMarkdown(d.content) + '\x3C/div\x3E' +
                    imgHtml +
-                   '<div class="diary-footer">' +
-                     '<span class="diary-time">' + timeStr + '</span>' +
-                     '<span class="diary-reply-btn" onclick="toggleReplyBox(\''+d.id+'\')">💬 回复</span>' +
-                   '</div>' +
+                   '\x3Cdiv class="diary-footer"\x3E' +
+                     '\x3Cspan class="diary-time"\x3E' + timeStr + '\x3C/span\x3E' +
+                     '\x3Cspan class="diary-reply-btn" onclick="toggleReplyBox(\'' + d.id + '\')"\x3E' + svgReply + ' 回复\x3C/span\x3E' +
+                   '\x3C/div\x3E' +
                    commentsHtml +
-                   replyBoxHtml +
-                 '</div>' +
-               '</div>';
+                   '\x3Cdiv class="diary-reply-box" id="box-' + d.id + '" style="display:none;"\x3E' +
+                     '\x3Cdiv style="display:flex; gap:10px;"\x3E' +
+                       '\x3Cinput type="text" id="name-' + d.id + '" placeholder="昵称(选填)" class="reply-input" style="flex:1;" \x3E' +
+                       '\x3Cinput type="email" id="email-' + d.id + '" placeholder="邮箱(填QQ邮箱抓头像)" class="reply-input" style="flex:2;" \x3E' +
+                     '\x3C/div\x3E' +
+                     '\x3Ctextarea id="text-' + d.id + '" placeholder="说点什么吧..." class="reply-textarea"\x3E\x3C/textarea\x3E' +
+                     '\x3Cbutton class="reply-submit-btn" onclick="submitComment(\'' + d.id + '\', this)"\x3E发送\x3C/button\x3E' +
+                   '\x3C/div\x3E' +
+                 '\x3C/div\x3E' +
+               '\x3C/div\x3E';
       }).join('');
     } catch (e) {
-      feed.innerHTML = '<div class="diary-empty">加载动态失败，请刷新重试 T_T</div>';
+      console.error(e);
+      feed.innerHTML = '\x3Cdiv class="diary-empty"\x3E加载失败，请重试。\x3C/div\x3E';
     }
   }
 
-  // 控制回复框的展开与折叠
+  // 2. 提交逻辑 (QQ 头像识别版)
   window.toggleReplyBox = function(id) {
-    var box = document.getElementById('reply-box-' + id);
-    box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+    var b = document.getElementById('box-' + id);
+    if(b) b.style.display = b.style.display === 'none' ? 'flex' : 'none';
   };
 
- // 提交评论的核心逻辑 (超级防弹版)
-  window.submitComment = async function(diary_id, btnElement) {
-    var emailInput = document.getElementById('reply-email-' + diary_id);
-    var contentInput = document.getElementById('reply-content-' + diary_id);
+  window.submitComment = async function(id, btnElement) {
+    var nameInput = document.getElementById('name-' + id);
+    var emailInput = document.getElementById('email-' + id);
+    var contentInput = document.getElementById('text-' + id);
     
-    // 兼容不同的传参方式
     var btn = btnElement || window.event?.target;
-
     if (!emailInput || !contentInput) return;
 
+    var name = nameInput ? nameInput.value.trim() : '';
     var email = emailInput.value.trim();
     var content = contentInput.value.trim();
 
-    if (!email || !content) { alert('邮箱和回复内容都不能为空哦！'); return; }
+    if (!email || !content) { alert('邮箱和回复内容不能为空！'); return; }
     if (!email.includes('@')) { alert('请填写正确的邮箱格式！'); return; }
 
-    if (btn) {
-      btn.disabled = true;
-      btn.innerText = '发送中...';
-    }
+    if (btn) { btn.disabled = true; btn.innerText = '发送中...'; }
 
     try {
-      // 🌟 使用国内镜像站 Cravatar，通过邮箱的 MD5 值精准拉取全球通用头像
-      var hash = typeof md5 === 'function' ? md5(email.toLowerCase()) : Date.now().toString();
-      var avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
+      var avatar_url = '';
+      
+      // 🌟 核心魔法：正则匹配 QQ 邮箱并调用腾讯官方头像 API
+      var qqMatch = email.match(/^([1-9][0-9]{4,10})@qq\.com$/i);
+      if (qqMatch) {
+        var qqNum = qqMatch[1];
+        avatar_url = 'https://q1.qlogo.cn/g?b=qq&nk=' + qqNum + '&s=100';
+        if (!name) name = 'QQ网友'; // 没填昵称时，默认给个称呼
+      } else {
+        // 非 QQ 邮箱，使用 Cravatar
+        var hash = typeof md5 === 'function' ? md5(email.toLowerCase()) : Date.now().toString();
+        avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
+        if (!name) name = email.split('@')[0];
+      }
 
       const response = await fetch('/api/comment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ diary_id, email, content, avatar_url })
+        // 把 name 传给后端
+        body: JSON.stringify({ diary_id: id, name: name, email: email, content: content, avatar_url: avatar_url })
       });
 
-      // 🚨 【核心修复】防止后端数据库报错返回 HTML 导致前端解析崩溃
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const result = await response.json();
         if (result.success) {
+          if (nameInput) nameInput.value = '';
           if (emailInput) emailInput.value = '';
           if (contentInput) contentInput.value = '';
-          fetchAndRenderDiaries(); // 评论成功，重新渲染信息流
+          fetchAndRenderDiaries(); // 成功后刷新
         } else {
           alert('回复失败: ' + (result.error || '未知错误'));
-          if (btn) { btn.disabled = false; btn.innerText = '发送'; }
         }
       } else {
-        // 如果后端返回的不是 JSON，说明 Cloudflare 后端或 D1 数据库崩溃了！
-        const errorText = await response.text();
-        console.error("🚨 后端崩溃日志 (交给博主排查):", errorText);
-        alert('服务器数据库开小差了，请按键盘 F12 打开控制台查看红色报错日志！');
-        if (btn) { btn.disabled = false; btn.innerText = '发送'; }
+        console.error("后端异常日志:", await response.text());
+        alert('后端连不上了，请检查数据库设置！');
       }
     } catch (e) {
       console.error(e);
       alert('网络波动，请重试！');
+    } finally {
       if (btn) { btn.disabled = false; btn.innerText = '发送'; }
     }
   };
