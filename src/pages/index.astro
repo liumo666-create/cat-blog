@@ -1268,13 +1268,23 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
                     }).join('') + '\x3C/div\x3E';
         }
 
-        var postComments = comments.filter(function(c) { return c.diary_id === d.id; });
+       var postComments = comments.filter(function(c) { return c.diary_id === d.id; });
         var commentsHtml = '';
         if (postComments.length > 0) {
           commentsHtml = '\x3Cdiv class="diary-comments-list"\x3E' +
                          postComments.map(function(c) {
-                           // 优先使用传上来的 name，如果没有再用邮箱前缀
-                           var displayName = c.name ? c.name : (c.email ? c.email.split('@')[0] : '匿名用户');
+                           // 🌟 从头像 URL 的查询参数中精准提取出藏在里面的昵称
+                           var hiddenName = '';
+                           if (c.avatar_url && c.avatar_url.includes('nn=')) {
+                             var match = c.avatar_url.match(/[?&]nn=([^&]+)/);
+                             if (match) {
+                               hiddenName = decodeURIComponent(match[1]);
+                             }
+                           }
+                           
+                           // 优先级：真实字段 > URL参数提取 > 邮箱前缀 > 匿名用户
+                           var displayName = c.name ? c.name : (hiddenName ? hiddenName : (c.email ? c.email.split('@')[0] : '匿名用户'));
+                           
                            return '\x3Cdiv class="diary-comment-item"\x3E' +
                                     '\x3Cimg src="' + (c.avatar_url || '/cat1.png') + '" class="comment-avatar" onerror="this.src=\'/cat1.png\'" \x3E' +
                                     '\x3Cdiv class="comment-content-box"\x3E' +
@@ -1940,10 +1950,10 @@ window.toggleReplyBox = function(id) {
       }
 
       // 🌟 3. 偷天换日：把昵称编码后藏在头像 URL 的尾巴上
+    // 🌟 改用问号查询参数：把昵称作为 &nn= 拼在头像链接后面（后端绝不会丢弃它）
       if (name) {
-        avatar_url = avatar_url + '#name=' + encodeURIComponent(name);
+        avatar_url += (avatar_url.includes('?') ? '&' : '?') + 'nn=' + encodeURIComponent(name);
       }
-
       // 4. 发送数据给云端
       const response = await fetch('/api/comment', {
         method: 'POST',
