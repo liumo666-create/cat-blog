@@ -1748,51 +1748,170 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
     });
   }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
-<script>
-  // @ts-nocheck
-  
-  // 2. 渲染核心
-  async function loadData() {
-    const [dRes, cRes] = await Promise.all([fetch('/api/diary'), fetch('/api/comment')]);
-    const diaries = await dRes.json();
-    const comments = await cRes.json();
-    
-    const feed = document.getElementById('diaryFeed');
-    feed.innerHTML = diaries.map(d => {
-      const postComments = comments.filter(c => c.diary_id === d.id);
-      return `
-        <div class="diary-post">
-          <p>${simpleMarkdown(d.content)}</p>
-          <div id="comments-${d.id}">
-             ${postComments.map(c => `<div>${c.email}: ${c.content}</div>`).join('')}
-          </div>
-          <button onclick="toggleBox('${d.id}')">回复</button>
-          <div id="box-${d.id}" style="display:none">
-            <input id="email-${d.id}" placeholder="邮箱" />
-            <textarea id="text-${d.id}"></textarea>
-            <button onclick="sendComment('${d.id}')">提交</button>
-          </div>
-        </div>`;
-    }).join('');
+<script src="https://fastly.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js"></script>
+<script is:inline>
+  // 1. 唯一且防报错的 Markdown 解析器 (使用 \x3C 转义，彻底屏蔽 Astro 幽灵报错)
+  function simpleMarkdown(text) {
+    if (!text) return '';
+    var html = text.split('&').join('&amp;').split('\x3C').join('&lt;').split('\x3E').join('&gt;');
+    html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>')
+               .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+               .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+               .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+               .replace(/\*(.+?)\*/g, '<em>$1</em>')
+               .replace(/`([^`]+)`/g, '<code>$1</code>');
+    var imgReg = new RegExp('!\\[([^\\]]*)\\]\\(([^)]+)\\)', 'g');
+    html = html.replace(imgReg, '\x3Cimg src="$2" alt="$1" style="max-width:100%;border-radius:8px;" \x3E');
+    var linkReg = new RegExp('\\[([^\\]]+)\\]\\(([^)]+)\\)', 'g');
+    html = html.replace(linkReg, '\x3Ca href="$2" target="_blank" rel="noopener"\x3E$1\x3C/a\x3E');
+    html = html.replace(/^- (.+)$/gm, '\x3Cli\x3E$1\x3C/li\x3E');
+    var liReg = new RegExp('(\x3Cli\x3E.*\x3C/li\x3E)', 'gs');
+    html = html.replace(liReg, function(m){ return '\x3Cul\x3E'+m+'\x3C/ul\x3E'; });
+    html = html.split('\n\n').join('\x3C/p\x3E\x3Cp\x3E');
+    html = html.split('\n').join('\x3Cbr \x3E');
+    return '\x3Cp\x3E'+html+'\x3C/p\x3E';
   }
 
-  // 3. 提交评论
-  window.sendComment = async function(id) {
-    const email = document.getElementById(`email-${id}`).value;
-    const content = document.getElementById(`text-${id}`).value;
-    const avatar_url = 'https://cravatar.cn/avatar/' + md5(email.toLowerCase()) + '?d=identicon';
-    await fetch('/api/comment', {
-      method: 'POST',
-      body: JSON.stringify({ diary_id: id, email, content, avatar_url })
+  // 2. 核心渲染函数 (恢复高级排版、图片九宫格、评论头像)
+  window.currentDiariesData = [];
+  async function fetchAndRenderDiaries() {
+    var feed = document.getElementById('diaryFeed');
+    if (!feed) return;
+    feed.innerHTML = '\x3Cdiv class="diary-empty"\x3E正在连接宇宙电波... 📡\x3C/div\x3E';
+
+    try {
+      const [dRes, cRes] = await Promise.all([fetch('/api/diary'), fetch('/api/comment')]);
+      const diaries = await dRes.json();
+      const comments = await cRes.json();
+      window.currentDiariesData = diaries;
+
+      var svgReply = '\x3Csvg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"\x3E\x3Cpath d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"\x3E\x3C/path\x3E\x3C/svg\x3E';
+
+      feed.innerHTML = diaries.map(function(d, idx) {
+        var dateObj = new Date(d.created_at + 'Z');
+        var timeStr = (dateObj.getMonth()+1) + '月' + dateObj.getDate() + '日 ' + String(dateObj.getHours()).padStart(2,'0') + ':' + String(dateObj.getMinutes()).padStart(2,'0');
+
+        // 处理图片
+        var imgs = d.images ? JSON.parse(d.images) : [];
+        var imgHtml = '';
+        if (imgs.length > 0) {
+          var gridClass = imgs.length === 1 ? 'grid-1' : (imgs.length === 2 || imgs.length === 4 ? 'grid-2' : 'grid-multi');
+          imgHtml = '\x3Cdiv class="diary-img-grid ' + gridClass + '"\x3E' +
+                    imgs.map(function(img, i) {
+                      return '\x3Cimg src="' + img + '" loading="lazy" class="diary-zoom-img" data-diary-idx="' + idx + '" data-img-idx="' + i + '" \x3E';
+                    }).join('') +
+                    '\x3C/div\x3E';
+        }
+
+        // 处理评论
+        var postComments = comments.filter(function(c) { return c.diary_id === d.id; });
+        var commentsHtml = '';
+        if (postComments.length > 0) {
+          commentsHtml = '\x3Cdiv class="diary-comments-list"\x3E' +
+                         postComments.map(function(c) {
+                           var emailName = c.email ? c.email.split('@')[0] : '匿名用户';
+                           return '\x3Cdiv class="diary-comment-item"\x3E' +
+                                    '\x3Cimg src="' + (c.avatar_url || '/cat1.png') + '" class="comment-avatar" onerror="this.src=\'/cat1.png\'" \x3E' +
+                                    '\x3Cdiv class="comment-content-box"\x3E' +
+                                      '\x3Cspan class="comment-email"\x3E' + emailName + '\x3C/span\x3E' +
+                                      '\x3Cspan class="comment-text"\x3E' + c.content + '\x3C/span\x3E' +
+                                    '\x3C/div\x3E' +
+                                  '\x3C/div\x3E';
+                         }).join('') + '\x3C/div\x3E';
+        }
+
+        return '\x3Cdiv class="diary-post" style="animation: fadeInUp 0.5s ease backwards; animation-delay: ' + (idx * 0.05) + 's;"\x3E' +
+                 '\x3Cdiv class="diary-avatar"\x3E\x3Cimg src="/cat1.png" \x3E\x3C/div\x3E' +
+                 '\x3Cdiv class="diary-body"\x3E' +
+                   '\x3Cdiv class="diary-author"\x3EFYH \x3Cspan class="diary-badge"\x3E博主\x3C/span\x3E\x3C/div\x3E' +
+                   '\x3Cdiv class="diary-content"\x3E' + simpleMarkdown(d.content) + '\x3C/div\x3E' +
+                   imgHtml +
+                   '\x3Cdiv class="diary-footer"\x3E' +
+                     '\x3Cspan class="diary-time"\x3E' + timeStr + '\x3C/span\x3E' +
+                     '\x3Cspan class="diary-reply-btn" onclick="toggleReplyBox(\'' + d.id + '\')"\x3E' + svgReply + ' 回复\x3C/span\x3E' +
+                   '\x3C/div\x3E' +
+                   commentsHtml +
+                   '\x3Cdiv class="diary-reply-box" id="box-' + d.id + '" style="display:none;"\x3E' +
+                     '\x3Cinput type="email" id="email-' + d.id + '" placeholder="输入常用邮箱 (自动生成专属头像)" class="reply-input" \x3E' +
+                     '\x3Ctextarea id="text-' + d.id + '" placeholder="说点什么吧..." class="reply-textarea"\x3E\x3C/textarea\x3E' +
+                     '\x3Cbutton class="reply-submit-btn" onclick="submitComment(\'' + d.id + '\', this)"\x3E发送\x3C/button\x3E' +
+                   '\x3C/div\x3E' +
+                 '\x3C/div\x3E' +
+               '\x3C/div\x3E';
+      }).join('');
+    } catch (e) {
+      feed.innerHTML = '\x3Cdiv class="diary-empty"\x3E加载失败，请重试。\x3C/div\x3E';
+    }
+  }
+
+  // 3. 提交与展开逻辑
+  window.toggleReplyBox = function(id) {
+    var b = document.getElementById('box-' + id);
+    if(b) b.style.display = b.style.display === 'none' ? 'flex' : 'none';
+  };
+
+  window.submitComment = async function(id, btn) {
+    var email = document.getElementById('email-' + id).value.trim();
+    var content = document.getElementById('text-' + id).value.trim();
+    if(!email || !content) return alert('邮箱和内容不能为空哦！');
+
+    btn.disabled = true;
+    btn.innerText = '发送中...';
+    try {
+      var hash = typeof md5 === 'function' ? md5(email.toLowerCase()) : Date.now().toString();
+      var avatar_url = 'https://cravatar.cn/avatar/' + hash + '?d=identicon';
+      await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ diary_id: id, email: email, content: content, avatar_url: avatar_url })
+      });
+      fetchAndRenderDiaries();
+    } catch(e) {
+      alert('网络连接失败');
+      btn.disabled = false;
+      btn.innerText = '发送';
+    }
+  };
+
+  // 4. 图片放大功能 (Lightbox)
+  var diaryFeed = document.getElementById('diaryFeed');
+  if (diaryFeed) {
+    diaryFeed.addEventListener('click', function(e) {
+      var img = e.target.closest('.diary-zoom-img');
+      if (img) {
+        var dIdx = parseInt(img.dataset.diaryIdx);
+        var iIdx = parseInt(img.dataset.imgIdx);
+        var currentPost = window.currentDiariesData[dIdx];
+        if (currentPost && currentPost.images) {
+           var imagesArr = JSON.parse(currentPost.images);
+           showDiaryLightbox(imagesArr, iIdx);
+        }
+      }
     });
-    loadData();
-  };
+  }
 
-  window.toggleBox = (id) => {
-    const b = document.getElementById('box-' + id);
-    b.style.display = b.style.display === 'none' ? 'block' : 'none';
-  };
+  var diaryLightboxEl = null;
+  function showDiaryLightbox(images, index) {
+    if (diaryLightboxEl) { diaryLightboxEl.remove(); diaryLightboxEl = null; }
+    diaryLightboxEl = document.createElement('div');
+    diaryLightboxEl.className = 'lightbox-overlay diary-lightbox';
+    
+    var svgPrev = '\x3Csvg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"\x3E\x3Cpath d="m15 18-6-6 6-6"\x3E\x3C/path\x3E\x3C/svg\x3E';
+    var svgNext = '\x3Csvg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"\x3E\x3Cpath d="m9 18 6-6-6-6"\x3E\x3C/path\x3E\x3C/svg\x3E';
+    var navPrev = index > 0 ? '\x3Cspan class="lightbox-nav prev" data-go="' + (index-1) + '"\x3E' + svgPrev + '\x3C/span\x3E' : '';
+    var navNext = index < images.length - 1 ? '\x3Cspan class="lightbox-nav next" data-go="' + (index+1) + '"\x3E' + svgNext + '\x3C/span\x3E' : '';
+    var counter = '\x3Cdiv class="lightbox-counter" style="position:absolute; top:20px; left:50%; transform:translateX(-50%); color:#fff; font-family:monospace; font-size:16px;"\x3E' + (index + 1) + ' / ' + images.length + '\x3C/div\x3E';
+    
+    diaryLightboxEl.innerHTML = '\x3Cspan class="lightbox-close"\x3E×\x3C/span\x3E' + counter + navPrev + navNext + '\x3Cimg src="' + images[index] + '" \x3E';
+    
+    diaryLightboxEl.addEventListener('click', function(e) {
+      if (e.target.classList.contains('lightbox-close') || e.target === diaryLightboxEl) { diaryLightboxEl.remove(); diaryLightboxEl = null; return; }
+      var nav = e.target.closest('.lightbox-nav');
+      if (nav) { showDiaryLightbox(images, parseInt(nav.dataset.go)); }
+    });
+    document.body.appendChild(diaryLightboxEl);
+  }
 
-  loadData();
+  // 初始化拉取数据
+  fetchAndRenderDiaries();
 </script>

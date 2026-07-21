@@ -1,68 +1,115 @@
-<script>
-  // 1. 明确声明 pendingImages 是一个字符串数组
-  let pendingImages: string[] = [];
-  
-  // 获取 DOM 元素并明确它们的类型，添加 null 安全检查
-  const imgUpload = document.getElementById('imgUpload') as HTMLInputElement | null;
-  const diaryInput = document.getElementById('diaryInput') as HTMLTextAreaElement | null;
-  const adminPwd = document.getElementById('adminPwd') as HTMLInputElement | null;
-  const preview = document.getElementById('preview') as HTMLElement | null;
-  const btnSend = document.getElementById('btnSend') as HTMLButtonElement | null;
+---
+// src/pages/admin.astro
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>控制台 - 宇宙电波发射站</title>
+  <style>
+    :root { --cyan: #5eead4; --pink: #ff6b9d; --bg: #0f172a; }
+    body { background: var(--bg); background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 100%); color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .admin-card { width: 90%; max-width: 480px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 32px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); animation: floatIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes floatIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    .title { font-size: 22px; font-weight: 800; margin-bottom: 24px; text-align: center; background: linear-gradient(135deg, var(--cyan), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .input-group { margin-bottom: 16px; }
+    input[type="password"], textarea { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 12px; font-size: 14px; outline: none; transition: all 0.3s ease; box-sizing: border-box; }
+    input[type="password"]:focus, textarea:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(94, 234, 212, 0.2); background: rgba(0, 0, 0, 0.5); }
+    textarea { resize: vertical; min-height: 100px; }
+    .file-upload-wrapper { position: relative; width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; box-sizing: border-box; margin-bottom: 16px; }
+    .file-upload-wrapper:hover { border-color: var(--pink); background: rgba(255, 107, 157, 0.05); }
+    .file-upload-wrapper input[type="file"] { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .preview-area { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .preview-area img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-send { width: 100%; background: linear-gradient(135deg, var(--pink), #e11d48); color: #fff; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3); }
+    .btn-send:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(225, 29, 72, 0.5); }
+    .btn-send:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none; }
+  </style>
+</head>
+<body>
+  <div class="admin-card">
+    <div class="title">🌌 宇宙电波发射站</div>
+    <div class="input-group">
+      <input type="password" id="adminPwd" placeholder="请输入最高权限密钥" />
+    </div>
+    <div class="input-group">
+      <textarea id="diaryInput" placeholder="记录这一刻的碎片... (支持 Markdown)"></textarea>
+    </div>
+    <div class="file-upload-wrapper">
+      <span>📸 点击或拖拽添加图片 (最多9张)</span>
+      <input type="file" id="imgUpload" multiple accept="image/*" />
+    </div>
+    <div class="preview-area" id="previewArea"></div>
+    <button id="btnSend" class="btn-send">🚀 确认发射</button>
+  </div>
 
-  // 图片预览逻辑
-  imgUpload?.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    const files = target.files;
-    if (!files) return;
+  <script>
+    // 严格模式下的 TypeScript 类型声明，彻底消灭 VS Code 飘红报错
+    let pendingImages: string[] = [];
     
-    for (let file of Array.from(files)) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const result = ev.target?.result as string;
-        if (result) {
-          pendingImages.push(result);
-          if (preview) {
-            preview.innerHTML = pendingImages.map(img => `<img src="${img}" />`).join('');
+    const imgUpload = document.getElementById('imgUpload') as HTMLInputElement | null;
+    const previewArea = document.getElementById('previewArea') as HTMLDivElement | null;
+    const btnSend = document.getElementById('btnSend') as HTMLButtonElement | null;
+    const adminPwd = document.getElementById('adminPwd') as HTMLInputElement | null;
+    const diaryInput = document.getElementById('diaryInput') as HTMLTextAreaElement | null;
+
+    imgUpload?.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement;
+      const files = target.files;
+      
+      if (!files) return;
+      if (pendingImages.length + files.length > 9) return alert('最多只能发 9 张图片哦！');
+      
+      for (let file of Array.from(files)) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const result = ev.target?.result as string;
+          if (result) {
+            pendingImages.push(result);
+            if (previewArea) {
+              previewArea.innerHTML = pendingImages.map(img => `<img src="${img}" />`).join('');
+            }
           }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // 发送逻辑
-  btnSend?.addEventListener('click', async (e) => {
-    const btn = e.target as HTMLButtonElement;
-    const pwd = adminPwd?.value;
-    const content = diaryInput?.value.trim();
-
-    if (!pwd) return alert('请先输入密码！');
-    if (!content && pendingImages.length === 0) return alert('不能发送空宇宙电波哦！');
-
-    btn.disabled = true;
-    btn.innerText = '正在穿越虫洞...';
-
-    try {
-      const res = await fetch('/api/diary', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwd, content: content, images: pendingImages })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        alert('发射成功！快去主页看看吧。');
-        if (diaryInput) diaryInput.value = '';
-        pendingImages = [];
-        if (preview) preview.innerHTML = '';
-      } else {
-        alert('发射失败: ' + data.error);
+        };
+        reader.readAsDataURL(file);
       }
-    } catch (err) {
-      alert('网络波动，连接云端失败！');
-    } finally {
-      btn.disabled = false;
-      btn.innerText = '🚀 发送动态';
-    }
-  });
-</script>
+    });
+
+    btnSend?.addEventListener('click', async (e) => {
+      const btn = e.target as HTMLButtonElement;
+      const pwd = adminPwd?.value;
+      const content = diaryInput?.value?.trim();
+
+      if (!pwd) return alert('请先输入密码！');
+      if (!content && pendingImages.length === 0) return alert('不能发送空数据！');
+
+      btn.disabled = true;
+      btn.innerText = '正在穿越虫洞... 🛸';
+
+      try {
+        const res = await fetch('/api/diary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pwd, content: content, images: pendingImages })
+        });
+        const data = await res.json();
+        
+        if (res.ok && data.success) {
+          alert('发射成功！');
+          if (diaryInput) diaryInput.value = '';
+          pendingImages = [];
+          if (previewArea) previewArea.innerHTML = '';
+        } else {
+          alert('发射失败: ' + (data.error || '未知错误'));
+        }
+      } catch(err) {
+        alert('网络错误，连接云端失败！');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '🚀 确认发射';
+      }
+    });
+  </script>
+</body>
+</html>
