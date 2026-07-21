@@ -1,0 +1,500 @@
+
+
+  /* ---- Reset base constraints ---- */
+  html.is-mobile { font-size: 14px; }
+  html.is-mobile body { overflow: auto; overflow-x: hidden; }
+
+  /* ---- Touch & scroll optimization ---- */
+  html.is-mobile {
+-webkit-tap-highlight-color: transparent;
+touch-action: manipulation;
+  }
+  html.is-mobile .scroll-container {
+-webkit-overflow-scrolling: touch;
+scroll-behavior: smooth;
+overscroll-behavior-y: contain;
+  }
+  /* Bottom safe area for notched phones */
+  html.is-mobile .web-wrapper {
+padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  html.is-mobile .mobile-bottom-indicator {
+bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* Enhanced touch feedback: ripple on contact */
+  @keyframes mobileTouchPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+.glass-card:active, .post-card:active, .proj-card:active,
+.cat-card:active, .cat-fact-card:active, .painter-feature-card:active,
+.weather-day-card:active, .weather-feat-card:active, .sakura-feature-item:active,
+  html.is-mobile .album-set:active {
+animation: mobileTouchPulse 0.25s ease;
+transition: none;
+  }
+  /* Nav items touch feedback */
+  html.is-mobile .nav-links.mobile-open .nav-item:active {
+background: rgba(255,255,255,0.08);
+transform: scale(0.97);
+  }
+  /* Input font-size fix (prevents iOS zoom on focus) */
+  html.is-mobile input, html.is-mobile textarea, html.is-mobile select { font-size: 16px !important; }
+
+  /* ---- Game Scene: remove absolute centering, go full viewport ---- */
+  html.is-mobile .game-scene {
+position: relative;
+top: auto; left: auto;
+transform: none;
+min-width: 100%; min-height: 100vh;
+aspect-ratio: auto;
+overflow-x: hidden;
+overflow-y: auto;
+  }
+  /* Hide background gradient animation on mobile */
+  html.is-mobile .game-scene::before {
+display: none;
+  }
+  /* Day/night ripple still works but simplified */
+  html.is-mobile .game-scene::after {
+background-size: 100% 100%;
+  }
+
+  /* ---- Foreground layer: hide on mobile (no background scene) ---- */
+  html.is-mobile .foreground-layer { display: none; }
+
+  /* ---- Scroll Container: full width, natural flow ---- */
+  html.is-mobile .scroll-container {
+position: relative;
+width: 100%; height: auto;
+top: auto; left: auto;
+transform: none;
+overflow: visible;
+  }
+
+  /* ---- Web Wrapper: full-width glass panel ---- */
+  html.is-mobile .web-wrapper {
+border-radius: 0;
+padding: 16px 14px;
+min-height: 100vh;
+box-shadow: none;
+border-left: none; border-right: none;
+  }
+
+  /* ---- Section Pages: column layout ---- */
+  html.is-mobile .section-page.active { flex-direction: column; gap: 16px; }
+  html.is-mobile .main-col { flex: auto; width: 100%; }
+  html.is-mobile .side-col { width: 100%; flex-shrink: 0; }
+
+  /* ---- Header / NavBar mobile overrides ---- */
+  html.is-mobile header {
+padding-bottom: 12px; margin-bottom: 14px;
+flex-wrap: nowrap; gap: 8px;
+position: relative;
+  }
+  html.is-mobile .logo-area { gap: 8px; }
+  html.is-mobile .cat-wrap { width: 44px; height: 44px; }
+  html.is-mobile .fyh-title-img { height: 38px; margin-top: -4px; margin-bottom: -3px; margin-left: -4px; }
+  html.is-mobile .logo-text p { font-size: 10px; letter-spacing: 1px; }
+
+  /* Hide desktop nav links */
+  html.is-mobile .nav-links { display: none; }
+  /* Hamburger button shown via JS/NavBar */
+  html.is-mobile .nav-links.mobile-open {
+display: flex; flex-direction: column;
+position: fixed; top: 0; right: 0;
+width: 75vw; max-width: 320px; height: 100vh;
+background: var(--glass-strong);
+backdrop-filter: blur(28px);
+-webkit-backdrop-filter: blur(28px);
+border-left: 1px solid var(--border-hi);
+padding: 70px 20px 20px;
+z-index: 1500;
+gap: 4px;
+box-shadow: -8px 0 32px rgba(0,0,0,0.5);
+animation: slideInRight 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Mobile nav items */
+  html.is-mobile .nav-links.mobile-open .nav-item {
+width: 100%; justify-content: flex-start;
+padding: 12px 16px; border-radius: 12px;
+font-size: 15px;
+  }
+  html.is-mobile .nav-links.mobile-open .nav-dropdown { width: 100%; }
+  html.is-mobile .nav-links.mobile-open .dropdown-menu {
+position: static; transform: none;
+box-shadow: none; border: none;
+background: transparent;
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
+padding-left: 20px;
+opacity: 1; visibility: visible;
+pointer-events: auto;
+  }
+  html.is-mobile .nav-links.mobile-open .nav-dropdown.open .dropdown-menu {
+display: block;
+  }
+  html.is-mobile .nav-links.mobile-open .nav-dropdown:not(.open) .dropdown-menu {
+display: none;
+  }
+  html.is-mobile .nav-links.mobile-open .nav-chevron { display: none; }
+
+  /* Hamburger button */
+  html.is-mobile .mobile-menu-btn {
+display: flex;
+width: 38px; height: 38px;
+align-items: center; justify-content: center;
+border: 1px solid var(--border-hi);
+border-radius: 10px;
+background: var(--card);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+color: var(--text-secondary);
+cursor: pointer;
+flex-shrink: 0;
+z-index: 1600;
+transition: all 0.25s ease;
+  }
+  html.is-mobile .mobile-menu-btn:active { transform: scale(0.94); }
+  html.is-mobile .mobile-menu-btn svg { width: 20px; height: 20px; }
+
+  /* Mobile nav overlay */
+  html.is-mobile .mobile-nav-overlay {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.5);
+z-index: 1400;
+animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Theme toggle on mobile */
+  html.is-mobile .theme-toggle-btn { width: 38px; height: 38px; }
+
+  /* ---- Hero Banner ---- */
+  html.is-mobile .hero-banner {
+height: auto;
+min-height: 160px;
+aspect-ratio: 16/7;
+margin-bottom: 18px;
+border-radius: var(--radius-md);
+  }
+  html.is-mobile .hero-banner::before {
+background: linear-gradient(180deg, transparent 30%, var(--deep) 90%);
+  }
+  html.is-mobile .hero-overlay { bottom: 14px; left: 18px; }
+  html.is-mobile .hero-overlay h2 { font-size: 22px; }
+  html.is-mobile .hero-overlay p { font-size: 11px; letter-spacing: 1px; }
+
+  /* ---- Post Cards ---- */
+  html.is-mobile .post-card { padding: 16px; }
+  html.is-mobile .post-card.has-cover { flex-direction: column; gap: 12px; padding: 12px; }
+  html.is-mobile .post-cover-wrap { width: 100%; height: 140px; }
+  html.is-mobile .post-card .post-title { font-size: 15px; }
+  html.is-mobile .post-card .post-excerpt { font-size: 13px; }
+  html.is-mobile .post-card .post-date { font-size: 10px; }
+  html.is-mobile .post-card .tag, html.is-mobile .post-card .cat { font-size: 10px; padding: 2px 8px; }
+
+  /* ---- Pagination ---- */
+  html.is-mobile .pagination-controls { gap: 12px; }
+  html.is-mobile .pagination-controls .glass-btn { padding: 7px 14px; font-size: 13px; }
+
+  /* ---- Glass Cards ---- */
+  html.is-mobile .glass-card { padding: 14px; border-radius: var(--radius-md); }
+
+  /* ---- Stats Grid ---- */
+  html.is-mobile .stats-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  html.is-mobile .stat-item { padding: 12px 6px; }
+  html.is-mobile .stat-number { font-size: 22px; }
+
+  /* ---- Categories & Tags ---- */
+  html.is-mobile .cat-item { padding: 8px 12px; font-size: 13px; }
+  html.is-mobile .tag-chip { font-size: 11px; padding: 4px 10px; }
+
+  /* ---- Section Title ---- */
+  html.is-mobile .section-title { font-size: 12px; }
+
+  /* ---- Announce Box ---- */
+  html.is-mobile .announce-box { padding: 12px 14px; }
+  html.is-mobile .announce-box .ann-text { font-size: 12px; }
+
+  /* ---- Footer ---- */
+  html.is-mobile .site-footer { font-size: 11px; margin-top: 18px; padding-top: 12px; }
+
+  /* ---- Widget / Weather Card ---- */
+  html.is-mobile .uw-clock { font-size: 34px; }
+  html.is-mobile .uw-temp { font-size: 24px; }
+  html.is-mobile .uw-date { font-size: 11px; }
+
+  /* ---- Calendar Widget ---- */
+  html.is-mobile .calendar-grid .day-cell { font-size: 12px; padding: 5px 1px; }
+  html.is-mobile .calendar-grid .day-header { font-size: 10px; }
+
+  /* ---- About Page ---- */
+  html.is-mobile .about-layout { grid-template-columns: 1fr; gap: 16px; }
+  html.is-mobile .about-avatar-card { max-width: 280px; margin: 0 auto; padding: 20px 16px; }
+  html.is-mobile .about-avatar-ring { width: 80px; height: 80px; margin-bottom: 14px; }
+  html.is-mobile .about-name { font-size: 18px; }
+  html.is-mobile .about-bio-card { padding: 18px; }
+  html.is-mobile .about-bio-text { font-size: 14px; line-height: 1.8; }
+  html.is-mobile .about-skills-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  html.is-mobile .about-skill { padding: 10px 8px; }
+
+  /* ---- Projects Page ---- */
+  html.is-mobile .proj-featured { grid-template-columns: 1fr; min-height: auto; }
+  html.is-mobile .proj-feat-content { padding: 20px; }
+  html.is-mobile .proj-feat-name { font-size: 22px; }
+  html.is-mobile .proj-feat-desc { font-size: 14px; }
+  html.is-mobile .proj-feat-visual { min-height: 120px; }
+  html.is-mobile .proj-feat-icon { font-size: 48px; }
+  html.is-mobile .proj-grid { grid-template-columns: 1fr; gap: 12px; }
+  html.is-mobile .proj-card { padding: 18px; }
+  html.is-mobile .proj-card-name { font-size: 15px; }
+  html.is-mobile .proj-card-desc { font-size: 13px; }
+
+  /* ---- Project Detail Pages ---- */
+  html.is-mobile .proj-detail-blog .blog-hero { grid-template-columns: 1fr; }
+  html.is-mobile .proj-detail-blog .blog-hero-content { padding: 20px; }
+  html.is-mobile .proj-detail-blog .blog-hero-visual { min-height: 120px; }
+  html.is-mobile .proj-detail-blog .blog-hero-title { font-size: 20px; }
+  html.is-mobile .proj-detail-blog .blog-hero-desc { font-size: 14px; }
+  html.is-mobile .proj-detail-blog .blog-stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  html.is-mobile .proj-detail-blog .blog-stat-card { padding: 14px 10px; }
+  html.is-mobile .proj-detail-blog .blog-stat-num { font-size: 22px; }
+  html.is-mobile .proj-detail-sakura .sakura-feature-row { grid-template-columns: 1fr; }
+  html.is-mobile .proj-detail-weather .weather-forecast-row { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  html.is-mobile .proj-detail-back { padding: 6px 12px; font-size: 12px; margin-bottom: 14px; }
+  /* ---- CatViewer Project ---- */
+  html.is-mobile .proj-detail-cat .cat-showcase { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  html.is-mobile .proj-detail-cat .cat-card { border-radius: var(--radius-sm); }
+  html.is-mobile .proj-detail-cat .cat-card:hover { transform: none; border-color: var(--border-sub); }
+  html.is-mobile .proj-detail-cat .cat-card:hover .cat-card-icon { transform: none; }
+  html.is-mobile .proj-detail-cat .cat-card .cat-card-icon { font-size: 28px; }
+  html.is-mobile .proj-detail-cat .cat-facts-grid { grid-template-columns: 1fr; gap: 10px; }
+  html.is-mobile .proj-detail-cat .cat-fact-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  html.is-mobile .proj-detail-cat .cat-fact-card h4 { font-size: 13px; }
+  html.is-mobile .proj-detail-cat .cat-fact-card p { font-size: 12px; }
+  /* ---- Pixel Painter Project ---- */
+  html.is-mobile .proj-detail-painter .painter-canvas-demo { height: 150px; }
+  html.is-mobile .proj-detail-painter .painter-palette { gap: 6px; margin-bottom: 14px; }
+  html.is-mobile .proj-detail-painter .painter-toolbar-row { gap: 6px; margin-bottom: 14px; }
+  html.is-mobile .proj-detail-painter .painter-tool-btn { width: 36px; height: 36px; border-radius: 8px; }
+  html.is-mobile .proj-detail-painter .painter-tool-btn svg { width: 16px; height: 16px; }
+  html.is-mobile .proj-detail-painter .painter-features-grid { grid-template-columns: 1fr; gap: 10px; }
+  html.is-mobile .proj-detail-painter .painter-feature-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  html.is-mobile .proj-detail-painter .painter-feature-card h4 { font-size: 13px; }
+  html.is-mobile .proj-detail-painter .painter-feature-card p { font-size: 12px; }
+  /* ---- Pixel Weather Project ---- */
+  html.is-mobile .proj-detail-weather .weather-hero { padding: 16px; }
+  html.is-mobile .proj-detail-weather .weather-features-grid { grid-template-columns: 1fr; gap: 10px; }
+  html.is-mobile .proj-detail-weather .weather-feat-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  html.is-mobile .proj-detail-weather .weather-feat-card h4 { font-size: 13px; }
+  html.is-mobile .proj-detail-weather .weather-feat-card p { font-size: 12px; }
+  html.is-mobile .proj-detail-weather .weather-day-card:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  html.is-mobile .proj-detail-weather .weather-day-card:hover .day-icon { transform: none; animation: none; }
+  html.is-mobile .proj-detail-weather .weather-day-card .day-icon { font-size: 28px; }
+  html.is-mobile .proj-detail-weather .weather-day-card .day-temp { font-size: 18px; }
+  /* ---- Sakura CSS Project ---- */
+  html.is-mobile .proj-detail-sakura .sakura-feature-item:hover { transform: none; border-color: var(--border-sub); box-shadow: none; }
+  html.is-mobile .proj-detail-sakura .sakura-feature-item:hover .sakura-feat-icon { transform: none; }
+  html.is-mobile .proj-detail-sakura .sakura-feature-item .sakura-feat-icon { font-size: 24px; }
+  html.is-mobile .proj-detail-sakura .sakura-feature-item h4 { font-size: 13px; }
+  html.is-mobile .proj-detail-sakura .sakura-feature-item p { font-size: 11px; }
+
+
+  /* ---- Gallery / Album Pages ---- */
+  html.is-mobile .album-page-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  html.is-mobile .album-page-hero { flex-direction: column; text-align: center; padding: 18px; gap: 14px; }
+  html.is-mobile .album-page-hero-icon { width: 60px; height: 60px; font-size: 28px; border-radius: 16px; }
+  html.is-mobile .album-page-hero-info h3 { font-size: 18px; }
+  html.is-mobile .album-page-hero-stats { justify-content: center; gap: 16px; }
+  html.is-mobile .album-page-hero-stat .num { font-size: 22px; }
+  html.is-mobile .album-masonry { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  html.is-mobile .album-masonry-enhanced { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  html.is-mobile .album-masonry-item.wide { grid-column: span 1; }
+  html.is-mobile .album-masonry-item.tall { grid-row: span 1; }
+  html.is-mobile .album-masonry-item .masonry-scatter { display: none; }
+  html.is-mobile .album-upload-card-enhanced { grid-column: span 1; min-height: 100px; }
+  html.is-mobile .album-set .scatter-photo { width: 30px; height: 30px; }
+  html.is-mobile .album-set:hover .scatter-photo:nth-child(1) { transform: translate(-28px, -22px) rotate(-12deg) scale(1); }
+  html.is-mobile .album-set:hover .scatter-photo:nth-child(2) { transform: translate(26px, -18px) rotate(10deg) scale(1); }
+  html.is-mobile .album-set:hover .scatter-photo:nth-child(3) { transform: translate(-24px, 24px) rotate(-8deg) scale(1); }
+  html.is-mobile .album-set:hover .scatter-photo:nth-child(4) { transform: translate(28px, 22px) rotate(14deg) scale(1); }
+
+  /* ---- Gallery Detail Page ---- */
+  html.is-mobile .lightbox-nav { width: 38px; height: 38px; font-size: 16px; }
+  html.is-mobile .lightbox-nav.prev { left: 8px; }
+  html.is-mobile .lightbox-nav.next { right: 8px; }
+
+  /* ---- Admin Page ---- */
+  html.is-mobile .editor-layout { grid-template-columns: 1fr; height: auto; }
+  html.is-mobile .editor-pane textarea, html.is-mobile .editor-preview { min-height: 220px; }
+  html.is-mobile .entry-modal { width: 94vw; padding: 18px; }
+  html.is-mobile .entry-modal h3 { font-size: 16px; }
+
+  /* ===== LIQUID GLASS EFFECT ON MOBILE ===== */
+  /* Apply SVG filter to glass cards for edge chromatic aberration */
+.glass-card,
+.post-card,
+.stat-item,
+.project-card,
+.proj-card,
+.album-set,
+.about-bio-card,
+.about-avatar-card,
+.about-skill,
+.announce-box,
+.proj-detail-blog .blog-hero,
+.proj-detail-blog .blog-stat-card,
+  html.is-mobile .album-page-hero {
+filter: url(#liquid-glass);
+backdrop-filter: blur(14px);
+-webkit-backdrop-filter: blur(14px);
+  }
+  /* Hover effects are disabled on mobile (touch devices) */
+.glass-card:hover,
+.post-card:hover,
+  html.is-mobile .proj-card:hover {
+transform: none;
+  }
+
+  /* ===== MOBILE-ONLY ANIMATIONS ===== */
+  /* Subtle entrance animation for cards */
+  @keyframes mobileFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  html.is-mobile .post-card, html.is-mobile .glass-card, html.is-mobile .proj-card, html.is-mobile .stat-item, html.is-mobile .album-set {
+animation: mobileFadeUp 0.45s cubic-bezier(0.4,0,0.2,1) backwards;
+  }
+  html.is-mobile .post-card:nth-child(1) { animation-delay: 0.05s; }
+  html.is-mobile .post-card:nth-child(2) { animation-delay: 0.10s; }
+  html.is-mobile .post-card:nth-child(3) { animation-delay: 0.15s; }
+  html.is-mobile .post-card:nth-child(4) { animation-delay: 0.20s; }
+  html.is-mobile .post-card:nth-child(5) { animation-delay: 0.25s; }
+
+  /* Touch ripple feedback */
+.glass-card:active,
+.post-card:active,
+  html.is-mobile .proj-card:active {
+transform: scale(0.98);
+transition: transform 0.12s ease;
+  }
+
+  /* Scroll-triggered shimmer for mobile */
+  @keyframes mobileShimmer {
+    0%, 100% { background-position: -200% center; }
+    50% { background-position: 200% center; }
+  }
+  html.is-mobile .web-wrapper::after {
+content: "";
+position: absolute; inset: 0; pointer-events: none; z-index: -1;
+border-radius: inherit;
+background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.015) 45%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 55%, transparent 60%);
+background-size: 200% 100%;
+animation: mobileShimmer 6s ease-in-out infinite;
+  }
+
+  /* ---- Disable custom cursors on mobile ---- */
+  html.is-mobile body { cursor: auto !important; }
+a, button, .cat-wrap, .post-card, .cat-item, .tag-chip, .project-card, .album-set,
+  html.is-mobile .day-cell, html.is-mobile .album-upload-zone, html.is-mobile .glass-btn, html.is-mobile .dropdown-item, html.is-mobile .nav-item, html.is-mobile .calendar-btn {
+cursor: pointer !important;
+  }
+
+  /* ---- Glass Button ---- */
+  html.is-mobile .glass-btn { padding: 7px 14px; font-size: 13px; }
+
+  /* ---- Sakura canvas: hidden on mobile ---- */
+  html.is-mobile #canvas_sakura { display: none !important; }
+  html.is-mobile .click-sakura { display: none !important; }
+
+  /* ---- Liquid glass enhanced card borders ---- */
+  html.is-mobile .glass-card, html.is-mobile .post-card {
+border-width: 1.5px;
+  }
+
+  /* Mobile bottom nav indicator */
+  html.is-mobile .mobile-bottom-indicator {
+position: fixed; bottom: 0; left: 0; right: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--pink), var(--cyan), var(--purple));
+z-index: 2000;
+opacity: 0.7;
+  }
+
+
+  /* ---- Post/Article Detail Page ---- */
+  html.is-mobile .article-container { padding: 0 4px; }
+  html.is-mobile .article-header { margin-bottom: 20px; }
+  html.is-mobile .article-cover {
+width: 100%; height: auto;
+max-height: 220px; object-fit: cover;
+border-radius: var(--radius-md);
+  }
+  html.is-mobile .article-title {
+font-size: 22px; line-height: 1.3;
+margin: 14px 0 8px;
+  }
+  html.is-mobile .article-meta { font-size: 12px; gap: 10px; }
+  html.is-mobile .article-meta .date { font-size: 11px; }
+  html.is-mobile .article-meta .cat { font-size: 11px; padding: 2px 10px; }
+  html.is-mobile .back-btn {
+font-size: 13px; padding: 6px 12px;
+margin-bottom: 14px;
+  }
+  html.is-mobile .markdown-body {
+font-size: 15px; line-height: 1.8;
+padding: 0;
+  }
+  html.is-mobile .markdown-body h2 { font-size: 20px; }
+  html.is-mobile .markdown-body h3 { font-size: 17px; }
+  html.is-mobile .markdown-body pre { font-size: 12px; padding: 12px; margin: 12px 0; }
+  html.is-mobile .markdown-body code { font-size: 13px; }
+  html.is-mobile .markdown-body img {
+width: 100%; height: auto;
+border-radius: var(--radius-sm);
+  }
+  html.is-mobile .markdown-body blockquote {
+margin: 12px 0; padding: 10px 14px;
+font-size: 13px;
+  }
+
+  /* ---- Gallery Detail Page ---- */
+  html.is-mobile .photo-viewer-container { max-width: 100%; padding: 0 8px; margin: 20px auto; }
+  html.is-mobile .viewer-title { font-size: 1.6rem; }
+  html.is-mobile .viewer-desc { font-size: 0.95rem; }
+  html.is-mobile .viewer-header { margin-bottom: 30px; }
+  html.is-mobile .photo-column { gap: 30px; }
+  html.is-mobile .photo-frame { padding: 8px; }
+  html.is-mobile .photo-frame:hover { transform: none; }
+  html.is-mobile .viewer-footer { margin-top: 40px; margin-bottom: 30px; }
+
+  /* ---- Comment Section ---- */
+  html.is-mobile .comment-form textarea { font-size: 14px; }
+  html.is-mobile .comment-item { padding: 12px; }
+  html.is-mobile .comment-author { font-size: 13px; }
+  html.is-mobile .comment-text { font-size: 14px; }
+
+  /* ---- Diary Section ---- */
+  html.is-mobile .diary-post { padding: 14px; }
+  html.is-mobile .diary-header-avatar img { width: 36px; height: 36px; }
+  html.is-mobile .diary-content { font-size: 14px; }
+  html.is-mobile .reply-input, html.is-mobile .reply-textarea { font-size: 14px; }
+
+  /* ---- Entry Modal ---- */
+  html.is-mobile .entry-modal-overlay { padding: 16px; }
+  html.is-mobile .entry-modal { max-width: 96vw; max-height: 88vh; padding: 16px; }
+  html.is-mobile .entry-modal label { font-size: 13px; }
+  html.is-mobile .entry-modal input, html.is-mobile .entry-modal textarea { font-size: 14px; }
+
+  /* ---- Sakura detail project page ---- */
+  html.is-mobile .proj-detail-sakura .sakura-hero { flex-direction: column; gap: 16px;

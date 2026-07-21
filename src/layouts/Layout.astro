@@ -1,12 +1,13 @@
-﻿---
+---
 import '../styles/global.css';
+import '../styles/mobile.css';
 import SakuraEffect from "@components/SakuraEffect.astro";
 
 interface Props { title?: string; description?: string; }
 
 const { title, description } = Astro.props;
-// 👇 核心修改 1：将标题模板和默认乱码改为 "FYH的工作站"
-const pageTitle = title ? `${title} - FYH的工作站` : "FYH的工作站";
+// ?? �����޸� 1��������ģ���Ĭ�������Ϊ "FYH�Ĺ���վ"
+const pageTitle = title ? `${title} - FYH的个人站` : "FYH的个人站";
 const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u827a\u672f\u4e0e\u4ee3\u7801\u7684\u4e2a\u4eba\u7a7a\u95f4";
 ---
 
@@ -36,27 +37,28 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
       })();
     </script>
     
-    <!-- 👇 核心修改 2：彻底移除 SVG 文字猫图标，引入 public 目录下的 cat.png -->
+    <!-- ?? �����޸� 2�������Ƴ� SVG ����èͼ�꣬���� public Ŀ¼�µ� cat.png -->
     <link rel="icon" type="image/png" href="/cat.png" />
+    
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     
-    <!-- 🌟 终极防闪烁：在浏览器绘制第一帧前，拦截并注入日间模式 🌟 -->
+    <!-- ?? �ռ�����˸������������Ƶ�һ֡ǰ�����ز�ע���ռ�ģʽ ?? -->
     <script is:inline>
       (function() {
-        // 1. 封杀所有动画，防止加载时的残留特效
+        // 1. ��ɱ���ж�������ֹ����ʱ�Ĳ�����Ч
         var style = document.createElement('style');
         style.id = 'theme-preload-blocker';
         style.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
         document.head.appendChild(style);
 
-        // 2. 提前读取本地存储
+        // 2. ��ǰ��ȡ���ش洢
         try {
           var theme = localStorage.getItem('fyh-theme');
           if (theme === 'day') {
-            // 3. 使用 MutationObserver 蹲点，DOM 生成的一瞬间注入 class
+            // 3. ʹ�� MutationObserver �׵㣬DOM ���ɵ�һ˲��ע�� class
             var observer = new MutationObserver(function(mutations, obs) {
               var scene = document.querySelector('.game-scene');
               var btn = document.querySelector('.theme-toggle-btn');
@@ -69,7 +71,7 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
               }
               
               if (scene && btn) {
-                obs.disconnect(); // 拦截完成，事了拂衣去
+                obs.disconnect(); // ������ɣ����˷���ȥ
               }
             });
             observer.observe(document.documentElement, { childList: true, subtree: true });
@@ -129,7 +131,7 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
         
         init();
         
-        // 撤销封杀令，恢复完美点击扩散动画
+        // ������ɱ��ָ����������ɢ����
         requestAnimationFrame(function() {
           requestAnimationFrame(function() {
             var blocker = document.getElementById('theme-preload-blocker');
