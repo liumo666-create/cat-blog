@@ -1,0 +1,9 @@
+16:08:09 [vite] Re-optimizing dependencies because vite config has changed
+16:08:09 [content] Syncing content
+16:08:09 [content] Synced content
+16:08:09 [types] Generated 972ms
+16:08:09 [build] output: "static"
+16:08:09 [build] mode: "static"
+16:08:09 [build] directory: D:\fyh blog page\cat-blog\dist\
+16:08:09 [build] Collecting build info...
+16:08:09 [build] ✓ Completed in 1.03s.
