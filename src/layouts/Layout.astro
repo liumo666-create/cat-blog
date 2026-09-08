@@ -82,7 +82,9 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
   </head>
   <body>
     <SakuraEffect />
+    <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
     <slot />
+    <button class="back-to-top" id="backToTop" aria-label="返回顶部" title="返回顶部"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
     <script>
 // @ts-nocheck
       (function() {
@@ -140,6 +142,31 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
         });
         
         window.addEventListener('resize', updateRipple);
+
+        /* Motion polish: scroll progress, back-to-top, card tilt and pointer ripples */
+        var scroller = document.getElementById('scrollContainer');
+        var progress = document.getElementById('readingProgress');
+        var backTop = document.getElementById('backToTop');
+        function syncScrollMotion() {
+          if (!scroller) return;
+          var max = Math.max(1, scroller.scrollHeight - scroller.clientHeight);
+          var pct = scroller.scrollTop / max;
+          if (progress) progress.style.transform = 'scaleX(' + pct + ')';
+          if (backTop) backTop.classList.toggle('visible', scroller.scrollTop > 260);
+        }
+        if (scroller) scroller.addEventListener('scroll', syncScrollMotion, { passive: true });
+        if (backTop) backTop.addEventListener('click', function(){ if(scroller) scroller.scrollTo({top:0, behavior:'smooth'}); });
+        document.querySelectorAll('.glass-card, .post-card, .proj-card, .project-card').forEach(function(card) {
+          card.addEventListener('pointermove', function(e) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 768) return;
+            var r = card.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+            card.style.setProperty('--mouse-x', ((x + .5) * 100) + '%'); card.style.setProperty('--mouse-y', ((y + .5) * 100) + '%');
+            card.style.transform = 'perspective(900px) rotateX(' + (-y * 2.2) + 'deg) rotateY(' + (x * 2.8) + 'deg) translateY(-7px)';
+          });
+          card.addEventListener('pointerleave', function(){ card.style.transform = ''; });
+        });
+        syncScrollMotion();
         
         /* Mouse glow tracking for all glass cards (desktop only) */
         if (window.innerWidth > 768) {
@@ -201,3 +228,6 @@ const pageDesc = description || "CODE. DESIGN. LIFE. \u2014\u2014 \u50cf\u7d20\u
     </svg>    <div class="mobile-bottom-indicator"></div>
 </body>
 </html>
+
+
+

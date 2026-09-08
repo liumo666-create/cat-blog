@@ -2865,3 +2865,89 @@ img { max-width: 100%; display: block; }
   /* ---- Sakura detail project page ---- */
   .proj-detail-sakura .sakura-hero { flex-direction: column; gap: 16px; }
 }
+
+/* ===== 2026 polish layer: cinematic motion + refined liquid glass ===== */
+:root {
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --glass-blur: 20px;
+}
+
+/* subtle depth without washing out the pixel artwork */
+.web-wrapper {
+  isolation: isolate;
+  background: linear-gradient(135deg, rgba(16,10,34,.76), rgba(10,6,22,.84));
+  box-shadow: 0 24px 90px rgba(0,0,0,.28), 0 0 80px var(--glow-purple), inset 0 1px 0 rgba(255,255,255,.09);
+}
+.game-scene.day-mode .web-wrapper {
+  background: linear-gradient(135deg, rgba(255,252,246,.82), rgba(246,241,232,.9));
+  box-shadow: 0 24px 90px rgba(81,54,36,.15), 0 0 70px var(--glow-purple), inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.glass-card, .post-card, .stat-item, .announce-box, .project-card, .proj-card, .album-set {
+  --card-lift: 0px;
+  transform: translate3d(0, var(--card-lift), 0);
+  background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.018) 48%, rgba(10,6,22,.2));
+  backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+  border-color: rgba(255,255,255,.105);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 10px 30px rgba(0,0,0,.12);
+  transition: transform .55s var(--ease-spring), box-shadow .55s var(--ease-out), border-color .35s ease, background .35s ease;
+}
+.game-scene.day-mode .glass-card, .game-scene.day-mode .post-card, .game-scene.day-mode .stat-item,
+.game-scene.day-mode .announce-box, .game-scene.day-mode .project-card, .game-scene.day-mode .proj-card,
+.game-scene.day-mode .album-set {
+  background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,250,242,.7));
+  border-color: rgba(92,62,42,.16);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 12px 28px rgba(81,54,36,.1);
+}
+.glass-card::after, .post-card::after {
+  opacity: .0;
+  background: radial-gradient(420px circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(255,255,255,.16), transparent 42%);
+  transition: opacity .45s ease;
+}
+.glass-card:hover, .post-card:hover, .project-card:hover, .proj-card:hover, .album-set:hover {
+  --card-lift: -7px;
+  border-color: rgba(255,107,157,.56);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 22px 48px rgba(0,0,0,.24), 0 0 28px var(--glow-pink);
+}
+.glass-card:hover::after, .post-card:hover::after { opacity: 1; }
+
+/* animated glass reflection */
+.glass-card::before, .post-card::before {
+  background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.11) 42%, transparent 58%);
+  background-size: 220% 100%;
+  animation: glassSheen 9s ease-in-out infinite;
+  opacity: .35;
+}
+@keyframes glassSheen { 0%, 58% { background-position: 160% 0; } 78%, 100% { background-position: -80% 0; } }
+
+/* entrance choreography */
+.section-page.active .hero-banner, .section-page.active .section-title, .section-page.active .post-card-link,
+.section-page.active .glass-card, .section-page.active .stat-item, .section-page.active .announce-box,
+.section-page.active .proj-card, .section-page.active .album-set {
+  animation: revealUp .75s var(--ease-out) both;
+}
+.section-page.active .post-card-link:nth-child(2), .section-page.active .glass-card:nth-child(2), .section-page.active .proj-card:nth-child(2) { animation-delay: .08s; }
+.section-page.active .post-card-link:nth-child(3), .section-page.active .glass-card:nth-child(3), .section-page.active .proj-card:nth-child(3) { animation-delay: .16s; }
+.section-page.active .post-card-link:nth-child(4), .section-page.active .glass-card:nth-child(4), .section-page.active .proj-card:nth-child(4) { animation-delay: .24s; }
+@keyframes revealUp { from { opacity: 0; transform: translate3d(0, 18px, 0) scale(.985); filter: blur(3px); } to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); } }
+
+/* progress + back-to-top controls */
+.reading-progress { position: fixed; inset: 0 0 auto; height: 3px; z-index: 3000; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan)); box-shadow: 0 0 16px var(--glow-pink); pointer-events: none; }
+.back-to-top { position: fixed; right: 26px; bottom: 26px; width: 42px; height: 42px; border: 1px solid var(--border-hi); border-radius: 50%; color: var(--text); background: var(--glass-strong); backdrop-filter: blur(16px); display: grid; place-items: center; opacity: 0; transform: translateY(16px) scale(.85); pointer-events: none; transition: .4s var(--ease-spring); z-index: 1200; cursor: pointer; }
+.back-to-top.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.back-to-top:hover { color: var(--pink); border-color: var(--pink); box-shadow: 0 0 24px var(--glow-pink); }
+.back-to-top svg { width: 17px; height: 17px; }
+
+/* smoother controls and focus states */
+.glass-btn, .theme-toggle-btn, .nav-item, .calendar-btn, .tag-chip, .cat-item { transition-timing-function: var(--ease-spring); }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+@media (max-width: 768px) {
+  .back-to-top { right: 16px; bottom: 18px; }
+  .glass-card:hover, .post-card:hover, .project-card:hover, .proj-card:hover, .album-set:hover { --card-lift: -2px; }
+}
