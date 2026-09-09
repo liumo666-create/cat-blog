@@ -2052,6 +2052,45 @@ window.toggleReplyBox = function(id) {
         if (href) setTimeout(function () { window.location.href = href; }, 300);
       }
     }, true);
+    // Mobile navigation routing: capture every menu item before overlay/close handlers.
+    document.addEventListener('click', function (e) {
+      if (window.innerWidth > 768) return;
+      var item = e.target.closest('#mainNav a.nav-item, #mainNav .dropdown-item');
+      if (!item) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      item.classList.remove('is-jelly');
+      void item.offsetWidth;
+      item.classList.add('is-jelly');
+      var page = item.dataset.page;
+      var href = item.getAttribute('href');
+      setTimeout(function () {
+        var nav = document.getElementById('mainNav');
+        if (nav) nav.classList.remove('mobile-open');
+        var overlay = document.querySelector('.mobile-nav-overlay');
+        if (overlay) overlay.remove();
+        document.body.style.overflow = '';
+        if (page && typeof window.navigateTo === 'function') {
+          window.navigateTo(page);
+        } else if (href && href !== '#') {
+          window.location.assign(href);
+        }
+      }, 240);
+    }, true);
+    // Mobile diary entry: handle the dropdown link directly before menu-closing handlers can swallow it.
+    document.addEventListener('click', function (e) {
+      if (window.innerWidth > 768) return;
+      var diaryLink = e.target.closest('#mainNav [data-page="diary"]');
+      if (!diaryLink) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof window.navigateTo === 'function') window.navigateTo('diary');
+      var nav = document.getElementById('mainNav');
+      if (nav) nav.classList.remove('mobile-open');
+      var overlay = document.querySelector('.mobile-nav-overlay');
+      if (overlay) overlay.remove();
+      document.body.style.overflow = '';
+    }, true);
     document.addEventListener('keydown', function (e) {
       if ((e.key !== 'Enter' && e.key !== ' ') || window.innerWidth > 768) return;
       var card = document.activeElement && document.activeElement.closest('.proj-card');
