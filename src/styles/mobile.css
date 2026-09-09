@@ -595,3 +595,38 @@
   }
   @keyframes mobileNavPress { 50% { transform: scale(.95) translateY(2px); } }
 }
+/* Screenshot-inspired mobile navigation: anchored vertical cards */
+@media (max-width: 768px) {
+  .game-scene #mainNav.mobile-open {
+    display: flex !important;
+    position: absolute;
+    top: 58px;
+    right: 54px;
+    width: min(64vw, 248px);
+    height: auto;
+    max-height: calc(100dvh - 90px);
+    overflow: visible;
+    padding: 10px;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 22px;
+    background: linear-gradient(160deg, rgba(28,17,54,.96), rgba(10,6,22,.94));
+    box-shadow: 0 24px 60px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.12);
+    transform-origin: 92% 0%;
+    animation: mobileNavPanelIn .5s cubic-bezier(.16,1.2,.3,1) both;
+  }
+  .game-scene.day-mode #mainNav.mobile-open { background: linear-gradient(160deg, rgba(255,252,246,.98), rgba(244,237,228,.96)); border-color: rgba(92,62,42,.18); }
+  .game-scene #mainNav.mobile-open::before { content: ''; position: absolute; top: -8px; right: 28px; width: 16px; height: 16px; background: inherit; border-left: 1px solid rgba(255,255,255,.14); border-top: 1px solid rgba(255,255,255,.14); transform: rotate(45deg); }
+  .game-scene #mainNav.mobile-open > .nav-item,
+  .game-scene #mainNav.mobile-open > .nav-dropdown { width: 100%; margin: 0; }
+  .game-scene #mainNav.mobile-open > .nav-item,
+  .game-scene #mainNav.mobile-open .nav-dropdown-trigger {
+    min-height: 46px; justify-content: flex-start; padding: 11px 13px; border-radius: 14px;
+    background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.07);
+  }
+  .game-scene.day-mode #mainNav.mobile-open > .nav-item,
+  .game-scene.day-mode #mainNav.mobile-open .nav-dropdown-trigger { background: rgba(255,255,255,.65); border-color: rgba(92,62,42,.1); }
+  .game-scene #mainNav.mobile-open .dropdown-menu { padding: 4px 0 0 12px; }
+  .game-scene #mainNav.mobile-open .dropdown-item { min-height: 40px; border-radius: 11px; padding: 9px 12px; }
+  @keyframes mobileNavPanelIn { 0% { opacity: 0; transform: translateY(-10px) scaleY(.72) scaleX(.96); } 55% { opacity: 1; transform: translateY(4px) scaleY(1.05) scaleX(1.01); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+}
