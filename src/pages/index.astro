@@ -1623,7 +1623,7 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
   function renderProjects() {
     var grid = document.getElementById("projGrid"); if (!grid) return;
     grid.innerHTML = PROJECTS.map(function(p) {
-      return "<div class=\"proj-card\" style=\"--proj-accent:" + p.accent + ";--proj-glow:rgba(255,107,157,0.12);--proj-icon-bg:" + p.iconBg + ";--proj-status-bg:" + p.statusBg + ";\">" +
+      return "<div class=\"proj-card\" role=\"button\" tabindex=\"0\" data-project-id=\"" + p.id + "\" onclick=\"navigateTo('project-detail-" + p.id + "')\" style=\"--proj-accent:" + p.accent + ";--proj-glow:rgba(255,107,157,0.12);--proj-icon-bg:" + p.iconBg + ";--proj-status-bg:" + p.statusBg + ";\">" +
         "<div class=\"proj-card-icon\">" + p.icon + "</div>" +
         "<div class=\"proj-card-name\">" + p.name + "</div>" +
         "<div class=\"proj-card-desc\">" + p.desc + "</div>" +
@@ -2029,4 +2029,35 @@ window.toggleReplyBox = function(id) {
 
   // 初始化拉取数据
   fetchAndRenderDiaries();
+</script>
+<script is:inline>
+  // Mobile card interaction: preserve navigation while giving touch feedback time to play.
+  (function () {
+    var selector = '.post-card-link, .proj-card, .proj-featured, .album-set, .glass-card';
+    function jelly(el) {
+      if (!el || window.innerWidth > 768) return;
+      el.classList.remove('is-jelly');
+      void el.offsetWidth;
+      el.classList.add('is-jelly');
+      setTimeout(function () { el.classList.remove('is-jelly'); }, 700);
+    }
+    document.addEventListener('click', function (e) {
+      var card = e.target.closest(selector);
+      if (!card || window.innerWidth > 768) return;
+      jelly(card);
+      var link = card.closest('a.post-card-link');
+      if (link) {
+        e.preventDefault();
+        var href = link.getAttribute('href');
+        if (href) setTimeout(function () { window.location.href = href; }, 300);
+      }
+    }, true);
+    document.addEventListener('keydown', function (e) {
+      if ((e.key !== 'Enter' && e.key !== ' ') || window.innerWidth > 768) return;
+      var card = document.activeElement && document.activeElement.closest('.proj-card');
+      if (!card) return;
+      e.preventDefault(); jelly(card);
+      setTimeout(function () { if (card.dataset.projectId && typeof window.navigateTo === 'function') window.navigateTo('project-detail-' + card.dataset.projectId); }, 300);
+    });
+  })();
 </script>
