@@ -499,3 +499,55 @@
   /* ---- Sakura detail project page ---- */
   .proj-detail-sakura .sakura-hero { flex-direction: column; gap: 16px; }
 }
+
+/* ===== Mobile redesign: calm, tactile and app-like ===== */
+@media (max-width: 768px) {
+  :root { --mobile-gutter: 14px; --mobile-radius: 20px; }
+  .game-scene { isolation: isolate; min-height: 100dvh; background: radial-gradient(circle at 10% 0%, rgba(255,107,157,.12), transparent 34%), #080414; }
+  .game-scene.day-mode { background: radial-gradient(circle at 85% 0%, rgba(217,70,111,.1), transparent 36%), #f6f1e8; }
+  .game-scene::after { z-index: 0; opacity: .28; transition: clip-path .75s var(--ease-out), opacity .45s ease; }
+  .game-scene.day-mode::after { opacity: .2; }
+  .game-scene .scroll-container { position: relative; z-index: 2; }
+  .game-scene .web-wrapper { position: relative; z-index: 2; min-height: 100dvh; padding: max(14px, env(safe-area-inset-top)) var(--mobile-gutter) calc(72px + env(safe-area-inset-bottom)); background: rgba(10,6,22,.76); border: 0; }
+  .game-scene.day-mode .web-wrapper { background: rgba(255,252,246,.78); }
+  .game-scene header { position: sticky; top: 0; z-index: 20; padding: 8px 0 12px; margin-bottom: 16px; background: linear-gradient(180deg, rgba(10,6,22,.94), rgba(10,6,22,.72) 72%, transparent); backdrop-filter: blur(18px); }
+  .game-scene.day-mode header { background: linear-gradient(180deg, rgba(246,241,232,.95), rgba(246,241,232,.75) 72%, transparent); }
+  .game-scene #mainNav { display: none !important; }
+  .game-scene #mainNav.mobile-open { display: flex !important; }
+  .game-scene .nav-links.mobile-open { width: min(86vw, 340px); padding: calc(76px + env(safe-area-inset-top)) 18px 24px; border-radius: 26px 0 0 26px; background: linear-gradient(160deg, rgba(22,14,44,.98), rgba(10,6,22,.96)); box-shadow: -18px 0 60px rgba(0,0,0,.46), inset 1px 0 0 rgba(255,255,255,.1); }
+  .game-scene.day-mode .nav-links.mobile-open { background: linear-gradient(160deg, rgba(255,252,246,.98), rgba(244,237,228,.98)); }
+  .game-scene .nav-links.mobile-open .nav-item { min-height: 48px; border-radius: 14px; font-size: 15px; }
+  .game-scene .mobile-menu-btn, .game-scene .theme-toggle-btn { width: 40px; height: 40px; border-radius: 13px; }
+  .game-scene .mobile-nav-overlay { background: rgba(4,2,12,.58); backdrop-filter: blur(5px); }
+  .game-scene .hero-banner { min-height: 178px; aspect-ratio: auto; border-radius: var(--mobile-radius); margin-bottom: 22px; box-shadow: 0 18px 40px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.16); }
+  .game-scene .hero-overlay { left: 18px; right: 18px; bottom: 18px; }
+  .game-scene .hero-overlay h2 { font-size: clamp(21px, 7vw, 28px); letter-spacing: .04em; }
+  .game-scene .section-page.active { animation: mobilePageEnter .55s var(--ease-out) both; }
+  .game-scene .section-page:not(.active) { animation: none; opacity: 0; transform: none; }
+  @keyframes mobilePageEnter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .game-scene .post-card.has-cover { gap: 14px; padding: 12px; border-radius: var(--mobile-radius); }
+  .game-scene .post-cover-wrap { height: 154px; border-radius: 15px; }
+  .game-scene .side-col { display: grid; gap: 12px; }
+  .game-scene .glass-card, .game-scene .post-card, .game-scene .stat-item, .game-scene .announce-box { border-radius: var(--mobile-radius); }
+  .game-scene .glass-card { padding: 16px; }
+  .game-scene .stat-item { padding: 14px 8px; }
+  #page-diary { display: none; width: 100%; min-width: 0; }
+  #page-diary.active { display: block; animation: mobilePageEnter .55s var(--ease-out) both; }
+  #page-diary .diary-container { max-width: none; width: 100%; padding: 0 1px 24px; }
+  #page-diary .diary-header-cover { height: 190px; margin: 0 0 52px; border-radius: 24px; box-shadow: 0 18px 40px rgba(0,0,0,.28); }
+  #page-diary .diary-header-avatar { right: 16px; bottom: -28px; gap: 10px; }
+  #page-diary .diary-header-avatar span { font-size: 18px; margin-bottom: 30px; }
+  #page-diary .diary-header-avatar img { width: 70px; height: 70px; border-radius: 18px; border-width: 3px; }
+  #page-diary .diary-feed { padding: 0 4px; }
+  #page-diary .diary-post { position: relative; gap: 11px; padding: 18px 0 20px; border-bottom: 1px solid rgba(255,255,255,.09); }
+  #page-diary .diary-post::before { content: ''; position: absolute; left: 21px; top: 62px; bottom: -1px; width: 1px; background: linear-gradient(var(--pink), transparent); opacity: .34; }
+  #page-diary .diary-avatar { position: relative; z-index: 1; }
+  #page-diary .diary-avatar img { width: 42px; height: 42px; border-radius: 13px; border: 2px solid rgba(255,255,255,.12); }
+  #page-diary .diary-author { font-size: 15px; margin-bottom: 7px; }
+  #page-diary .diary-content { font-size: 14px; line-height: 1.8; }
+  #page-diary .diary-footer { margin-top: 12px; font-size: 11px; }
+  #page-diary .diary-img-grid { gap: 5px; }
+  #page-diary .diary-img-grid img { border-radius: 12px; box-shadow: 0 8px 18px rgba(0,0,0,.18); }
+  #page-diary .diary-reply-box { border-radius: 16px; padding: 13px; }
+  .game-scene .back-to-top { right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); width: 44px; height: 44px; }
+}
