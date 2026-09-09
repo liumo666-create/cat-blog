@@ -322,15 +322,20 @@
       }
     });
     
-    /* Close nav when a nav item is clicked */
+    /* Mobile routing: handle links before the close animation can swallow the click. */
     mainNavEl.addEventListener('click', function(e) {
-      var link = e.target.closest('a, [data-page]');
-      if (link && mainNavEl.classList.contains('mobile-open')) {
-        setTimeout(closeMobileNav, 150);
-      }
-    });
+      if (window.innerWidth > 768) return;
+      var target = e.target.closest('a.dropdown-item, a.nav-item, [data-page]');
+      if (!target || target.classList.contains('nav-dropdown-trigger')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var page = target.dataset.page;
+      var href = target.getAttribute('href');
+      closeMobileNav();
+      if (page) navigateTo(page);
+      else if (href && href !== '#') window.location.assign(href);
+    }, true);
   }
-
 
   /* Close dropdowns when clicking outside */
   document.addEventListener('click', function(e) {
