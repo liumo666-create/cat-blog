@@ -169,6 +169,7 @@
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.5);
     z-index: 1400;
+    pointer-events: none;
     animation: fadeIn 0.25s ease;
   }
   @keyframes fadeIn {

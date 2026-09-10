@@ -317,26 +317,39 @@
     });
     
     document.addEventListener('click', function(e) {
-      if (mobileOverlay && e.target === mobileOverlay) {
-        closeMobileNav();
+      if (mobileOverlay && !mainNavEl.contains(e.target) && e.target !== mobileMenuBtn) {
+        setTimeout(closeMobileNav, 0);
       }
     });
     
-    /* Mobile routing: handle links before the close animation can swallow the click. */
+    /* Mobile routing: close the panel while preserving native link navigation. */
     mainNavEl.addEventListener('click', function(e) {
-      if (window.innerWidth > 768) return;
-      var target = e.target.closest('a.dropdown-item, a.nav-item, [data-page]');
-      if (!target || target.classList.contains('nav-dropdown-trigger')) return;
-      e.preventDefault();
-      e.stopPropagation();
-      var page = target.dataset.page;
-      var href = target.getAttribute('href');
-      closeMobileNav();
-      if (page) navigateTo(page);
-      else if (href && href !== '#') window.location.assign(href);
-    }, true);
-  }
+      if (e.target && e.target.closest('.nav-dropdown-trigger')) return;
+      var target = e.target && e.target.closest('a, [data-page]');
+      if (!target) return;
 
+      var page = target.dataset && target.dataset.page;
+      if (page) {
+        /* Section pages (for example diary) are handled in-place. */
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (window.innerWidth <= 768 && mainNavEl.classList.contains('mobile-open')) closeMobileNav();
+        navigateTo(page);
+        return;
+      }
+
+      /* Route real links explicitly on mobile. Some mobile browsers cancel
+         the native default when the menu node is removed during the click. */
+      var href = target.getAttribute('href');
+      if (href && href !== '#' && window.innerWidth <= 768) {
+        e.preventDefault();
+        setTimeout(function() {
+          closeMobileNav();
+          window.location.assign(href);
+        }, 0);
+      }
+    });
+  }
   /* Close dropdowns when clicking outside */
   document.addEventListener('click', function(e) {
     if (!e.target || !e.target.closest('.nav-dropdown')) {
@@ -344,17 +357,7 @@
     }
   });
 
-  /* Navigation: section-page switching */
-  var mainNav = document.getElementById('mainNav');
-  if (mainNav) {
-    mainNav.addEventListener('click', function(e) {
-      var a = e.target && e.target.closest('[data-page]');
-      if (!a || !a.dataset.page) return;
-      e.preventDefault();
-      e.stopPropagation();
-      navigateTo(a.dataset.page);
-    });
-  }
+  /* Section-page navigation is delegated above so mobile and desktop share one path. */
 
   function navigateTo(pageName) {
     /* Deactivate all sections */
