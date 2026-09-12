@@ -240,7 +240,9 @@
     var menu = dd.querySelector('.dropdown-menu');
 
     trigger.addEventListener('click', function(e) {
+      e.preventDefault();
       e.stopPropagation();
+      if (e.detail > 1 && window.innerWidth <= 768) return;
       if (dd.classList.contains('open')) {
         closeDropdown(dd);
       } else {

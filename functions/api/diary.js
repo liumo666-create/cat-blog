@@ -39,7 +39,7 @@ export async function onRequestPost(context) {
         });
         
         if (ghResponse.ok) {
-          const cdnUrl = `https://fastly.jsdelivr.net/gh/${REPO}@main/${fileName}`;
+          const cdnUrl = `/api/diary?path=${encodeURIComponent(fileName)}`;
           uploadedImageUrls.push(cdnUrl);
         } else {
           console.error("GitHub Upload Error:", await ghResponse.text());
@@ -63,7 +63,21 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
   try {
-    const { env } = context;
+    const { request, env } = context;
+    const imagePath = new URL(request.url).searchParams.get('path');
+    if (imagePath) {
+      if (!imagePath.startsWith('diary/') || !imagePath.endsWith('.png') || imagePath.includes('..')) return new Response('Bad image path', { status: 400 });
+      const cdnUrl = 'https://fastly.jsdelivr.net/gh/liumo666-create/blog-assets@main/' + imagePath;
+      let imageResponse = await fetch(cdnUrl, { headers: { 'User-Agent': 'FYH-Pixel-Blog' } });
+      if (!imageResponse.ok) {
+        imageResponse = await fetch('https://raw.githubusercontent.com/liumo666-create/blog-assets/main/' + imagePath, { headers: { 'User-Agent': 'FYH-Pixel-Blog' } });
+      }
+      if (!imageResponse.ok) return new Response('Image not found', { status: 404 });
+      const headers = new Headers(imageResponse.headers);
+      headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+      headers.set('Content-Type', imageResponse.headers.get('Content-Type') || 'image/png');
+      return new Response(imageResponse.body, { status: 200, headers });
+    }
     const DB = env.DB;
     const { results } = await DB.prepare("SELECT * FROM diaries ORDER BY created_at DESC").all();
     
