@@ -745,3 +745,50 @@
     z-index: 1600 !important;
   }
 }
+
+/* ===== Fragments diary mobile polish ===== */
+@media (max-width: 768px) {
+  #page-diary .diary-container { width: 100%; padding: 3px 0 32px; }
+  #page-diary .diary-header-cover {
+    height: 248px;
+    min-height: 248px;
+    margin-bottom: 48px;
+    border-radius: 25px;
+    background-position: center 52%;
+    box-shadow: 0 20px 42px rgba(9,4,16,.30), inset 0 1px 0 rgba(255,255,255,.18);
+  }
+  #page-diary .diary-header-cover::after { inset: 10px; border-radius: 18px; }
+  #page-diary .diary-cover-content { left: 20px; top: 22px; max-width: calc(100% - 40px); }
+  #page-diary .diary-cover-kicker { margin-bottom: 10px; font-size: 9px; letter-spacing: .12em; }
+  #page-diary .diary-kicker-line { width: 22px; }
+  #page-diary .diary-cover-content h1 { font-size: clamp(32px, 10vw, 42px); letter-spacing: .08em; }
+  #page-diary .diary-cover-content p { margin-top: 10px; font-size: 13px; letter-spacing: .04em; }
+  #page-diary .diary-cover-meta { margin-top: 14px; gap: 8px; font-size: 9px; }
+  #page-diary .diary-header-avatar { right: 14px; bottom: -29px; gap: 9px; }
+  #page-diary .diary-avatar-copy { margin-bottom: 30px; }
+  #page-diary .diary-avatar-copy strong { font-size: 18px; letter-spacing: .12em; }
+  #page-diary .diary-avatar-copy small { font-size: 9px; }
+  #page-diary .diary-header-avatar img { width: 72px; height: 72px; border-radius: 19px; border-width: 3px; }
+  #page-diary .diary-cover-scroll { left: 20px; bottom: 17px; font-size: 8px; letter-spacing: .10em; }
+  #page-diary .diary-cover-scroll i { width: 26px; }
+  #page-diary .diary-feed-head { margin: 0 3px 11px; align-items: flex-start; flex-direction: column; gap: 3px; }
+  #page-diary .diary-feed-kicker { font-size: 9px; letter-spacing: .18em; }
+  #page-diary .diary-feed-head h2 { font-size: 20px; letter-spacing: .05em; }
+  #page-diary .diary-feed-note { padding: 0; font-size: 11px; }
+  #page-diary .diary-feed { gap: 11px; padding: 0; }
+  #page-diary .diary-post { gap: 11px; padding: 18px 14px 18px 12px; border-radius: 20px; }
+  #page-diary .diary-post::after { top: 18px; bottom: 18px; width: 2px; }
+  #page-diary .diary-post:hover { transform: none; }
+  #page-diary .diary-avatar img { width: 43px; height: 43px; border-radius: 14px; }
+  #page-diary .diary-author { font-size: 14px; margin-bottom: 6px; }
+  #page-diary .diary-content { font-size: 14px; line-height: 1.82; }
+  #page-diary .diary-img-grid { gap: 5px; margin-top: 13px; }
+  #page-diary .diary-img-grid img { border-radius: 11px; }
+  #page-diary .diary-img-grid img:hover { transform: none; }
+  #page-diary .diary-footer { margin-top: 13px; padding-top: 11px; font-size: 11px; }
+  #page-diary .diary-reply-btn { padding: 5px 8px; }
+  #page-diary .diary-comments-list { margin-top: 13px; padding-top: 11px; gap: 9px; }
+  #page-diary .comment-content-box { padding: 9px 11px; }
+  #page-diary .diary-reply-box { margin-top: 10px; padding: 12px; border-radius: 15px; }
+  #page-diary .diary-empty { padding: 42px 18px; border-radius: 18px; }
+}

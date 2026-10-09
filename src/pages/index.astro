@@ -229,6 +229,109 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
 .diary-empty { text-align: center; padding: 60px 0; color: var(--muted); font-size: 15px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed var(--border-hi); }
 .diary-lightbox .lightbox-counter { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 16px; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
+/* ===== Editorial diary refresh ===== */
+#page-diary .diary-container { max-width: 760px; padding-bottom: 64px; }
+#page-diary .diary-header-cover {
+  min-height: 342px; height: clamp(342px, 42vw, 390px); margin-bottom: 82px;
+  overflow: hidden; isolation: isolate; border-radius: 26px;
+  background: url('/sakura-diary-cover.jpg') center 42% / cover no-repeat;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 24px 68px rgba(8, 3, 18, .36), 0 8px 24px rgba(8, 3, 18, .2);
+  animation: diaryCoverRise .8s cubic-bezier(.16,1,.3,1) both;
+}
+#page-diary .diary-header-cover::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: rgba(11, 6, 21, .36); pointer-events: none;
+}
+#page-diary .diary-header-cover::after {
+  content: ''; position: absolute; inset: 13px; z-index: 0;
+  border: 1px solid rgba(255,255,255,.24); border-radius: 19px;
+  pointer-events: none; opacity: .72;
+}
+@keyframes diaryCoverRise { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+#page-diary .diary-cover-content { left: 34px; top: 34px; z-index: 2; max-width: 470px; }
+#page-diary .diary-cover-kicker { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: rgba(255,255,255,.8); font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; }
+#page-diary .diary-kicker-line { display: inline-block; width: 30px; height: 1px; background: #ffd6df; box-shadow: 0 0 12px rgba(255,214,223,.65); }
+#page-diary .diary-cover-content h1 { color: #fff; font-family: var(--font-body); font-size: clamp(42px, 6vw, 66px); font-weight: 600; letter-spacing: .08em; line-height: 1.1; text-shadow: 0 4px 24px rgba(0,0,0,.42); }
+#page-diary .diary-cover-content p { margin-top: 16px; color: rgba(255,255,255,.88); font-size: 15px; letter-spacing: .08em; }
+#page-diary .diary-cover-meta { margin-top: 25px; color: rgba(255,255,255,.7); font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; }
+#page-diary .diary-cover-meta i { display: inline-block; width: 4px; height: 4px; margin: 0 10px 2px; border-radius: 50%; background: #ffd6df; box-shadow: 0 0 10px rgba(255,214,223,.75); }
+#page-diary .diary-cover-panel { position: absolute; right: 34px; top: 34px; z-index: 2; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; color: #fff; text-align: right; }
+#page-diary .diary-cover-panel-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .18em; color: rgba(255,255,255,.72); }
+#page-diary .diary-cover-panel strong { font-family: var(--font-mono); font-size: 25px; font-weight: 500; letter-spacing: .08em; }
+#page-diary .diary-cover-panel strong span { padding: 0 4px; color: rgba(255,255,255,.45); font-size: 14px; }
+#page-diary .diary-cover-panel small { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; color: rgba(255,255,255,.62); }
+#page-diary .diary-header-avatar { right: 34px; bottom: -39px; z-index: 4; gap: 14px; }
+#page-diary .diary-avatar-copy { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; margin-bottom: 45px; }
+#page-diary .diary-avatar-copy strong { font-family: var(--font-mono); font-size: 20px; font-weight: 600; letter-spacing: .18em; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.72); }
+#page-diary .diary-avatar-copy small { color: rgba(255,255,255,.74); font-size: 10px; letter-spacing: .13em; }
+#page-diary .diary-header-avatar img { width: 92px; height: 92px; border-radius: 24px; border: 4px solid rgba(255,255,255,.86); box-shadow: 0 12px 30px rgba(9, 3, 18, .4); }
+#page-diary .diary-cover-bottom { position: absolute; left: 34px; right: 34px; bottom: 24px; z-index: 2; display: flex; align-items: center; justify-content: space-between; }
+#page-diary .diary-cover-scroll { position: static; color: rgba(255,255,255,.7); font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; }
+#page-diary .diary-cover-scroll i { display: inline-block; width: 34px; height: 1px; margin-left: 10px; vertical-align: middle; background: rgba(255,255,255,.62); }
+#page-diary .diary-cover-location { color: rgba(255,255,255,.64); font-family: var(--font-mono); font-size: 9px; letter-spacing: .13em; }
+#page-diary .diary-feed-head { margin: 0 4px 16px; align-items: flex-end; }
+#page-diary .diary-feed-kicker { color: var(--pink); font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; }
+#page-diary .diary-feed-head h2 { margin-top: 5px; font-size: 25px; font-weight: 600; letter-spacing: .06em; }
+#page-diary .diary-feed-note { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; letter-spacing: .06em; }
+#page-diary .diary-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #f0a1b2; box-shadow: 0 0 0 4px rgba(240,161,178,.13); animation: diaryPulse 2.2s ease-in-out infinite; }
+@keyframes diaryPulse { 0%, 100% { opacity: .55; transform: scale(.85); } 50% { opacity: 1; transform: scale(1); } }
+#page-diary .diary-feed { gap: 14px; }
+#page-diary .diary-post { position: relative; gap: 15px; padding: 22px 22px 19px; border: 1px solid var(--border-hi); border-radius: 22px; background: var(--glass); box-shadow: 0 13px 34px rgba(7, 3, 16, .16), inset 0 1px 0 rgba(255,255,255,.06); transition: transform .38s cubic-bezier(.16,1,.3,1), border-color .28s ease, box-shadow .38s ease; }
+#page-diary .diary-post::after { content: ''; position: absolute; left: 0; top: 22px; bottom: 22px; width: 2px; border-radius: 4px; background: linear-gradient(180deg, rgba(255,214,223,.85), rgba(94,234,212,.6)); opacity: .72; }
+#page-diary .diary-post:hover { transform: translateY(-4px); border-color: rgba(255,214,223,.28); box-shadow: 0 20px 42px rgba(7, 3, 16, .24), inset 0 1px 0 rgba(255,255,255,.1); }
+#page-diary .diary-avatar img { width: 48px; height: 48px; border-radius: 15px; border: 1px solid rgba(255,255,255,.15); box-shadow: 0 6px 16px rgba(0,0,0,.22); }
+#page-diary .diary-author { margin-bottom: 8px; color: #f6b9c7; font-size: 15px; letter-spacing: .03em; }
+#page-diary .diary-badge { border-radius: 999px; padding: 3px 8px; background: rgba(255,214,223,.1); border-color: rgba(255,214,223,.28); color: #ffd6df; font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; }
+#page-diary .diary-content { color: rgba(255,255,255,.84); font-size: 14px; line-height: 1.9; letter-spacing: .02em; }
+#page-diary .diary-img-grid { gap: 8px; margin-top: 15px; }
+#page-diary .diary-img-grid img { border-radius: 13px; box-shadow: 0 7px 18px rgba(0,0,0,.22); transition: transform .38s cubic-bezier(.16,1,.3,1), filter .38s ease; }
+#page-diary .diary-img-grid img:hover { filter: saturate(1.08) brightness(1.07); transform: scale(1.025); }
+#page-diary .diary-footer { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-sub); }
+#page-diary .diary-time { color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+#page-diary .diary-reply-btn { padding: 5px 9px; border-radius: 999px; color: var(--cyan); font-size: 11px; transition: background .25s ease, transform .25s ease; }
+#page-diary .diary-reply-btn:hover { background: rgba(94,234,212,.1); transform: translateY(-1px); }
+#page-diary .diary-empty { padding: 56px 20px; border-radius: 22px; background: var(--glass); }
+.game-scene.day-mode #page-diary .diary-post { background: rgba(255,255,255,.72); box-shadow: 0 14px 34px rgba(47, 29, 36, .08), inset 0 1px 0 rgba(255,255,255,.8); }
+.game-scene.day-mode #page-diary .diary-content { color: #403348; }
+.game-scene.day-mode #page-diary .diary-author { color: #b44d6c; }
+.game-scene.day-mode #page-diary .diary-badge { color: #b44d6c; border-color: rgba(180,77,108,.24); background: rgba(180,77,108,.08); }
+
+@media (max-width: 768px) {
+  #page-diary .diary-container { padding-bottom: 42px; }
+  #page-diary .diary-header-cover { min-height: 286px; height: 286px; margin-bottom: 65px; border-radius: 22px; background-position: 53% center; }
+  #page-diary .diary-header-cover::after { inset: 9px; border-radius: 15px; }
+  #page-diary .diary-cover-content { left: 22px; top: 24px; }
+  #page-diary .diary-cover-kicker { margin-bottom: 14px; font-size: 8px; letter-spacing: .14em; }
+  #page-diary .diary-kicker-line { width: 20px; }
+  #page-diary .diary-cover-content h1 { font-size: 39px; letter-spacing: .1em; }
+  #page-diary .diary-cover-content p { max-width: 210px; margin-top: 11px; font-size: 12px; line-height: 1.8; }
+  #page-diary .diary-cover-meta { margin-top: 14px; font-size: 8px; }
+  #page-diary .diary-cover-panel { right: 23px; top: 24px; }
+  #page-diary .diary-cover-panel strong { font-size: 19px; }
+  #page-diary .diary-cover-panel small { font-size: 8px; }
+  #page-diary .diary-header-avatar { right: 20px; bottom: -30px; gap: 9px; }
+  #page-diary .diary-avatar-copy { margin-bottom: 31px; }
+  #page-diary .diary-avatar-copy strong { font-size: 16px; }
+  #page-diary .diary-avatar-copy small { font-size: 8px; }
+  #page-diary .diary-header-avatar img { width: 70px; height: 70px; border-radius: 19px; border-width: 3px; }
+  #page-diary .diary-cover-bottom { left: 22px; right: 22px; bottom: 17px; }
+  #page-diary .diary-cover-scroll { font-size: 7px; }
+  #page-diary .diary-cover-scroll i { width: 22px; margin-left: 7px; }
+  #page-diary .diary-cover-location { font-size: 8px; }
+  #page-diary .diary-feed-head { margin: 0 2px 12px; gap: 5px; }
+  #page-diary .diary-feed-head h2 { font-size: 21px; }
+  #page-diary .diary-feed-note { font-size: 10px; }
+  #page-diary .diary-post { gap: 11px; padding: 17px 14px 16px 12px; border-radius: 19px; }
+  #page-diary .diary-post::after { top: 18px; bottom: 18px; }
+  #page-diary .diary-avatar img { width: 42px; height: 42px; border-radius: 13px; }
+  #page-diary .diary-author { font-size: 14px; margin-bottom: 6px; }
+  #page-diary .diary-content { font-size: 13px; line-height: 1.82; }
+  #page-diary .diary-img-grid { gap: 5px; margin-top: 12px; }
+  #page-diary .diary-img-grid img { border-radius: 10px; }
+  #page-diary .diary-footer { margin-top: 12px; padding-top: 10px; }
+}
+
 
 
 /* =================================================================== */
@@ -694,16 +797,37 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
 <!-- ===== DIARY / MOMENTS PAGE ===== -->
         <div class="section-page" id="page-diary">
           <div class="diary-container">
-            <!-- 朋友圈顶部背景与头像 -->
+            <!-- 碎片日记封面：使用用户提供的樱花夜景作为真实头图 -->
             <div class="diary-header-cover animate-in">
+              <div class="diary-cover-content">
+                <div class="diary-cover-kicker"><span class="diary-kicker-line"></span><span>PERSONAL NOTES · 2026</span></div>
+                <h1>碎片日记</h1>
+                <p>把微小的心绪，收进一片樱花夜。</p>
+                <div class="diary-cover-meta"><span>随手写下</span><i></i><span>慢慢回望</span></div>
+              </div>
+              <div class="diary-cover-panel" aria-label="日记封面信息">
+                <span class="diary-cover-panel-label">NIGHT BLOOM</span>
+                <strong>03<span>/</span>26</strong>
+                <small>JINGZHOU · 21:48</small>
+              </div>
               <div class="diary-header-avatar">
-                <span>FYH</span>
-                <img src="/cat1.png" alt="Avatar" />
+                <span class="diary-avatar-copy"><strong>FYH</strong><small>生活记录者</small></span>
+                <img src="/cat1.png" alt="FYH 的头像" loading="lazy" />
+              </div>
+              <div class="diary-cover-bottom">
+                <div class="diary-cover-scroll" aria-hidden="true"><span>SCROLL TO REMEMBER</span><i></i></div>
+                <span class="diary-cover-location">湖北 · 中国</span>
               </div>
             </div>
 
-        
-            <!-- 动态时间线列表 -->
+            <div class="diary-feed-head">
+              <div>
+                <span class="diary-feed-kicker">LATEST FRAGMENTS</span>
+                <h2>最近的片段</h2>
+              </div>
+              <div class="diary-feed-note"><span class="diary-live-dot"></span><span>记录当下，也留住当下。</span></div>
+            </div>
+            <!-- 动态时间线列表：保留动态加载、评论回复与图片放大能力 -->
             <div class="diary-feed" id="diaryFeed"></div>
           </div>
         </div>
@@ -1805,7 +1929,7 @@ const calendarPostsData = JSON.stringify(sortedPosts.map((p: any) => ({
     });
   }
 </script>
-<script src="https://fastly.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js"></script>
+<script is:inline src="https://fastly.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js"></script>
 <script is:inline>
   // 1. 唯一且防报错的 Markdown 解析器 (使用 \x3C 转义，彻底屏蔽 Astro 幽灵报错)
   function simpleMarkdown(text) {
