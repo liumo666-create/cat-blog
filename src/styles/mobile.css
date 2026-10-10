@@ -536,12 +536,12 @@
   #page-diary.active { display: block; animation: mobilePageEnter .55s var(--ease-out) both; }
   #page-diary .diary-container { max-width: none; width: 100%; padding: 0 1px 24px; }
   #page-diary .diary-header-cover { height: 190px; margin: 0 0 52px; border-radius: 24px; box-shadow: 0 18px 40px rgba(0,0,0,.28); }
-  #page-diary .diary-header-avatar { right: 16px; bottom: -28px; gap: 10px; }
+  #page-diary .diary-header-avatar { right: 16px; bottom: 14px; gap: 10px; }
   #page-diary .diary-header-avatar span { font-size: 18px; margin-bottom: 30px; }
   #page-diary .diary-header-avatar img { width: 70px; height: 70px; border-radius: 18px; border-width: 3px; }
   #page-diary .diary-feed { padding: 0 4px; }
   #page-diary .diary-post { position: relative; gap: 11px; padding: 18px 0 20px; border-bottom: 1px solid rgba(255,255,255,.09); }
-  #page-diary .diary-post::before { content: ''; position: absolute; left: 21px; top: 62px; bottom: -1px; width: 1px; background: linear-gradient(var(--pink), transparent); opacity: .34; }
+  #page-diary .diary-post::before { display: none; }
   #page-diary .diary-avatar { position: relative; z-index: 1; }
   #page-diary .diary-avatar img { width: 42px; height: 42px; border-radius: 13px; border: 2px solid rgba(255,255,255,.12); }
   #page-diary .diary-author { font-size: 15px; margin-bottom: 7px; }
@@ -764,7 +764,7 @@
   #page-diary .diary-cover-content h1 { font-size: clamp(32px, 10vw, 42px); letter-spacing: .08em; }
   #page-diary .diary-cover-content p { margin-top: 10px; font-size: 13px; letter-spacing: .04em; }
   #page-diary .diary-cover-meta { margin-top: 14px; gap: 8px; font-size: 9px; }
-  #page-diary .diary-header-avatar { right: 14px; bottom: -29px; gap: 9px; }
+  #page-diary .diary-header-avatar { right: 14px; bottom: 14px; gap: 9px; }
   #page-diary .diary-avatar-copy { margin-bottom: 30px; }
   #page-diary .diary-avatar-copy strong { font-size: 18px; letter-spacing: .12em; }
   #page-diary .diary-avatar-copy small { font-size: 9px; }
